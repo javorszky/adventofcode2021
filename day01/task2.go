@@ -6,12 +6,12 @@ import (
 
 func task2() {
 	input := getInputs()
-	counter := 0
+	counter := -1
 	previousSum := 0
 	lenInputs := len(input)
 
-	for i := range input[1 : lenInputs-2] {
-		currentSum := input[i+1] + input[i+2] + input[i+3]
+	for i := range input[0 : lenInputs-2] {
+		currentSum := input[i] + input[i+1] + input[i+2]
 		if currentSum > previousSum {
 			counter++
 		}
