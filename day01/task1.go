@@ -1,12 +1,12 @@
 package day01
 
 import (
-	"fmt"
+	"bufio"
+	"io"
+	"strings"
 )
 
-func task1() {
-	input := getInputs()
-
+func task1(input []int) int {
 	counter := -1
 	previous := 0
 
@@ -18,5 +18,22 @@ func task1() {
 		previous = depth
 	}
 
-	fmt.Printf("Task 1: There are %d values larger than their previous values\n", counter)
+	return counter
+}
+
+func okraTask1(rd io.Reader) int {
+	reader := bufio.NewScanner(rd)
+	previous := ""
+	increases := 0
+
+	for reader.Scan() {
+		current := reader.Text()
+		if strings.Compare(previous, current) == -1 {
+			increases++
+		}
+
+		previous = current
+	}
+
+	return increases
 }

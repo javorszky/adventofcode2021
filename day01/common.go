@@ -7,11 +7,9 @@ import (
 	"strings"
 )
 
-const filename = "day01/input.txt"
-
 // getInputs reads the input.txt file and returns them as a slice of strings for each row.
-func getInputs() []int {
-	data, err := ioutil.ReadFile(filename)
+func getInputs(fn string) []int {
+	data, err := ioutil.ReadFile(fn)
 	if err != nil {
 		panic(err)
 	}
