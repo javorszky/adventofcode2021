@@ -22,6 +22,18 @@ func task2(input []int) int {
 	return counter
 }
 
+func alternateTask2(input []int) int {
+	counter := 0
+
+	for i, v := range input[:len(input)-3] {
+		if v < input[i+3] {
+			counter++
+		}
+	}
+
+	return counter
+}
+
 func okraTask2(values []string) int {
 	previous := 0
 	increases := 0

@@ -40,6 +40,16 @@ func TestCorrectness(t *testing.T) {
 			want: 1497,
 		},
 		{
+			name:     "tests my alternate solution with Daniel's input task 2",
+			filename: "bench_input.txt",
+			fn: func(tb testing.TB, s string) int {
+				input := getBenchInput(tb, s)
+
+				return alternateTask2(input)
+			},
+			want: 1497,
+		},
+		{
 			name:     "tests okra's solution with Daniel's input task 1",
 			filename: "bench_input.txt",
 			fn: func(t testing.TB, s string) int {
@@ -83,6 +93,11 @@ func Benchmark(b *testing.B) {
 			name:     "task 2 bench with Daniel's input",
 			filename: "bench_input.txt",
 			fn:       task2,
+		},
+		{
+			name:     "task 2 alternate with D's input",
+			filename: "bench_input.txt",
+			fn:       alternateTask2,
 		},
 	}
 	for _, bm := range benchmarks {
