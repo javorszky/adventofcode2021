@@ -20,7 +20,7 @@ func task2(input []uint, width int) interface{} {
 }
 
 func reduceList(input []uint, width int, reducer func(int, int) bool) (uint, error) {
-	newList := filterList(input, 1<<width, reducer)
+	newList := filterList(input, 1<<(width-1), reducer)
 
 	if len(newList) != 1 {
 		return 0, fmt.Errorf("length of new list is not 1, it's %d\n%v", len(newList), newList)

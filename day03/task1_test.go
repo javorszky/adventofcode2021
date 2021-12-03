@@ -40,7 +40,7 @@ func Test_task1(t *testing.T) {
 	}
 }
 
-func BenchmarkTask1Uint(b *testing.B) {
+func Benchmark_Task1_Uint(b *testing.B) {
 	benchmarks := []struct {
 		name     string
 		filename string
@@ -70,7 +70,7 @@ func getBenchInputs(b testing.TB, filename string) ([]uint, int) {
 	return getInputs(getLines(filename))
 }
 
-func BenchmarkTask1Strings(b *testing.B) {
+func Benchmark_Task1_Strings(b *testing.B) {
 	benchmarks := []struct {
 		name     string
 		filename string

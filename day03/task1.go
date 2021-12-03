@@ -12,6 +12,9 @@ const (
 func task1(input []uint, width int) uint {
 	var gamma uint
 
+	local := make([]uint, len(input))
+	copy(local, input)
+
 	var mask uint = (1 << width) - 1
 
 	for i := width - 1; i >= 0; i-- {
@@ -20,12 +23,12 @@ func task1(input []uint, width int) uint {
 
 		var currentCheck uint = 1 << i
 
-		for j, v := range input {
+		for j, v := range local {
 			if v < currentCheck {
 				zeroes++
 			} else {
 				ones++
-				input[j] -= 1 << i
+				local[j] -= 1 << i
 			}
 		}
 

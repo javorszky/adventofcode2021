@@ -1,6 +1,8 @@
 package day03
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func Tasks() {
 	fmt.Printf("\nDay 03\n------\n")
