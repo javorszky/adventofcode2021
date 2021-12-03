@@ -5,14 +5,41 @@ import (
 )
 
 const (
-	mask     uint = 0b111111111111
 	zeroByte rune = 0x30
-	oneByte       = 0x31
+	oneByte  rune = 0x31
 )
 
-func task1(input []string) uint {
+func task1(input []uint, width int) uint {
+	var gamma uint
+	var mask uint = (1 << width) - 1
+
+	for i := width - 1; i >= 0; i-- {
+		ones := 0
+		zeroes := 0
+
+		var currentCheck uint = 1 << i
+
+		for j, v := range input {
+			if v < currentCheck {
+				zeroes++
+			} else {
+				ones++
+				input[j] -= 1 << i
+			}
+		}
+
+		if ones > zeroes {
+			gamma += 1 << i
+		}
+	}
+
+	return gamma * (^gamma - ^mask)
+}
+
+func task1Strings(input []string) uint {
 	width := len(input[0])
 	vertical := make([]int, width)
+	var mask uint = (1 << width) - 1
 
 	for _, line := range input {
 		for j, char := range line {
