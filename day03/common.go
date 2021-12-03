@@ -7,8 +7,11 @@ import (
 	"strings"
 )
 
-const filename = "day03/input.txt"
-const smolFilename = "day03/smallinput.txt"
+const (
+	filename  = "day03/input.txt"
+	base2     = 2
+	bitSize12 = 12
+)
 
 // getInputs reads the input.txt file and returns them as a slice of strings for each row.
 func getInputs(parsed []string) ([]uint, int) {
@@ -16,7 +19,7 @@ func getInputs(parsed []string) ([]uint, int) {
 	width := len(parsed[0])
 
 	for i, p := range parsed {
-		v, err := strconv.ParseUint(p, 2, 12)
+		v, err := strconv.ParseUint(p, base2, bitSize12)
 		if err != nil {
 			log.Fatalf("failed to parse string [%s] into uint: %s", p, err)
 		}

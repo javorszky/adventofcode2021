@@ -10,7 +10,7 @@ func Tasks() {
 	output := task1(input, width)
 
 	fmt.Printf("Task 1: The power consumption of the submarine is: %d\n", output)
-	//
-	//output2 := task2(input)
-	//fmt.Printf("Task 1: The life support rating of the submarine is: %d\n", output2)
+
+	output2 := task2(input, width)
+	fmt.Printf("Task 2: The life support rating of the submarine is: %d\n", output2)
 }

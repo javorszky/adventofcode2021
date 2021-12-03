@@ -11,6 +11,7 @@ const (
 
 func task1(input []uint, width int) uint {
 	var gamma uint
+
 	var mask uint = (1 << width) - 1
 
 	for i := width - 1; i >= 0; i-- {
@@ -39,6 +40,7 @@ func task1(input []uint, width int) uint {
 func task1Strings(input []string) uint {
 	width := len(input[0])
 	vertical := make([]int, width)
+
 	var mask uint = (1 << width) - 1
 
 	for _, line := range input {
