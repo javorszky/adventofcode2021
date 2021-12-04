@@ -36,7 +36,7 @@ func parseDraw(input string) []int {
 	for i, s := range stringNumbers {
 		n, err := strconv.Atoi(s)
 		if err != nil {
-			log.Fatalf("parseDraw: failed to strconv.Atoi the following string: [%s]: %s", s, err)
+			log.Fatalf("parseDraw: failed to strconv.Atoi the following string: [%s] at index [%d]: %s", s, i, err)
 		}
 
 		drawNumbers[i] = n
@@ -52,13 +52,14 @@ func parseBingoBoards(input []string) []bingoBoard {
 	for _, s := range input {
 		removedNewLines := strings.ReplaceAll(s, "\n", " ")
 		removedMultipleSpaces := strings.ReplaceAll(removedNewLines, "  ", " ")
-		sliceOfStringNumbers := strings.Split(removedMultipleSpaces, " ")
+		removedTrimmedEnds := strings.Trim(removedMultipleSpaces, " ")
+		sliceOfStringNumbers := strings.Split(removedTrimmedEnds, " ")
 		sliceOfNumbers := make([]int, len(sliceOfStringNumbers))
 
-		for i, s := range sliceOfStringNumbers {
-			n, err := strconv.Atoi(s)
+		for i, num := range sliceOfStringNumbers {
+			n, err := strconv.Atoi(num)
 			if err != nil {
-				log.Fatalf("parseBingoBoards: strconv.Atoi failed to parse string [%s]: %s", s, err)
+				log.Fatalf("parseBingoBoards: strconv.Atoi failed to parse string [%s] at index [%d]: %s", num, i, err)
 			}
 
 			sliceOfNumbers[i] = n

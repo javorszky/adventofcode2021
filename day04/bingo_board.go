@@ -36,3 +36,8 @@ func (b bingoBoard) Unmarked() int {
 
 	return sum
 }
+
+// State returns the current state of the board.
+func (b bingoBoard) State() uint {
+	return b.state
+}

@@ -1,13 +1,15 @@
 package day04
 
-import "errors"
+import (
+	"errors"
+)
 
 func task1(draws []int, boards []bingoBoard) (int, error) {
 	for _, i := range draws {
-		for _, board := range boards {
-			win := board.Mark(i)
+		for j := range boards {
+			win := boards[j].Mark(i)
 			if win {
-				return board.Unmarked() * i, nil
+				return boards[j].Unmarked() * i, nil
 			}
 		}
 	}
