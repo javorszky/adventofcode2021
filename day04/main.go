@@ -17,8 +17,10 @@ func Tasks() {
 
 	fmt.Printf("Task 1: The product of unmarked values times winning value is %d\n", output)
 
-	output2 := task2(fileData)
-	fmt.Printf("Task 1: The result is something: %v\n", output2)
+	output2, err := task2(fileData)
+	if err != nil {
+		log.Fatalf("Task 2 error :( :%s", err)
+	}
 
-	fmt.Println("That's all folks!")
+	fmt.Printf("Task 2: The product of unmarked values times winning value for the last board is: %d\n", output2)
 }
