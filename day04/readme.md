@@ -67,3 +67,17 @@ where the win flag is set to true.
 Once the counter reaches 0, that's when the last board is completed, and do the calculation again.
 
 Le fin.
+
+## Benchmarks
+
+```shell
+❯ go test -bench=.
+goos: darwin
+goarch: amd64
+pkg: github.com/javorszky/adventofcode2021/day04
+cpu: Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
+Benchmark_Task1-16    	    2569	    440103 ns/op
+Benchmark_Task2-16    	    2134	    546266 ns/op
+PASS
+ok  	github.com/javorszky/adventofcode2021/day04	2.639s
+```
