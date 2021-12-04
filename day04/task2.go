@@ -1,5 +1,5 @@
 package day04
 
-func task2(draws []int, boards []bingoBoard) interface{} {
-	return draws
+func task2(fileData []string) interface{} {
+	return 0
 }

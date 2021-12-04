@@ -4,7 +4,8 @@ import (
 	"errors"
 )
 
-func task1(draws []int, boards []bingoBoard) (int, error) {
+func task1(fileData []string) (int, error) {
+	draws, boards := getParsed(fileData)
 	for _, i := range draws {
 		for j := range boards {
 			win := boards[j].Mark(i)

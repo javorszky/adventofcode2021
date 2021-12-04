@@ -22,9 +22,7 @@ func getInputs(fn string) []string {
 	return strings.Split(strings.TrimRight(string(data), "\n"), "\n\n")
 }
 
-func getParsed(fn string) ([]int, []bingoBoard) {
-	inputs := getInputs(fn)
-
+func getParsed(inputs []string) ([]int, []bingoBoard) {
 	return parseDraw(inputs[0]), parseBingoBoards(inputs[1:])
 }
 
