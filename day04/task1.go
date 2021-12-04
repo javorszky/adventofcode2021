@@ -1,7 +1,18 @@
 package day04
 
-func task1(draws []int, boards []bingoBoard) interface{} {
-	return draws
+import "errors"
+
+func task1(draws []int, boards []bingoBoard) (int, error) {
+	for _, i := range draws {
+		for _, board := range boards {
+			win := board.Mark(i)
+			if win {
+				return board.Unmarked() * i, nil
+			}
+		}
+	}
+
+	return 0, errors.New("none of the boards won :(")
 }
 
 var winConditions = []uint{

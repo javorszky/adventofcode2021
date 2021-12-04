@@ -6,6 +6,7 @@ type bingoBoard struct {
 	state  uint
 }
 
+// Mark will mark an int in a square if it's there, silently does nothing if it's not on the board.
 func (b *bingoBoard) Mark(n int) bool {
 	present, ok := b.pieces[n]
 	if !ok {
@@ -21,4 +22,17 @@ func (b *bingoBoard) Mark(n int) bool {
 	}
 
 	return false
+}
+
+// Unmarked returns the sum of all unmarked numbers in the bingo square.
+func (b bingoBoard) Unmarked() int {
+	sum := 0
+
+	for num, mask := range b.pieces {
+		if b.state&mask == 0 {
+			sum += num
+		}
+	}
+
+	return sum
 }
