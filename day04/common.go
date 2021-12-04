@@ -2,6 +2,8 @@ package day04
 
 import (
 	"io/ioutil"
+	"log"
+	"strconv"
 	"strings"
 )
 
@@ -20,15 +22,27 @@ func getInputs(fn string) []string {
 	return strings.Split(strings.TrimRight(string(data), "\n"), "\n\n")
 }
 
-func getParsed(fn string) ([]string, []bingoBoard) {
+func getParsed(fn string) ([]int, []bingoBoard) {
 	inputs := getInputs(fn)
 
 	return parseDraw(inputs[0]), parseBingoBoards(inputs[1:])
 }
 
 // parseDraw takes the first string in the parsed input, and that's going to be the drawn numbers.
-func parseDraw(input string) []string {
-	return strings.Split(input, ",")
+func parseDraw(input string) []int {
+	stringNumbers := strings.Split(input, ",")
+	drawNumbers := make([]int, len(stringNumbers))
+
+	for i, s := range stringNumbers {
+		n, err := strconv.Atoi(s)
+		if err != nil {
+			log.Fatalf("parseDraw: failed to strconv.Atoi the following string: [%s]: %s", s, err)
+		}
+
+		drawNumbers[i] = n
+	}
+
+	return drawNumbers
 }
 
 // parseBingoBoards takes the rest of the strings, parses the bingo boards from them.
@@ -38,9 +52,19 @@ func parseBingoBoards(input []string) []bingoBoard {
 	for _, s := range input {
 		removedNewLines := strings.ReplaceAll(s, "\n", " ")
 		removedMultipleSpaces := strings.ReplaceAll(removedNewLines, "  ", " ")
-		sliceOfNumbers := strings.Split(removedMultipleSpaces, " ")
+		sliceOfStringNumbers := strings.Split(removedMultipleSpaces, " ")
+		sliceOfNumbers := make([]int, len(sliceOfStringNumbers))
 
-		pieces := make(map[string]uint)
+		for i, s := range sliceOfStringNumbers {
+			n, err := strconv.Atoi(s)
+			if err != nil {
+				log.Fatalf("parseBingoBoards: strconv.Atoi failed to parse string [%s]: %s", s, err)
+			}
+
+			sliceOfNumbers[i] = n
+		}
+
+		pieces := make(map[int]uint)
 
 		var start uint = 0b1000000000000000000000000
 
