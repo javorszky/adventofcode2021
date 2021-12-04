@@ -4,6 +4,7 @@ package day04
 type bingoBoard struct {
 	pieces map[int]uint
 	state  uint
+	won    bool
 }
 
 // Mark will mark an int in a square if it's there, silently does nothing if it's not on the board.
@@ -17,6 +18,8 @@ func (b *bingoBoard) Mark(n int) bool {
 
 	for _, cond := range winConditions {
 		if b.state&cond == cond {
+			b.won = true
+
 			return true
 		}
 	}
@@ -40,4 +43,9 @@ func (b bingoBoard) Unmarked() int {
 // State returns the current state of the board.
 func (b bingoBoard) State() uint {
 	return b.state
+}
+
+// Won returns whether the board is done.
+func (b bingoBoard) Won() bool {
+	return b.won
 }
