@@ -19,6 +19,10 @@ func Benchmark_Task1s(b *testing.B) {
 			name: "task1BoardPlay",
 			fn:   task1BoardPlay,
 		},
+		{
+			name: "task1BoardPlayConcurrent",
+			fn:   task1BoardPlayConcurrent,
+		},
 	}
 	for _, bm := range benchmarks {
 		fileData := benchInput(b, "input.txt")
@@ -44,7 +48,7 @@ func Test_task1BoardPlay(t *testing.T) {
 		wantErr  assert.ErrorAssertionFunc
 	}{
 		{
-			name:     "verifies that task1BoardPlay and task1 come to the same result",
+			name:     "verifies that task1BoardPlay, task1BoardPlayConcurrent and task1 come to the same result",
 			filename: "input.txt",
 			want:     33348,
 			wantErr:  assert.NoError,
@@ -57,11 +61,15 @@ func Test_task1BoardPlay(t *testing.T) {
 			bpGot, bpErr := task1BoardPlay(benchInput(t, tt.filename))
 			tt.wantErr(t, bpErr)
 
+			bpGotCC, bpErrCC := task1BoardPlayConcurrent(benchInput(t, tt.filename))
+			tt.wantErr(t, bpErrCC)
+
 			t1Got, t1Err := task1(fileData)
 			tt.wantErr(t, t1Err)
 
 			assert.Equal(t, tt.want, bpGot)
 			assert.Equal(t, bpGot, t1Got)
+			assert.Equal(t, bpGot, bpGotCC)
 		})
 	}
 }
