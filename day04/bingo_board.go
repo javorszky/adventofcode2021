@@ -1,9 +1,12 @@
 package day04
 
+import "errors"
+
 // bingoBoard is a custom representation of a data structure that holds 25 numbers and a way to update them.
 type bingoBoard struct {
 	pieces map[int]uint
 	state  uint
+	idx    int
 	won    bool
 }
 
@@ -48,4 +51,19 @@ func (b bingoBoard) State() uint {
 // Won returns whether the board is done.
 func (b bingoBoard) Won() bool {
 	return b.won
+}
+
+// Play takes a number of moves and plays that against the current board. Returns the index, sum of unmarked, and an
+// error.
+func (b *bingoBoard) Play(moves []int) (int, int, error) {
+	for i, n := range moves {
+		b.idx = i
+
+		win := b.Mark(n)
+		if win {
+			return b.idx, b.Unmarked(), nil
+		}
+	}
+
+	return 0, 0, errors.New("did not finish board :(")
 }
