@@ -55,6 +55,15 @@ won.
 We then loop through all the values on the board, do a bitwise OR between the mask and the current state, and if the
 result is 0 (ie unmarked), we add that value to the rollup, and multiply by the current draw number, and early exit.
 
+### Alternative solutions
+
+#### Board plays on its own given data
+Instead of looping through each draw, and marking the draw for each board every time, we pass the entire draw data to each board, and let them loop through themselves, returning the index at which the win happened, the sum of their unmarked fields, and an error if the board did not finish.
+
+#### Board plays on its own, but concurrently!
+
+Because now each individual board is independent of the others, their plays can be done independently too, which means WaitGroup stuff! Same as above, except go func after a wg.Add(1).
+
 ## Task 2
 
 Same as the first one, except returning early at the first win, we start with a counter for wins needed, and each win
@@ -69,14 +78,18 @@ Le fin.
 
 ## Benchmarks
 
+Interestingly the board plays itself, and its concurrent version are not faster than the first, original solution.
+
 ```shell
 ❯ go test -bench=.
 goos: darwin
 goarch: amd64
 pkg: github.com/javorszky/adventofcode2021/day04
 cpu: Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
-Benchmark_Task1-16    	    2569	    440103 ns/op
-Benchmark_Task2-16    	    2134	    546266 ns/op
+Benchmark_Task1s/task1-16                            	    3945	    275352 ns/op
+Benchmark_Task1s/task1BoardPlay-16                   	    3205	    351855 ns/op
+Benchmark_Task1s/task1BoardPlayConcurrent-16         	    3583	    334875 ns/op
+Benchmark_Task2-16                                   	    2914	    350823 ns/op
 PASS
-ok  	github.com/javorszky/adventofcode2021/day04	2.639s
+ok  	github.com/javorszky/adventofcode2021/day04	5.645s
 ```
