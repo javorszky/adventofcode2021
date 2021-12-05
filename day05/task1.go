@@ -1,9 +1,5 @@
 package day05
 
-import (
-	"log"
-)
-
 const bitSizeForCoordinates = 10
 
 func task1(input []string) int {
