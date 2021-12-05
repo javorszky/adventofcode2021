@@ -12,6 +12,10 @@ func Benchmark_Tasks(b *testing.B) {
 			fn:   task1,
 		},
 		{
+			name: "task 1 full input string split",
+			fn:   task2TupleStrings,
+		},
+		{
 			name: "task 1 full input tuple reverse",
 			fn:   task1TuplesReverse,
 		},
@@ -22,6 +26,18 @@ func Benchmark_Tasks(b *testing.B) {
 		{
 			name: "task 2 using full input",
 			fn:   task2,
+		},
+		{
+			name: "task 2 full input string split",
+			fn:   task2TupleStrings,
+		},
+		{
+			name: "task 2 full input reverse",
+			fn:   task2TupleReverse,
+		},
+		{
+			name: "task 2 full input slicy",
+			fn:   task2Slicy,
 		},
 	}
 	for _, bm := range benchmarks {
