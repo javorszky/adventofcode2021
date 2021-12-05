@@ -47,7 +47,19 @@ func Test_task2(t *testing.T) {
 		{
 			name:  "task 2 slicy example input",
 			input: input,
-			fn:    task2Slicy,
+			fn:    task2SlicyReversed,
+			want:  12,
+		},
+		{
+			name:  "task 2 slicy example input",
+			input: input,
+			fn:    task2SlicyRegex,
+			want:  12,
+		},
+		{
+			name:  "task 2 slicy example input",
+			input: input,
+			fn:    task2SlicyStrings,
 			want:  12,
 		},
 	}

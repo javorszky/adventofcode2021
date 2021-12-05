@@ -32,8 +32,53 @@ func task1TuplesReverse(input []string) int {
 	return twos
 }
 
-func task1Slicy(input []string) int {
+func task1TuplesStrings(input []string) int {
+	tuples := getTuplesString(input)
+	euclideanTuples := filterToEuclideanLines(tuples)
+	lines := mapLinesTuples(euclideanTuples)
+	twos := 0
+
+	for _, v := range lines {
+		if v > 1 {
+			twos++
+		}
+	}
+
+	return twos
+}
+
+func task1SlicyReverse(input []string) int {
 	coords := getCoordinateSliceReverse(input)
+	euclideanCoords := filterToEuclideanLinesSlice(coords)
+	lines := mapLinesSlice(euclideanCoords)
+	twos := 0
+
+	for _, v := range lines {
+		if v > 1 {
+			twos++
+		}
+	}
+
+	return twos
+}
+
+func task1SlicyRegex(input []string) int {
+	coords := getCoordinateSliceRegex(input)
+	euclideanCoords := filterToEuclideanLinesSlice(coords)
+	lines := mapLinesSlice(euclideanCoords)
+	twos := 0
+
+	for _, v := range lines {
+		if v > 1 {
+			twos++
+		}
+	}
+
+	return twos
+}
+
+func task1SlicyStrings(input []string) int {
+	coords := getCoordinateSliceStrings(input)
 	euclideanCoords := filterToEuclideanLinesSlice(coords)
 	lines := mapLinesSlice(euclideanCoords)
 	twos := 0

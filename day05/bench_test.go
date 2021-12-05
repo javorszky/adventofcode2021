@@ -8,40 +8,58 @@ func Benchmark_Tasks(b *testing.B) {
 		fn   func([]string) int
 	}{
 		{
-			name: "task 1 using full input",
+			name: "task 1 tuple regex",
 			fn:   task1,
 		},
 		{
-			name: "task 1 full input string split",
-			fn:   task2TupleStrings,
+			name: "task 1 tuple string split",
+			fn:   task1TuplesStrings,
 		},
 		{
-			name: "task 1 full input tuple reverse",
+			name: "task 1 tuple reverse",
 			fn:   task1TuplesReverse,
 		},
 		{
-			name: "task 1 slicy using full input",
-			fn:   task1Slicy,
+			name: "task 1 slicy regex",
+			fn:   task1SlicyRegex,
 		},
 		{
-			name: "task 2 using full input",
+			name: "task 1 slicy string split",
+			fn:   task1SlicyStrings,
+		},
+		{
+			name: "task 1 slicy reverse",
+			fn:   task1SlicyReverse,
+		},
+		{
+			name: "task 2 tuple regex",
 			fn:   task2,
 		},
 		{
-			name: "task 2 full input string split",
+			name: "task 2 tuple string split",
 			fn:   task2TupleStrings,
 		},
 		{
-			name: "task 2 full input reverse",
+			name: "task 2 tuple reverse",
 			fn:   task2TupleReverse,
 		},
 		{
-			name: "task 2 full input slicy",
-			fn:   task2Slicy,
+			name: "task 2 slicy regex",
+			fn:   task2SlicyRegex,
+		},
+		{
+			name: "task 2 slicy string split",
+			fn:   task2SlicyStrings,
+		},
+		{
+			name: "task 2 slicy reverse",
+			fn:   task2SlicyReversed,
 		},
 	}
+
+	inputs := benchInput(b, "input.txt")
+
 	for _, bm := range benchmarks {
-		inputs := benchInput(b, "input.txt")
 		b.Run(bm.name, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				_ = bm.fn(inputs)
@@ -60,16 +78,48 @@ func Benchmark_GetTuples(b *testing.B) {
 			fn:   getTuples,
 		},
 		{
-			name: "getTuples strings.Split",
+			name: "getTuples string split",
 			fn:   getTuplesString,
 		},
 		{
-			name: "gettuples reversed",
+			name: "getTuples reverse",
 			fn:   getTuplesReversed,
 		},
 	}
+
+	inputs := benchInput(b, "input.txt")
+
 	for _, bm := range benchmarks {
-		inputs := benchInput(b, "input.txt")
+		b.Run(bm.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				_ = bm.fn(inputs)
+			}
+		})
+	}
+}
+
+func Benchmark_GetCoords(b *testing.B) {
+	benchmarks := []struct {
+		name string
+		fn   func([]string) []uint
+	}{
+		{
+			name: "getCoords regex",
+			fn:   getCoordinateSliceRegex,
+		},
+		{
+			name: "getCoords string split",
+			fn:   getCoordinateSliceStrings,
+		},
+		{
+			name: "getCoords reverse",
+			fn:   getCoordinateSliceReverse,
+		},
+	}
+
+	inputs := benchInput(b, "input.txt")
+
+	for _, bm := range benchmarks {
 		b.Run(bm.name, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				_ = bm.fn(inputs)

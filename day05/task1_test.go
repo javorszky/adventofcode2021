@@ -144,7 +144,7 @@ func Test_task1(t *testing.T) {
 		{
 			name:  "task 1 slicy with example input works correcly",
 			input: input,
-			fn:    task1Slicy,
+			fn:    task1SlicyReverse,
 			want:  5,
 		},
 	}

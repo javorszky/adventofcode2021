@@ -233,10 +233,11 @@ func Test_getTuples(t *testing.T) {
 	}
 }
 
-func Test_getCoordinateSliceReverse(t *testing.T) {
+func Test_getCoordinates(t *testing.T) {
 	tests := []struct {
 		name     string
 		fileData []string
+		fn       func([]string) []uint
 		want     []uint
 	}{
 		{
@@ -263,6 +264,8 @@ func Test_getCoordinateSliceReverse(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equalf(t, tt.want, getCoordinateSliceReverse(tt.fileData), "getCoordinateSliceReverse(%v)", tt.fileData)
+			assert.Equalf(t, tt.want, getCoordinateSliceRegex(tt.fileData), "getCoordinateSliceRegex(%v)", tt.fileData)
+			assert.Equalf(t, tt.want, getCoordinateSliceStrings(tt.fileData), "getCoordinateSliceStrings(%v)", tt.fileData)
 		})
 	}
 }

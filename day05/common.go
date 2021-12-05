@@ -139,6 +139,50 @@ func getTuplesString(fileData []string) []tuple {
 	return tuples
 }
 
+func getCoordinateSliceRegex(fileData []string) []uint {
+	coords := make([]uint, len(fileData)*4)
+
+	for i, line := range fileData {
+		matches := extractData.FindStringSubmatch(line)
+		if len(matches) != lineMatchLength {
+			log.Fatalf("regex extracting data from line [%s] at index [%d] failed. Matches: %v, len should be 5, it's %d",
+				line,
+				i,
+				matches,
+				len(matches))
+		}
+
+		reInts := convertToUints(matches[1:])
+
+		coords[i*4] = reInts[0]
+		coords[i*4+1] = reInts[1]
+		coords[i*4+2] = reInts[2]
+		coords[i*4+3] = reInts[3]
+	}
+
+	return coords
+}
+
+func getCoordinateSliceStrings(fileData []string) []uint {
+	coords := make([]uint, len(fileData)*4)
+
+	for i, line := range fileData {
+		pairs := strings.Split(line, " -> ")
+		t1 := strings.Split(pairs[0], ",")
+		t2 := strings.Split(pairs[1], ",")
+
+		t1Uints := convertToUints(t1)
+		t2Uints := convertToUints(t2)
+
+		coords[i*4] = t1Uints[0]
+		coords[i*4+1] = t1Uints[1]
+		coords[i*4+2] = t2Uints[0]
+		coords[i*4+3] = t2Uints[1]
+	}
+
+	return coords
+}
+
 func getCoordinateSliceReverse(fileData []string) []uint {
 	coords := make([]uint, len(fileData)*4)
 	power := 1
