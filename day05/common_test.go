@@ -379,6 +379,7 @@ func Test_mapLinesSlice(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equalf(t, tt.want, mapLinesSlice(tt.coords), "mapLinesSlice(%v)", tt.coords)
+			assert.Equalf(t, tt.want, mapLinesSliceConcurrent(tt.coords), "mapLinesSliceConcurrent(%v)", tt.coords)
 		})
 	}
 }

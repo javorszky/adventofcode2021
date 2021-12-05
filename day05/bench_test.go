@@ -32,6 +32,10 @@ func Benchmark_Tasks(b *testing.B) {
 			fn:   task1SlicyReverse,
 		},
 		{
+			name: "task 1 concurrent slicy reverse",
+			fn:   task1SlicyReverseConcurrent,
+		},
+		{
 			name: "task 2 tuple regex",
 			fn:   task2,
 		},
@@ -128,8 +132,68 @@ func Benchmark_GetCoords(b *testing.B) {
 	}
 }
 
+func Benchmark_MapLinesTuples(b *testing.B) {
+	benchmarks := []struct {
+		name string
+		fn   func([]tuple) map[uint]uint
+	}{
+		{
+			name: "mapLinesTuples",
+			fn:   mapLinesTuples,
+		},
+	}
+
+	ts := benchTuples(b, benchInput(b, "input.txt"))
+
+	for _, bm := range benchmarks {
+		b.Run(bm.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				_ = bm.fn(ts)
+			}
+		})
+	}
+}
+
+func Benchmark_MapLinesCoords(b *testing.B) {
+	benchmarks := []struct {
+		name string
+		fn   func([]uint) map[uint]uint
+	}{
+		{
+			name: "mapLinesCoords",
+			fn:   mapLinesSlice,
+		},
+		{
+			name: "mapLinesCoordsConcurrent",
+			fn:   mapLinesSliceConcurrent,
+		},
+	}
+
+	coords := benchCoords(b, benchInput(b, "input.txt"))
+
+	for _, bm := range benchmarks {
+		b.Run(bm.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				bm.fn(coords)
+			}
+		})
+	}
+}
+
 func benchInput(b testing.TB, filename string) []string {
 	b.Helper()
 
 	return getInputs(filename)
+}
+
+func benchTuples(b testing.TB, input []string) []tuple {
+	b.Helper()
+
+	return getTuples(input)
+}
+
+func benchCoords(b testing.TB, input []string) []uint {
+	b.Helper()
+
+	return getCoordinateSliceRegex(input)
 }
