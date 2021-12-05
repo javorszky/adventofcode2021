@@ -166,3 +166,69 @@ func Test_mapLines(t *testing.T) {
 		})
 	}
 }
+
+func Test_getTuples(t *testing.T) {
+	fileData := []string{
+		"242,601 -> 242,18",
+		"938,357 -> 938,128",
+		"920,574 -> 750,574",
+		"804,978 -> 804,813",
+		"955,932 -> 68,45",
+		"232,604 -> 232,843",
+	}
+
+	ts := []tuple{
+		{
+			{242, 601},
+			{242, 18},
+		},
+		{
+			{938, 357},
+			{938, 128},
+		},
+		{
+			{920, 574},
+			{750, 574},
+		},
+		{
+			{804, 978},
+
+			{804, 813},
+		},
+		{
+			{955, 932},
+			{68, 45},
+		},
+		{
+			{232, 604},
+			{232, 843},
+		},
+	}
+
+	tests := []struct {
+		name string
+		fn   func([]string) []tuple
+		want []tuple
+	}{
+		{
+			name: "gettuples works with regex",
+			fn:   getTuples,
+			want: ts,
+		},
+		{
+			name: "gettuples works with string split",
+			fn:   getTuplesString,
+			want: ts,
+		},
+		{
+			name: "gettuples works with reversed char by char parsing",
+			fn:   getTuplesReversed,
+			want: ts,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, getTuples(fileData), "getTuples(%v)", fileData)
+		})
+	}
+}

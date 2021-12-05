@@ -56,6 +56,77 @@ func getTuples(fileData []string) []tuple {
 	return tuples
 }
 
+func getTuplesReversed(fileData []string) []tuple {
+	tuples := make([]tuple, len(fileData))
+	lineArray := [4]uint{}
+	power := uint(1)
+	n := 0
+	usedNonNumber := false
+	acc := uint(0)
+
+	for j, line := range fileData {
+		power = 1
+		n = 0
+		usedNonNumber = false
+		acc = 0
+
+		for i := len(line) - 1; i >= 0; i-- {
+			switch line[i] {
+			case 0x20, 0x2c, 0x2d, 0x3e:
+				if usedNonNumber {
+					continue
+				}
+
+				usedNonNumber = true
+				lineArray[n] = acc
+				acc = 0
+				power = 1
+				n++
+			default:
+				usedNonNumber = false
+				acc += uint(line[i]) * power
+				power = power * 10
+			}
+
+			lineArray[n] = acc
+		}
+
+		tuples[j] = tuple{
+
+			{lineArray[3], lineArray[2]},
+			{lineArray[1], lineArray[0]},
+		}
+	}
+
+	return tuples
+}
+
+func getTuplesString(fileData []string) []tuple {
+	tuples := make([]tuple, len(fileData))
+
+	for i, line := range fileData {
+		pairs := strings.Split(line, " -> ")
+		t1 := strings.Split(pairs[0], ",")
+		t2 := strings.Split(pairs[1], ",")
+
+		t1Uints := convertToUints(t1)
+		t2Uints := convertToUints(t2)
+
+		tuples[i] = tuple{
+			{
+				t1Uints[0],
+				t1Uints[1],
+			},
+			{
+				t2Uints[0],
+				t2Uints[1],
+			},
+		}
+	}
+
+	return tuples
+}
+
 func convertToUints(matches []string) []uint {
 	reInts := make([]uint, len(matches))
 
