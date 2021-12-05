@@ -105,31 +105,31 @@ func mapLines(tuples []tuple) map[uint]uint {
 				m[(i<<bitSizeForCoordinates)|y]++
 			}
 		case t[0][0] < t[1][0] && t[0][1] < t[1][1]:
-			// top left to bottom right
+			// top left to bottom right \
 			for i := uint(0); i <= (t[1][0] - t[0][0]); i++ {
 				x := t[0][0] + i
 				y := t[0][1] + i
 				m[x<<10|y]++
 			}
 		case t[0][0] < t[1][0] && t[0][1] > t[1][1]:
-			// bottom left to top right
+			// bottom left to top right /
 			for i := uint(0); i <= (t[1][0] - t[0][0]); i++ {
 				x := t[0][0] + i
 				y := t[0][1] - i
 				m[x<<10|y]++
 			}
 		case t[0][0] > t[1][0] && t[0][1] < t[1][1]:
-			// top right to bottom left
-			for i := uint(0); i <= (t[1][0] - t[0][0]); i++ {
+			// top right to bottom left /
+			for i := uint(0); i <= (t[0][0] - t[1][0]); i++ {
 				x := t[0][0] - i
 				y := t[0][1] + i
 				m[x<<10|y]++
 			}
 		case t[0][0] > t[1][0] && t[0][1] > t[1][1]:
-			// bottom right to top left
-			for i := uint(0); i <= (t[1][0] - t[0][0]); i++ {
-				x := t[0][0] - i
-				y := t[0][1] - i
+			// bottom right to top left \
+			for i := uint(0); i <= (t[0][0] - t[1][0]); i++ {
+				x := t[1][0] + i
+				y := t[1][1] + i
 				m[x<<10|y]++
 			}
 		default:
