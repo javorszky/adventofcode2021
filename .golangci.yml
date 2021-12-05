@@ -149,16 +149,6 @@ linters-settings:
     # by default
     extra-rules: true
 
-
-  gomnd:
-    settings:
-      mnd:
-        # the list of enabled checks, see https://github.com/tommy-muehle/go-mnd/#checks for description.
-        checks: argument,case,condition,operation,return,assign
-        # ignored-numbers: 1000
-        # ignored-files: magic_.*.go
-        # ignored-functions: math.*
-
   gosimple:
     # Select the Go version to target. The default is '1.13'.
     go: "1.17.3"
@@ -279,7 +269,6 @@ linters:
     - goconst
     - godot
     - gofmt
-    - gomnd
     - lll
     - nakedret
     - nlreturn
