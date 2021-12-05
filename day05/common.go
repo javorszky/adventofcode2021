@@ -13,6 +13,18 @@ const (
 )
 
 var extractData = regexp.MustCompile(`^(\d+),(\d+) -> (\d+),(\d+)$`)
+var byteToInt = map[uint8]int{
+	0x30: 0,
+	0x31: 1,
+	0x32: 2,
+	0x33: 3,
+	0x34: 4,
+	0x35: 5,
+	0x36: 6,
+	0x37: 7,
+	0x38: 8,
+	0x39: 9,
+}
 
 type tuple [2][2]uint
 
@@ -59,10 +71,10 @@ func getTuples(fileData []string) []tuple {
 func getTuplesReversed(fileData []string) []tuple {
 	tuples := make([]tuple, len(fileData))
 	lineArray := [4]uint{}
-	power := uint(1)
+	power := 1
 	n := 0
 	usedNonNumber := false
-	acc := uint(0)
+	acc := 0
 
 	for j, line := range fileData {
 		power = 1
@@ -78,21 +90,21 @@ func getTuplesReversed(fileData []string) []tuple {
 				}
 
 				usedNonNumber = true
-				lineArray[n] = acc
+				lineArray[n] = uint(acc)
 				acc = 0
 				power = 1
 				n++
 			default:
 				usedNonNumber = false
-				acc += uint(line[i]) * power
+				acc += byteToInt[line[i]] * power
+
 				power = power * 10
 			}
-
-			lineArray[n] = acc
 		}
 
-		tuples[j] = tuple{
+		lineArray[n] = uint(acc)
 
+		tuples[j] = tuple{
 			{lineArray[3], lineArray[2]},
 			{lineArray[1], lineArray[0]},
 		}
@@ -125,6 +137,44 @@ func getTuplesString(fileData []string) []tuple {
 	}
 
 	return tuples
+}
+
+func getCoordinateSliceReverse(fileData []string) []uint {
+	coords := make([]uint, len(fileData)*4)
+	power := 1
+	n := 3
+	usedNonNumber := false
+	acc := 0
+
+	for j, line := range fileData {
+		power = 1
+		n = 3
+		usedNonNumber = false
+		acc = 0
+
+		for i := len(line) - 1; i >= 0; i-- {
+			switch line[i] {
+			case 0x20, 0x2c, 0x2d, 0x3e:
+				if usedNonNumber {
+					continue
+				}
+
+				usedNonNumber = true
+				coords[j*4+n] = uint(acc)
+				acc = 0
+				power = 1
+				n--
+			default:
+				usedNonNumber = false
+				acc += byteToInt[line[i]] * power
+				power = power * 10
+			}
+		}
+
+		coords[j*4+n] = uint(acc)
+	}
+
+	return coords
 }
 
 func convertToUints(matches []string) []uint {

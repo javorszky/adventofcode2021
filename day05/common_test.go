@@ -228,7 +228,41 @@ func Test_getTuples(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, getTuples(fileData), "getTuples(%v)", fileData)
+			assert.Equalf(t, tt.want, tt.fn(fileData), "getTuples(%v)", fileData)
+		})
+	}
+}
+
+func Test_getCoordinateSliceReverse(t *testing.T) {
+	tests := []struct {
+		name     string
+		fileData []string
+		want     []uint
+	}{
+		{
+			name: "parses one line correctly",
+			fileData: []string{
+				"242,601 -> 242,18",
+			},
+			want: []uint{242, 601, 242, 18},
+		},
+		{
+			name: "parses three lines correctly",
+			fileData: []string{
+				"242,601 -> 242,18",
+				"938,357 -> 938,128",
+				"920,574 -> 750,574",
+			},
+			want: []uint{
+				242, 601, 242, 18,
+				938, 357, 938, 128,
+				920, 574, 750, 574,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, getCoordinateSliceReverse(tt.fileData), "getCoordinateSliceReverse(%v)", tt.fileData)
 		})
 	}
 }
