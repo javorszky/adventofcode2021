@@ -142,7 +142,7 @@ func convertToUints(matches []string) []uint {
 	return reInts
 }
 
-func mapLines(tuples []tuple) map[uint]uint {
+func mapLinesTuples(tuples []tuple) map[uint]uint {
 	m := make(map[uint]uint)
 
 	for _, t := range tuples {

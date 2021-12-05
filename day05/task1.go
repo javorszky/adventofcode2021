@@ -5,7 +5,7 @@ const bitSizeForCoordinates = 10
 func task1(input []string) int {
 	tuples := getTuples(input)
 	euclideanTuples := filterToEuclideanLines(tuples)
-	lines := mapLines(euclideanTuples)
+	lines := mapLinesTuples(euclideanTuples)
 	twos := 0
 
 	for _, v := range lines {

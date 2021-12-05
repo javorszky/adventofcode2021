@@ -162,7 +162,7 @@ func Test_mapLines(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, mapLines(tt.tuples), "mapLines(%v)", tt.tuples)
+			assert.Equalf(t, tt.want, mapLinesTuples(tt.tuples), "mapLinesTuples(%v)", tt.tuples)
 		})
 	}
 }
