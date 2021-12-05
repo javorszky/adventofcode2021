@@ -12,6 +12,14 @@ func Benchmark_Tasks(b *testing.B) {
 			fn:   task1,
 		},
 		{
+			name: "task 1 full input tuple reverse",
+			fn:   task1TuplesReverse,
+		},
+		{
+			name: "task 1 slicy using full input",
+			fn:   task1Slicy,
+		},
+		{
 			name: "task 2 using full input",
 			fn:   task2,
 		},

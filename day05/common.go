@@ -260,3 +260,72 @@ func mapLinesTuples(tuples []tuple) map[uint]uint {
 
 	return m
 }
+
+func mapLinesSlice(coords []uint) map[uint]uint {
+	m := make(map[uint]uint)
+
+	for h := 0; h < len(coords); h += 4 {
+		switch {
+		case coords[h] == coords[h+2] && coords[h+1] < coords[h+3]:
+			// first coördinate is the same and first tuple is smaller
+			x := coords[h] << bitSizeForCoordinates
+
+			for i := coords[h+1]; i <= coords[h+3]; i++ {
+				m[x|i]++
+			}
+		case coords[h] == coords[h+2] && coords[h+1] > coords[h+3]:
+			// first coördinate is the same and second tuple is smaller
+			x := coords[h] << bitSizeForCoordinates
+
+			for i := coords[h+3]; i <= coords[h+1]; i++ {
+				m[x|i]++
+			}
+		case coords[h] < coords[h+2] && coords[h+1] == coords[h+3]:
+			// second coördinate is the same, first tuple is smaller
+			y := coords[h+1]
+
+			for i := coords[h]; i <= coords[h+2]; i++ {
+				m[(i<<bitSizeForCoordinates)|y]++
+			}
+		case coords[h] > coords[h+2] && coords[h+1] == coords[h+3]:
+			// second coördinate is the same, second tuple is smaller
+			y := coords[h+1]
+
+			for i := coords[h+2]; i <= coords[h]; i++ {
+				m[(i<<bitSizeForCoordinates)|y]++
+			}
+		case coords[h] < coords[h+2] && coords[h+1] < coords[h+3]:
+			// top left to bottom right \
+			for i := uint(0); i <= (coords[h+2] - coords[h]); i++ {
+				x := coords[h] + i
+				y := coords[h+1] + i
+				m[x<<10|y]++
+			}
+		case coords[h] < coords[h+2] && coords[h+1] > coords[h+3]:
+			// bottom left to top right /
+			for i := uint(0); i <= (coords[h+2] - coords[h]); i++ {
+				x := coords[h] + i
+				y := coords[h+1] - i
+				m[x<<10|y]++
+			}
+		case coords[h] > coords[h+2] && coords[h+1] < coords[h+3]:
+			// top right to bottom left /
+			for i := uint(0); i <= (coords[h] - coords[h+2]); i++ {
+				x := coords[h] - i
+				y := coords[h+1] + i
+				m[x<<10|y]++
+			}
+		case coords[h] > coords[h+2] && coords[h+1] > coords[h+3]:
+			// bottom right to top left \
+			for i := uint(0); i <= (coords[h] - coords[h+2]); i++ {
+				x := coords[h+2] + i
+				y := coords[h+3] + i
+				m[x<<10|y]++
+			}
+		default:
+			log.Fatalf("well something went wrong, neither the first, nor the second coordinates were equal")
+		}
+	}
+
+	return m
+}

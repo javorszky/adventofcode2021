@@ -17,6 +17,36 @@ func task1(input []string) int {
 	return twos
 }
 
+func task1TuplesReverse(input []string) int {
+	tuples := getTuplesReversed(input)
+	euclideanTuples := filterToEuclideanLines(tuples)
+	lines := mapLinesTuples(euclideanTuples)
+	twos := 0
+
+	for _, v := range lines {
+		if v > 1 {
+			twos++
+		}
+	}
+
+	return twos
+}
+
+func task1Slicy(input []string) int {
+	coords := getCoordinateSliceReverse(input)
+	euclideanCoords := filterToEuclideanLinesSlice(coords)
+	lines := mapLinesSlice(euclideanCoords)
+	twos := 0
+
+	for _, v := range lines {
+		if v > 1 {
+			twos++
+		}
+	}
+
+	return twos
+}
+
 func filterToEuclideanLines(tuples []tuple) []tuple {
 	out := make([]tuple, 0)
 
@@ -26,6 +56,20 @@ func filterToEuclideanLines(tuples []tuple) []tuple {
 		}
 
 		out = append(out, t)
+	}
+
+	return out
+}
+
+func filterToEuclideanLinesSlice(coords []uint) []uint {
+	out := make([]uint, 0)
+
+	for i := 0; i < len(coords); i += 4 {
+		if coords[i] != coords[i+2] && coords[i+1] != coords[i+3] {
+			continue
+		}
+
+		out = append(out, coords[i:i+4]...)
 	}
 
 	return out
