@@ -1,17 +1,24 @@
 package day05
 
 import (
-	"fmt"
 	"log"
 )
 
 const bitSizeForCoordinates = 10
 
-func task1(input []string) interface{} {
+func task1(input []string) int {
 	tuples := getTuples(input)
 	euclideanTuples := filterToEuclideanLines(tuples)
+	lines := mapLines(euclideanTuples)
+	twos := 0
 
-	return fmt.Sprintf("%d - %d\n", len(tuples), len(euclideanTuples))
+	for _, v := range lines {
+		if v > 1 {
+			twos++
+		}
+	}
+
+	return twos
 }
 
 func filterToEuclideanLines(tuples []tuple) []tuple {
