@@ -9,15 +9,16 @@ import (
 )
 
 const (
-	filename        = "dayn/input.txt"
 	lineMatchLength = 5
 )
 
 var extractData = regexp.MustCompile(`^(\d+),(\d+) -> (\d+),(\d+)$`)
 
+type tuple [2][2]uint
+
 // getInputs reads the input.txt file and returns them as a slice of strings for each row.
-func getInputs() []string {
-	data, err := ioutil.ReadFile(filename)
+func getInputs(fn string) []string {
+	data, err := ioutil.ReadFile(fn)
 	if err != nil {
 		panic(err)
 	}
@@ -25,21 +26,22 @@ func getInputs() []string {
 	return strings.Split(strings.TrimRight(string(data), "\n"), "\n")
 }
 
-func getTuples(fileData []string) [][2][2]int {
-	tuples := make([][2][2]int, len(fileData))
+func getTuples(fileData []string) []tuple {
+	tuples := make([]tuple, len(fileData))
 
 	for i, line := range fileData {
 		matches := extractData.FindStringSubmatch(line)
 		if len(matches) != lineMatchLength {
-			log.Fatalf("regex extracting data from line [%s] failed. Matches: %v, len should be 5, it's %d",
+			log.Fatalf("regex extracting data from line [%s] at index [%d] failed. Matches: %v, len should be 5, it's %d",
 				line,
+				i,
 				matches,
 				len(matches))
 		}
 
-		reInts := convertToInts(matches[1:])
+		reInts := convertToUints(matches[1:])
 
-		tuples[i] = [2][2]int{
+		tuples[i] = tuple{
 			{
 				reInts[0],
 				reInts[1],
@@ -54,8 +56,8 @@ func getTuples(fileData []string) [][2][2]int {
 	return tuples
 }
 
-func convertToInts(matches []string) []int {
-	reInts := make([]int, len(matches))
+func convertToUints(matches []string) []uint {
+	reInts := make([]uint, len(matches))
 
 	for i, m := range matches {
 		num, err := strconv.Atoi(m)
@@ -63,7 +65,7 @@ func convertToInts(matches []string) []int {
 			log.Fatalf("converting string [%s] to int: %s", m, err)
 		}
 
-		reInts[i] = num
+		reInts[i] = uint(num)
 	}
 
 	return reInts
