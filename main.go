@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/javorszky/adventofcode2021/day05"
+	"github.com/javorszky/adventofcode2021/day06"
 )
 
 func main() {
@@ -14,5 +14,6 @@ func main() {
 	//day02.Tasks()
 	//day03.Tasks()
 	//day04.Tasks()
-	day05.Tasks()
+	//day05.Tasks()
+	day06.Tasks()
 }

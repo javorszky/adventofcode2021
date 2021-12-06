@@ -1,14 +1,13 @@
 package day06
 
-func task1(input string) interface{} {
-	return input
-}
-
 const (
-	targetDay      = 80
-	defaultCycle   = 7
-	firstCyclePlus = 2
+	targetDay    = 80
+	defaultCycle = 7
 )
+
+func task1(input string) int {
+	return calculateAllSpawns(getSpawnDays(parseFishSplitAtoi(input)), targetDay)
+}
 
 func spawnsOn(day, current, until, cycle int) []int {
 	spawnDays := make([]int, 0)
@@ -18,4 +17,29 @@ func spawnsOn(day, current, until, cycle int) []int {
 	}
 
 	return spawnDays
+}
+
+func getSpawnDays(in []int) []int {
+	out := make([]int, len(in))
+	for i, age := range in {
+		out[i] = age - (defaultCycle + 1)
+	}
+
+	return out
+}
+
+func calculateAllSpawns(in []int, target int) int {
+	if len(in) == 0 {
+		return 0
+	}
+
+	acc := len(in)
+	spawns := make([]int, 0)
+
+	for _, d := range in {
+		newSpawns := spawnsOn(d, 8, target, defaultCycle)
+		spawns = append(spawns, newSpawns...)
+	}
+
+	return acc + calculateAllSpawns(spawns, target)
 }
