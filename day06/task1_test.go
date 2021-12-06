@@ -125,6 +125,12 @@ func Test_calculateAllSpawns(t *testing.T) {
 			days: 80,
 			want: 5934,
 		},
+		//{
+		//	name: "calculates example recursively",
+		//	in:   []int{-5, -4, -5, -7, -6},
+		//	days: 256,
+		//	want: 26984457539,
+		//},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
