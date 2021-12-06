@@ -132,3 +132,10 @@ func Test_calculateAllSpawns(t *testing.T) {
 		})
 	}
 }
+
+func Benchmark_Task1(b *testing.B) {
+	input := benchInput(b, "input.txt")
+	for i := 0; i < b.N; i++ {
+		task1(input)
+	}
+}
