@@ -111,18 +111,35 @@ func Test_calculateAllSpawns(t *testing.T) {
 		name string
 		in   []int
 		days int
+		fn   func([]int, int) int
 		want int
 	}{
 		{
-			name: "calculates example recursively",
-			in:   []int{-5, -4, -5, -7, -6},
+			name: "calculates example recursively 18 days",
+			in:   getSpawnDays([]int{3, 4, 3, 1, 2}),
 			days: 18,
+			fn:   calculateAllSpawns,
 			want: 26,
 		},
 		{
-			name: "calculates example recursively",
-			in:   []int{-5, -4, -5, -7, -6},
+			name: "calculates example recursively 80 days",
+			in:   getSpawnDays([]int{3, 4, 3, 1, 2}),
 			days: 80,
+			fn:   calculateAllSpawns,
+			want: 5934,
+		},
+		{
+			name: "calculates example ticks 18",
+			in:   []int{3, 4, 3, 1, 2},
+			days: 18,
+			fn:   calcState,
+			want: 26,
+		},
+		{
+			name: "calculates example ticks 80",
+			in:   []int{3, 4, 3, 1, 2},
+			days: 80,
+			fn:   calcState,
 			want: 5934,
 		},
 		//{
@@ -134,7 +151,7 @@ func Test_calculateAllSpawns(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, calculateAllSpawns(tt.in, tt.days), "calculateAllSpawns(%v, %v)", tt.in, tt.days)
+			assert.Equalf(t, tt.want, tt.fn(tt.in, tt.days), "calculateAllSpawns(%v, %v)", tt.in, tt.days)
 		})
 	}
 }
