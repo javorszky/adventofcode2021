@@ -12,6 +12,18 @@ var next = map[int][]int{
 	0: {6, 8},
 }
 
+var next8 = map[int][]int{
+	8: {0},
+	7: {6, 8},
+	6: {5, 7},
+	5: {4, 6},
+	4: {3, 5},
+	3: {2, 4},
+	2: {1, 3},
+	1: {0, 2},
+	0: {6, 8},
+}
+
 func tick(in []int) []int {
 	out := make([]int, 0)
 
@@ -22,7 +34,17 @@ func tick(in []int) []int {
 	return out
 }
 
-func task1_tick(input string) int {
+func tick8(in []int) []int {
+	out := make([]int, 0)
+
+	for _, i := range in {
+		out = append(out, next8[i]...)
+	}
+
+	return out
+}
+
+func task1Tick(input string) int {
 	return calcState(parseFishSplitAtoi(input), targetDay)
 }
 
