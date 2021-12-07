@@ -156,9 +156,27 @@ func Test_calculateAllSpawns(t *testing.T) {
 	}
 }
 
-func Benchmark_Task1(b *testing.B) {
+func Benchmark_Tasks(b *testing.B) {
 	input := benchInput(b, "input.txt")
-	for i := 0; i < b.N; i++ {
-		task1(input)
+
+	benchmarks := []struct {
+		name string
+		fn   func(string) int
+	}{
+		{
+			name: "task 1 recursive",
+			fn:   task1,
+		},
+		{
+			name: "task 1 tick",
+			fn:   task1Tick,
+		},
+	}
+	for _, bm := range benchmarks {
+		b.Run(bm.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				bm.fn(input)
+			}
+		})
 	}
 }
