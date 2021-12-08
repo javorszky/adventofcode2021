@@ -3,6 +3,7 @@ package day07
 import (
 	"io/ioutil"
 	"log"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -32,4 +33,21 @@ func parseToInts(in []string) []int {
 	}
 
 	return out
+}
+
+func minimize(in []int, f func([]int, int) int) int {
+	lowest := f(in, 0)
+	fuels := 0
+
+	sort.Ints(in)
+
+	for i := 0; i <= in[len(in)-1]; i++ {
+		fuels = f(in, i)
+
+		if fuels < lowest {
+			lowest = fuels
+		}
+	}
+
+	return lowest
 }
