@@ -7,9 +7,9 @@ func Tasks() {
 
 	input := getInputs(filename)
 
-	output := task1(input)
+	output := task1Array(input)
 	fmt.Printf("Task 1: After 80 days, given our input, there will be %d lanternfish\n", output)
 
-	//output2 := task2(input)
-	//fmt.Printf("Task 1: The result is something: %v\n", output2)
+	output2 := task2(input)
+	fmt.Printf("Task 2: After 256 there would be %d lanternfish.\n", output2)
 }

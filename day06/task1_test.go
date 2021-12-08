@@ -171,6 +171,14 @@ func Benchmark_Tasks(b *testing.B) {
 			name: "task 1 tick",
 			fn:   task1Tick,
 		},
+		{
+			name: "task 1 array",
+			fn:   task1Array,
+		},
+		{
+			name: "task 2 array",
+			fn:   task2,
+		},
 	}
 	for _, bm := range benchmarks {
 		b.Run(bm.name, func(b *testing.B) {
