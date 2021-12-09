@@ -40,3 +40,23 @@ func Test_makeGrid(t *testing.T) {
 		})
 	}
 }
+
+func Test_getValleys(t *testing.T) {
+	tests := []struct {
+		name string
+		in   []int
+		want []int
+	}{
+		{
+			name: "finds dips in longish array",
+			//          o                    o     o
+			in:   []int{1, 2, 3, 4, 3, 3, 5, 2, 5, 3},
+			want: []int{0, 7, 9},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, getValleys(tt.in), "getValleys(%v)", tt.in)
+		})
+	}
+}

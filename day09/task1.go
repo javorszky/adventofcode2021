@@ -40,3 +40,31 @@ func makeGrid(in []string) ([][]int, [][]int) {
 
 	return horizontals, verticals
 }
+
+func getValleys(in []int) []int {
+	if len(in) < 2 {
+		return nil
+	}
+
+	valleys := make([]int, 0)
+	last := len(in) - 1
+
+	for i, v := range in {
+		switch i {
+		case 0:
+			if in[i+1] > v {
+				valleys = append(valleys, i)
+			}
+		case last:
+			if in[i-1] > v {
+				valleys = append(valleys, i)
+			}
+		default:
+			if in[i-1] > v && v < in[i+1] {
+				valleys = append(valleys, i)
+			}
+		}
+	}
+
+	return valleys
+}
