@@ -80,7 +80,7 @@ func Test_display_parse(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			d := NewDisplay()
+			d := newDisplay()
 			d.parse(tt.in)
 			assert.Equalf(t, tt.want, d.State(), "parse(%v)", tt.in)
 		})

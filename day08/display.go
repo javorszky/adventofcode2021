@@ -144,8 +144,8 @@ func (d *display) IsSolved() bool {
 	return d.StateSum()&^segmentAll == 0
 }
 
-// NewDisplay will return a set of display with all the possibilities set to everything to start with.
-func NewDisplay() display {
+// newDisplay will return a set of display with all the possibilities set to everything to start with.
+func newDisplay() display {
 	return display{
 		possibilities: map[uint]uint{
 			segmentA: segmentAll,
