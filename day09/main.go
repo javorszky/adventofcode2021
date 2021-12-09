@@ -7,9 +7,9 @@ const filename = "day09/input.txt"
 func Tasks() {
 	fmt.Printf("\nDay 9\n------\n")
 
-	input := getInputs(filename)
+	lowestPoints := getLowestPoints(makeGrid(getInputs(filename)))
 
-	output := task1(input)
+	output := task1(lowestPoints)
 	fmt.Printf("Task 1: The sum of the danger points is %d.\n", output)
 
 	//output2 := task2(input)

@@ -81,7 +81,20 @@ func Test_task1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, task1(tt.input), "task1(%v)", tt.input)
+			assert.Equalf(t, tt.want, task1(getLowestPoints(makeGrid(tt.input))), "task1(%v)", tt.input)
 		})
 	}
+}
+
+func Benchmark_Task1(b *testing.B) {
+	in := benchInput(b, "input.txt")
+	for i := 0; i < b.N; i++ {
+		task1(in)
+	}
+}
+
+func benchInput(b testing.TB, filename string) map[uint]int {
+	b.Helper()
+
+	return getLowestPoints(makeGrid(getInputs(filename)))
 }
