@@ -51,6 +51,32 @@ func Test_display_parse(t *testing.T) {
 				segmentG: 0b0001010, // bottom
 			},
 		},
+		{
+			name: "parses a six",
+			in:   []string{"abcdef"},
+			want: map[uint]uint{
+				segmentA: 0b0111111, // top
+				segmentB: 0b0111111, // top left
+				segmentC: 0b1111111, // top right
+				segmentD: 0b1111111, // belt
+				segmentE: 0b1111111, // bottom left
+				segmentF: 0b0111111, // bottom right
+				segmentG: 0b0111111, // bottom
+			},
+		},
+		{
+			name: "parses a five",
+			in:   []string{"abefg"}, // missing: c, d
+			want: map[uint]uint{
+				segmentA: 0b1110011, // top
+				segmentB: 0b1111111, // top left
+				segmentC: 0b1111111, // top right
+				segmentD: 0b1110011, // belt
+				segmentE: 0b1111111, // bottom left
+				segmentF: 0b1111111, // bottom right
+				segmentG: 0b1110011, // bottom
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
