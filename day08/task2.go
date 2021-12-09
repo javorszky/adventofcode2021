@@ -8,7 +8,7 @@ import (
 
 func task2(input []string) int {
 	for _, i := range input {
-		deduce(i)
+		deduceMatch(i)
 	}
 
 	return 0

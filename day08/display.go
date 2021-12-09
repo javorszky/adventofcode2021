@@ -4,28 +4,6 @@ import (
 	"log"
 )
 
-const (
-	segmentA uint = 1 << iota
-	segmentB
-	segmentC
-	segmentD
-	segmentE
-	segmentF
-	segmentG
-
-	segmentAll = segmentA | segmentB | segmentC | segmentD | segmentE | segmentF | segmentG
-)
-
-var translate = map[string]uint{
-	"a": segmentA,
-	"b": segmentB,
-	"c": segmentC,
-	"d": segmentD,
-	"e": segmentE,
-	"f": segmentF,
-	"g": segmentG,
-}
-
 type display struct {
 	possibilities map[uint]uint
 	solved        bool
