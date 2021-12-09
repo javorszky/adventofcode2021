@@ -1,5 +1,9 @@
 package day09
 
+import (
+	"log"
+)
+
 var charToInt = map[int32]int{
 	0x30: 0,
 	0x31: 1,
@@ -13,8 +17,39 @@ var charToInt = map[int32]int{
 	0x39: 9,
 }
 
-func task1(input []string) interface{} {
-	return input
+func task1(input []string) int {
+	horz, verts := makeGrid(input)
+	binHCoords := make(map[uint]int)
+	binVCoords := make(map[uint]int)
+
+	for row, points := range horz {
+		valleys := getValleys(points)
+		for _, column := range valleys {
+			binHCoords[uint(column)<<7|uint(row)] = horz[row][column]
+		}
+	}
+
+	for column, points := range verts {
+		valleys := getValleys(points)
+		for _, row := range valleys {
+			binVCoords[uint(column)<<7|uint(row)] = verts[column][row]
+		}
+	}
+
+	acc := 0
+
+	for key, value := range binHCoords {
+		if vValue, ok := binVCoords[key]; ok {
+			if value != vValue {
+				log.Fatalf("horizontal and vertical coords stored a different value at the same coordinate. " +
+					"This should not have happened :(")
+			}
+
+			acc += value + 1
+		}
+	}
+
+	return acc
 }
 
 func makeGrid(in []string) ([][]int, [][]int) {
