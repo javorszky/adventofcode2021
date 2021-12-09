@@ -7,11 +7,13 @@ import (
 )
 
 func task2(input []string) int {
+	acc := 0
+
 	for _, i := range input {
-		deduceMatch(i)
+		acc += deduceMatch(i)
 	}
 
-	return 0
+	return acc
 }
 
 func deduce(input string) int {
