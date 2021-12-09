@@ -1,7 +1,8 @@
 package day08
 
 import (
-	"fmt"
+	"log"
+	"math"
 	"strings"
 )
 
@@ -18,159 +19,176 @@ func parseNumberString(in string) uint {
 func deduceMatch(in string) int {
 	parts := strings.Split(in, " | ")
 	leftNums := strings.Split(parts[0], " ")
-	rightNums := strings.Split(parts[0], " ")
+	rightNums := strings.Split(parts[1], " ")
 	allNums := append(leftNums, rightNums...)
 
-	collected := make(map[int][]string)
+	collected := make(map[int]map[uint]struct{})
 
 	for _, i := range allNums {
-		collected[len(i)] = append(collected[len(i)], i)
+		if collected[len(i)] == nil {
+			collected[len(i)] = make(map[uint]struct{})
+		}
+
+		collected[len(i)][parseNumberString(i)] = struct{}{}
 	}
+
+	//fmt.Printf("Collected in the new format:\n%#v\n", collected)
 
 	intToBin := make(map[int]uint)
 	binToInt := make(map[uint]int)
 
 	// Gather the uniques.
 	if one, ok := collected[2]; ok {
-		binToInt[parseNumberString(one[0])] = 1
-		intToBin[1] = parseNumberString(one[0])
+		for binKey := range one {
+			binToInt[binKey] = 1
+			intToBin[1] = binKey
+		}
 
 		delete(collected, 2)
 	}
 
 	if four, ok := collected[4]; ok {
-		binToInt[parseNumberString(four[0])] = 4
-		intToBin[4] = parseNumberString(four[0])
+		for binKey := range four {
+			binToInt[binKey] = 4
+			intToBin[4] = binKey
+		}
 
 		delete(collected, 4)
 	}
 
 	if seven, ok := collected[3]; ok {
-		binToInt[parseNumberString(seven[0])] = 7
-		intToBin[7] = parseNumberString(seven[0])
+		for binKey := range seven {
+			binToInt[binKey] = 7
+			intToBin[7] = binKey
+		}
 
 		delete(collected, 3)
 	}
 
 	if eight, ok := collected[7]; ok {
-		binToInt[parseNumberString(eight[0])] = 8
-		intToBin[8] = parseNumberString(eight[0])
+		for binKey := range eight {
+			binToInt[binKey] = 8
+			intToBin[8] = binKey
+		}
 
 		delete(collected, 7)
 	}
 
-	// Do matching!
+	// Do the matching!
 	// One & a five = one, it's number 3!
 	if one, ok := intToBin[1]; ok {
-		toRemove := make([]string, 0)
 		// check the fives against the one
-		for _, v := range collected[5] {
-			binN := parseNumberString(v)
-			if binN&one == one {
-				// we found the number 3
-				binToInt[binN] = 3
-				intToBin[3] = binN
+		toRemove := make([]uint, 0)
 
-				toRemove = append(toRemove, v)
+		for binKey := range collected[5] {
+			if binKey&one == one {
+				// we found the number 3
+				binToInt[binKey] = 3
+				intToBin[3] = binKey
+
+				toRemove = append(toRemove, binKey)
 			}
 		}
 
 		for _, tr := range toRemove {
-			collected[5] = remove(collected[5], tr)
+			delete(collected[5], tr)
 		}
 	}
 
 	// Seven & a five = seven, it's number 3!
 	if seven, ok := intToBin[7]; ok {
 		// check the fives against the seven.
-		toRemove := make([]string, 0)
+		toRemove := make([]uint, 0)
 
-		for _, v := range collected[5] {
-			binN := parseNumberString(v)
-			if binN&seven == seven {
+		for binKey := range collected[5] {
+			if binKey&seven == seven {
 				// we found the number 3
-				binToInt[binN] = 3
-				intToBin[3] = binN
+				binToInt[binKey] = 3
+				intToBin[3] = binKey
 
-				toRemove = append(toRemove, v)
+				toRemove = append(toRemove, binKey)
 			}
 		}
 
-		for _, x := range toRemove {
-			for _, y := range collected[5] {
-				if x == y {
-					collected[5] = remove(collected[5], y)
-
-					continue
-				}
-			}
+		for _, tr := range toRemove {
+			delete(collected[5], tr)
 		}
+
+		toRemove = make([]uint, 0)
 
 		// check the sixes against the seven.
 		// whichever is not the same, is number 6.
-		for _, w := range collected[6] {
-			binN := parseNumberString(w)
-			if binN&seven != seven {
+		for binKey := range collected[6] {
+			if binKey&seven != seven {
 				// we found the number 6!
-				binToInt[binN] = 6
-				intToBin[6] = binN
-				collected[6] = remove(collected[6], w)
+				binToInt[binKey] = 6
+				intToBin[6] = binKey
+
+				toRemove = append(toRemove, binKey)
 			}
 		}
 
-		for _, z := range toRemove {
-			collected[6] = remove(collected[6], z)
+		for _, tr := range toRemove {
+			delete(collected[6], tr)
 		}
 	}
 
 	// A six & five == five => 5 and 9. None of the other pairs do this
-	toRemoveFive := make([]string, 0)
-	toRemoveSix := make([]string, 0)
+	toRemoveFive := make([]uint, 0)
+	toRemoveSix := make([]uint, 0)
 
-	for _, aFive := range collected[5] {
-		binFive := parseNumberString(aFive)
-
-		for _, aSix := range collected[6] {
-			binSix := parseNumberString(aSix)
-
+	for binFive := range collected[5] {
+		for binSix := range collected[6] {
 			if binFive&binSix == binFive {
 				binToInt[binFive] = 5
 				binToInt[binSix] = 9
 				intToBin[5] = binFive
 				intToBin[9] = binSix
 
-				toRemoveFive = append(toRemoveFive, aFive)
-				toRemoveSix = append(toRemoveSix, aSix)
+				toRemoveFive = append(toRemoveFive, binFive)
+				toRemoveSix = append(toRemoveSix, binSix)
 			}
 		}
 	}
 
 	for _, tr := range toRemoveFive {
-		collected[5] = remove(collected[5], tr)
+		delete(collected[5], tr)
 	}
 
 	for _, tr := range toRemoveSix {
-		collected[6] = remove(collected[6], tr)
+		delete(collected[6], tr)
 	}
 
-	fmt.Printf("collected at this point:\n%#v\n\n", collected)
-	fmt.Printf("int to bin: %#v\n"+
-		"\nbin to int: %#b\n\n", intToBin, binToInt)
-
-	return 0
-}
-
-func remove(s []string, v string) []string {
-	newSlice := make([]string, 0)
-	vBin := parseNumberString(v)
-
-	for _, element := range s {
-		if vBin == parseNumberString(element) {
-			continue
+	// if there's only one 5 long thing left, it's a 2
+	if len(collected[5]) == 1 {
+		for binKey := range collected[5] {
+			intToBin[2] = binKey
+			binToInt[binKey] = 2
 		}
 
-		newSlice = append(newSlice, element)
+		delete(collected, 5)
 	}
 
-	return newSlice
+	// if there's only one 6 long thing left, it's a 0
+	if len(collected[6]) == 1 {
+		for binKey := range collected[6] {
+			intToBin[0] = binKey
+			binToInt[binKey] = 0
+		}
+
+		delete(collected, 6)
+	}
+
+	if len(binToInt) != 10 {
+		log.Fatalf("we haven't figured out everything yet :(")
+	}
+
+	acc := 0
+	exp := len(rightNums) - 1
+
+	for i, rightNum := range rightNums {
+		acc += int(math.Pow10(exp-i)) * binToInt[parseNumberString(rightNum)]
+	}
+
+	return acc
 }

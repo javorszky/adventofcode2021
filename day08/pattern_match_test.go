@@ -37,6 +37,21 @@ func Test_parseString(t *testing.T) {
 			in:   "efb",
 			want: 0b0110010,
 		},
+		{
+			name: "parses cefabd",
+			in:   "cefabd",
+			want: 0b0111111,
+		},
+		{
+			name: "parses cdfgeb",
+			in:   "cdfgeb",
+			want: 0b1111110,
+		},
+		{
+			name: "parses cagedb",
+			in:   "cagedb",
+			want: 0b1011111,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
