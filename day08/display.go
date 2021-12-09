@@ -144,6 +144,41 @@ func (d *display) IsSolved() bool {
 	return d.StateSum()&^segmentAll == 0
 }
 
+func (d *display) GetNumber(in string) int {
+	n := uint(0)
+	for _, c := range in {
+		n = n | translate[string(c)]
+	}
+
+	switch n {
+	case segmentAll &^ segmentD:
+		return 0
+	case segmentC | segmentF:
+		return 1
+	case segmentAll &^ (segmentB | segmentF):
+		return 2
+	case segmentAll &^ (segmentB | segmentE):
+		return 3
+
+	case segmentB | segmentC | segmentD | segmentF:
+		return 4
+	case segmentAll &^ (segmentC | segmentE):
+		return 5
+	case segmentAll &^ segmentC:
+		return 6
+	case segmentA | segmentC | segmentF:
+		return 7
+	case segmentAll:
+		return 8
+	case segmentAll &^ segmentE:
+		return 9
+	default:
+		log.Fatalf("whoop, something bad happened. This is the incoming value: %07b", n)
+	}
+
+	return 0
+}
+
 // newDisplay will return a set of display with all the possibilities set to everything to start with.
 func newDisplay() display {
 	return display{

@@ -1,7 +1,9 @@
 package day08
 
 import (
-	"fmt"
+	"log"
+	"math"
+	"strings"
 )
 
 func task2(input []string) int {
@@ -13,13 +15,26 @@ func task2(input []string) int {
 }
 
 func deduce(input string) int {
-	//set := display{
-	//	possibilities: everythingIsPossible,
-	//	solved:        false,
-	//}
-	//parts := strings.Split(input, " | ")
+	set := newDisplay()
+	parts := strings.Split(input, " | ")
+	leftNums := strings.Split(parts[0], " ")
+	rightNums := strings.Split(parts[0], " ")
+	allNums := append(leftNums, rightNums...)
 
-	fmt.Printf("deducing the follwing inptu:\n%s\n\n", input)
+	set.parse(allNums)
 
-	return 0
+	if !set.IsSolved() {
+		log.Fatalf("could not solve set for line\n[ %s ]\n"+
+			"current state:\n"+
+			"%#v\n", input, set.State())
+	}
+
+	a := 0
+	l := len(rightNums)
+
+	for i, rightnum := range rightNums {
+		a += set.GetNumber(rightnum) * int(math.Pow10(l-i))
+	}
+
+	return a
 }
