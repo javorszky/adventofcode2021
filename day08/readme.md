@@ -28,6 +28,64 @@ Count strings with lengths 2,3,4,7, return sum of counts. Easy.
 
 ## Task 2
 
+### The winning solution
+
+Turns out I don't need to figure out which letter is where. It's unnecessary. But see the thinking in the losing
+solution.
+
+Anyways, I only do overlaps. For that I start with assigning a binary number to each letter, which yields a 7 bit long
+bitmask for each group of letters within each line.
+
+I already know which ones are number 1, 4, 7, and 8. 8 is useless here besides "not being any other number", so I
+ignored it.
+
+Then I grouped the remaining numbers ino how many letters they have. The remaining ones are 3 five longs, and 3 six
+longs.
+
+#### Pattern matches
+
+##### One / Seven with a five long
+
+Then I do pattern matching. Given any of the 5 long ones, if a bitwise AND with what number one, or seven yields one, or
+seven, then I know that the 5 long number was 3, because 2 and 5 would not produce the same (the required segments are
+missing).
+
+```
+// 3 and 1 looks like this
+
+ aaa       ...       xxx
+.   c     .   c         o
+.   c     .   c         o
+ ddd   &   ...   =   xxx
+.   f     .   f         o
+.   f     .   f         o
+ ggg       ...       xxx
+ ```
+
+If we don't have a one, seven works as well.
+
+##### Four with a six long
+
+Comparing the pattern for number 4 with the sixes. If the AND operations comes back as 4, then we know the six long
+number was 9, because neither 6, nor 0 contains 4 fully.
+
+##### Seven with the sixes
+
+Of the six long patterns when we AND with seven (or one) and it's not the same as seven (or one), that's number 6.
+
+0 and 9 both fully contain 1 and 7 too.
+
+##### Comparing a five long and a six long
+
+If we AND a five long and a six long, and the result is the same five long, then the pair is 5 and 9, because none of
+the other five-six pair would contain the other fully.
+
+All of these tests were enough to decode all of the lines.
+
+### The losing solution
+
+I tried to figure out where each of the segments were, but ultimately there was not enough data.
+
 Deductions!
 
 ### 1-7 pair

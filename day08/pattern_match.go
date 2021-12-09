@@ -32,8 +32,6 @@ func deduceMatch(in string) int {
 		collected[len(i)][parseNumberString(i)] = struct{}{}
 	}
 
-	//fmt.Printf("Collected in the new format:\n%#v\n", collected)
-
 	intToBin := make(map[int]uint)
 	binToInt := make(map[uint]int)
 
