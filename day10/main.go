@@ -11,7 +11,7 @@ func Tasks() {
 
 	output := task1(input)
 	fmt.Printf("Task 1: The sum of the first invalid syntaxes is %d\n", output)
-	//
-	//output2 := task2(input)
-	//fmt.Printf("Task 1: The result is something: %v\n", output2)
+
+	output2 := task2(input)
+	fmt.Printf("Task 2: The result is something: %v\n", output2)
 }
