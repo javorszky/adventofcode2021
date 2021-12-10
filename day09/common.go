@@ -33,11 +33,29 @@ func getLowestPoints(horz, verts [][]int) map[uint]int {
 		}
 	}
 
+	//fmt.Printf("HCoords with row valley coords\n")
+	//for hc, hv := range binHCoords {
+	//	x, y := binToCoords(hc)
+	//	//fmt.Printf("[%2d, %2d]: %d\n", x, y, hv)
+	//}
+
+	//fmt.Printf("VCoords with column valley coords\n")
+	//for vc, vv := range binVCoords {
+	//	x, y := binToCoords(vc)
+	//	fmt.Printf("[%2d, %2d]: %d\n", x, y, vv)
+	//}
+
 	for key := range binHCoords {
 		if _, ok := binVCoords[key]; !ok {
 			delete(binHCoords, key)
 		}
 	}
+
+	//fmt.Printf("HCoords with row valley coords after double checking with vcoords\n")
+	//for hc, hv := range binHCoords {
+	//	x, y := binToCoords(hc)
+	//	fmt.Printf("[%2d, %2d]: %d\n", x, y, hv)
+	//}
 
 	return binHCoords
 }
