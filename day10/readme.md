@@ -76,3 +76,21 @@ Scoring example for the above:
 
 The scores for each line get added to a slice which is sorted, and then `scores[len(scores)/2]` returned. In go, halfing
 an `int` will always ever produce another `int`, rounding down, which so happens to be the index for the middle element.
+
+## Benchmarks
+
+Plugged in.
+
+```
+❯ go test -benchmem -bench=.
+goos: darwin
+goarch: amd64
+pkg: github.com/javorszky/adventofcode2021/day10
+cpu: Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
+Benchmark/task_1_example-16                81638         14776 ns/op       10264 B/op         147 allocs/op
+Benchmark/task_2_example-16                73308         15002 ns/op        3647 B/op         140 allocs/op
+Benchmark/task_1_full_input-16              3140        354975 ns/op       70400 B/op        1899 allocs/op
+Benchmark/task_2_full_input-16              2754        407205 ns/op       64953 B/op        1817 allocs/op
+PASS
+ok  	github.com/javorszky/adventofcode2021/day10	6.179s
+```

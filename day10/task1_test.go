@@ -25,3 +25,46 @@ func Test_task1(t *testing.T) {
 		})
 	}
 }
+
+func Benchmark(b *testing.B) {
+	benchmarks := []struct {
+		name     string
+		filename string
+		fn       func([]string) int
+	}{
+		{
+			name:     "task 1 example",
+			filename: "example_input.txt",
+			fn:       task1,
+		},
+		{
+			name:     "task 2 example",
+			filename: "example_input.txt",
+			fn:       task2,
+		},
+		{
+			name:     "task 1 full input",
+			filename: "input.txt",
+			fn:       task1,
+		},
+		{
+			name:     "task 2 full input",
+			filename: "input.txt",
+			fn:       task2,
+		},
+	}
+	for _, bm := range benchmarks {
+		input := benchInput(b, bm.filename)
+		b.Run(bm.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				bm.fn(input)
+			}
+		})
+	}
+}
+
+func benchInput(b testing.TB, filename string) []string {
+	b.Helper()
+
+	return getInputs(filename)
+}
