@@ -10,3 +10,4 @@ Here be solutions for aoc21 by moi!
 * [Day 06](day06/) - "How much is the fish!?" - 📼 [Scooter](https://www.youtube.com/watch?v=cbB3iGRHtqA)
 * [Day 07](day07/) - minimise the possible sum of these numbers
 * [Day 08](day08/) - pattern matching and displays
+* [Day 09](day09/) - get local maxima, and count areas recursively
