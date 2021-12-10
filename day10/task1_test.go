@@ -10,18 +10,26 @@ func Test_task1(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
+		fn    func([]string) int
 		want  int
 	}{
 		{
 			name:  "solves example",
 			input: "example_input.txt",
+			fn:    task1,
+			want:  26397,
+		},
+		{
+			name:  "solves example",
+			input: "example_input.txt",
+			fn:    task1Stack,
 			want:  26397,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			input := getInputs(tt.input)
-			assert.Equal(t, tt.want, task1(input))
+			assert.Equal(t, tt.want, tt.fn(input))
 		})
 	}
 }
@@ -38,6 +46,11 @@ func Benchmark(b *testing.B) {
 			fn:       task1,
 		},
 		{
+			name:     "task 1 stack example",
+			filename: "example_input.txt",
+			fn:       task1Stack,
+		},
+		{
 			name:     "task 2 example",
 			filename: "example_input.txt",
 			fn:       task2,
@@ -46,6 +59,11 @@ func Benchmark(b *testing.B) {
 			name:     "task 1 full input",
 			filename: "input.txt",
 			fn:       task1,
+		},
+		{
+			name:     "task 1 stack full input",
+			filename: "input.txt",
+			fn:       task1Stack,
 		},
 		{
 			name:     "task 2 full input",
