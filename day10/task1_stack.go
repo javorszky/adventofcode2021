@@ -46,3 +46,37 @@ func task1Stack(input []string) int {
 
 	return acc
 }
+
+func task1NakedStack(input []string) int {
+	acc := 0
+	stack := make([]int32, 0, 30)
+
+	for _, line := range input {
+		stack = stack[:0]
+
+	Loop:
+		for _, ch := range line {
+			switch ch {
+			// opening characters
+			case 0x28: // (
+				stack = append(stack, 0x29)
+			case 0x5b: // [
+				stack = append(stack, 0x5d)
+			case 0x7b: // {
+				stack = append(stack, 0x7d)
+			case 0x3c: // <
+				stack = append(stack, 0x3e)
+			default:
+				if stack[len(stack)-1] != ch {
+					acc += invalidScoreStack[ch]
+
+					break Loop
+				}
+
+				stack = stack[:len(stack)-1]
+			}
+		}
+	}
+
+	return acc
+}

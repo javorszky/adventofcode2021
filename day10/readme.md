@@ -2,6 +2,8 @@
 
 ## Task 1
 
+### Naive implementation
+
 A chunk is a unit of `()`, `[]`, `{}`, or `<>`. I got a new `strings.Replacer`, gave it rules to replace those with
 empty strings, and then ran it on each line until the new length after replacements was the same as the length when we
 began, ie no new replacements were made.
@@ -34,6 +36,18 @@ In the example above, the cleanup would look like this:
 ```
 
 We then count the score for the first character in the resulting string, whatever that is, and sum it up.
+
+### Optimized stack implementation
+
+1. Declare a slice variable at the start of work that's 0 len and 30 cap. 30 is a guesstimate. The idea is to
+   preallocate some amount of memory to cut down on allocations.
+2. Iterate over each line, and truncate the slice to its zero length with `stack[:0]`
+3. Iterate over each character in each line. Using a switch and the characters' `uint8` hexadec code, decide what to do
+   with them. For opening characters (`([{<`), insert their corresponding closing character using their `uint8` hexadec
+   code.
+4. For any other character (realistically these are the closing ones: (`>}])`), check if the last element of the stack
+   is the same as the current char. If it is not the same char, add the score to the accumulator, and break out of the
+   character loop and start the next line loop.
 
 ## Task 2
 
@@ -87,10 +101,14 @@ goos: darwin
 goarch: amd64
 pkg: github.com/javorszky/adventofcode2021/day10
 cpu: Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
-Benchmark/task_1_example-16                81638         14776 ns/op       10264 B/op         147 allocs/op
-Benchmark/task_2_example-16                73308         15002 ns/op        3647 B/op         140 allocs/op
-Benchmark/task_1_full_input-16              3140        354975 ns/op       70400 B/op        1899 allocs/op
-Benchmark/task_2_full_input-16              2754        407205 ns/op       64953 B/op        1817 allocs/op
+Benchmark/task_1_example-16                   81426     14912   ns/op    10264 B/op     147 allocs/op
+Benchmark/task_1_stack_example-16           1278571       940.5 ns/op        0 B/op       0 allocs/op
+Benchmark/task_1_nekkid_stack_example-16    3673298       318.2 ns/op        0 B/op       0 allocs/op
+Benchmark/task_2_example-16                   73894     15249   ns/op     3645 B/op     140 allocs/op
+Benchmark/task_1_full_input-16                 3148    358534   ns/op    70400 B/op    1899 allocs/op
+Benchmark/task_1_stack_full_input-16          15876     74451   ns/op        0 B/op       0 allocs/op
+Benchmark/task_1_nekkid_stack_full_input-16   28696     41222   ns/op        0 B/op       0 allocs/op
+Benchmark/task_2_full_input-16                 2755    405291   ns/op    65115 B/op    1817 allocs/op
 PASS
-ok  	github.com/javorszky/adventofcode2021/day10	6.179s
+ok  	github.com/javorszky/adventofcode2021/day10	13.460s
 ```

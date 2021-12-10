@@ -51,6 +51,11 @@ func Benchmark(b *testing.B) {
 			fn:       task1Stack,
 		},
 		{
+			name:     "task 1 nekkid stack example",
+			filename: "example_input.txt",
+			fn:       task1NakedStack,
+		},
+		{
 			name:     "task 2 example",
 			filename: "example_input.txt",
 			fn:       task2,
@@ -64,6 +69,11 @@ func Benchmark(b *testing.B) {
 			name:     "task 1 stack full input",
 			filename: "input.txt",
 			fn:       task1Stack,
+		},
+		{
+			name:     "task 1 nekkid stack full input",
+			filename: "input.txt",
+			fn:       task1NakedStack,
 		},
 		{
 			name:     "task 2 full input",
