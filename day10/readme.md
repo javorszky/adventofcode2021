@@ -122,10 +122,10 @@ cpu: Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
 Benchmark/task_1_example-16                   81862     14691   ns/op    10264 B/op     147 allocs/op
 Benchmark/task_1_stack_example-16           1238826       947.2 ns/op        0 B/op       0 allocs/op
 Benchmark/task_1_nekkid_stack_example-16    3718250       318.3 ns/op        0 B/op       0 allocs/op
-Benchmark/task_2_example-16                   75124     15158   ns/op     3645 B/op     140 allocs/op
 Benchmark/task_1_full_input-16                 3265    356359   ns/op    70400 B/op    1899 allocs/op
 Benchmark/task_1_stack_full_input-16          15831     76485   ns/op        0 B/op       0 allocs/op
 Benchmark/task_1_nekkid_stack_full_input-16   29584     39697   ns/op        0 B/op       0 allocs/op
+Benchmark/task_2_example-16                   75124     15158   ns/op     3645 B/op     140 allocs/op
 Benchmark/task_2_full_input-16                 2768    401184   ns/op    65018 B/op    1817 allocs/op
 Benchmark/task_2_nekkid_full_input-16         26323     45400   ns/op     1040 B/op       8 allocs/op
 PASS
