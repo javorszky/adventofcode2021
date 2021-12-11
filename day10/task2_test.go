@@ -58,18 +58,26 @@ func Test_task2(t *testing.T) {
 	tests := []struct {
 		name     string
 		filename string
+		fn       func([]string) int
 		want     int
 	}{
 		{
 			name:     "solves the example",
 			filename: "example_input.txt",
+			fn:       task2,
+			want:     288957,
+		},
+		{
+			name:     "solves the example",
+			filename: "example_input.txt",
+			fn:       task2Stack,
 			want:     288957,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			input := getInputs(tt.filename)
-			assert.Equalf(t, tt.want, task2(input), "task2(%v)", input)
+			assert.Equalf(t, tt.want, tt.fn(input), "task2(%v)", input)
 		})
 	}
 }

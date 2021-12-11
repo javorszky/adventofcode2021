@@ -9,9 +9,9 @@ func Tasks() {
 
 	input := getInputs(filename)
 
-	output := task1(input)
+	output := task1NakedStack(input)
 	fmt.Printf("Task 1: The sum of the first invalid syntaxes is %d\n", output)
 
-	output2 := task2(input)
+	output2 := task2Stack(input)
 	fmt.Printf("Task 2: The result is something: %v\n", output2)
 }

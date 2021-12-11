@@ -80,6 +80,11 @@ func Benchmark(b *testing.B) {
 			filename: "input.txt",
 			fn:       task2,
 		},
+		{
+			name:     "task 2 nekkid full input",
+			filename: "input.txt",
+			fn:       task2Stack,
+		},
 	}
 	for _, bm := range benchmarks {
 		input := benchInput(b, bm.filename)
