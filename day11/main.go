@@ -10,7 +10,7 @@ func Tasks() {
 	input := getInputs(filename)
 
 	output := task1(input)
-	fmt.Printf("Task 1: The result is something: %v\n", output)
+	fmt.Printf("Task 1: There were %d total flashes\n", output)
 
 	output2 := task2(input)
 	fmt.Printf("Task 1: The result is something: %v\n", output2)

@@ -10,10 +10,12 @@ const (
 )
 
 // task1 calculates how many flashes the octopodes do in 100 steps.
-func task1(input []string) interface{} {
+func task1(input []string) int {
 	m := parseIntoGrid(input)
 
-	return len(m)
+	_, flashes := simulate(m, 100)
+
+	return flashes
 }
 
 func step(m map[uint]uint) (map[uint]uint, int) {
