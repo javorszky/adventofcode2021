@@ -1,10 +1,5 @@
 package day11
 
-import (
-	"log"
-	"strings"
-)
-
 const (
 	lowerMask uint = 0b00001111 // 15
 )
@@ -150,21 +145,4 @@ func simulate(board map[uint]uint, ticks int) (map[uint]uint, int) {
 	}
 
 	return board, flashes
-}
-
-func getSum(m map[uint]uint) string {
-	var sb strings.Builder
-
-	for row := 0; row < 10; row++ {
-		for col := 0; col < 10; col++ {
-			r := intToChar[m[uint(row<<4|col)]]
-
-			_, err := sb.WriteRune(r)
-			if err != nil {
-				log.Fatalf("creating checksum for board failed while writing rune %s: %s", string(r), err)
-			}
-		}
-	}
-
-	return sb.String()
 }

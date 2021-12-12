@@ -257,38 +257,6 @@ func Test_inc1(t *testing.T) {
 	}
 }
 
-func Test_getSum(t *testing.T) {
-	tests := []struct {
-		name string
-		m    func() map[uint]uint
-		want string
-	}{
-		{
-			name: "Gets state of board",
-			m: func() map[uint]uint {
-				return parseIntoGrid([]string{
-					"6594254334",
-					"3856965822",
-					"6375667284",
-					"7252447257",
-					"7468496589",
-					"5278635756",
-					"3287952832",
-					"7993992245",
-					"5957959665",
-					"6394862637",
-				})
-			},
-			want: "6594254334385696582263756672847252447257746849658952786357563287952832799399224559579596656394862637",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, getSum(tt.m()), "getSum(%v)", tt.m())
-		})
-	}
-}
-
 func Test_simulate(t *testing.T) {
 	type args struct {
 		board func() map[uint]uint
