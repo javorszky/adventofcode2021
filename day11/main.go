@@ -5,7 +5,7 @@ import "fmt"
 const filename = "day11/input.txt"
 
 func Tasks() {
-	fmt.Printf("\nDay n\n------\n")
+	fmt.Printf("\nDay 11\n------\n")
 
 	input := getInputs(filename)
 
