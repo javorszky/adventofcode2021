@@ -2,6 +2,7 @@ package day12
 
 import (
 	"strings"
+	"sync"
 )
 
 func task2(input []string) int {
@@ -9,15 +10,48 @@ func task2(input []string) int {
 	smolCaves := make([]string, 0)
 
 	for _, n := range nodes {
-		if n.smol && n.name != "start" && n.name != "end" {
+		if n.smol && n.name != startName && n.name != endName {
 			smolCaves = append(smolCaves, n.name)
 		}
 	}
 
 	paths := make([][]string, 0, 10000)
 	for _, smolCave := range smolCaves {
-		paths = append(paths, walkNodes(nodes["start"], []string{}, containsTwice(smolCave))...)
+		paths = append(paths, walkNodes(nodes[startName], []string{}, containsTwice(smolCave))...)
 	}
+
+	uniquePaths := make(map[string]struct{})
+	for _, p := range paths {
+		uniquePaths[strings.Join(p, ",")] = struct{}{}
+	}
+
+	return len(uniquePaths)
+}
+
+func task2Concurrent(input []string) int {
+	nodes := parseIntoNodes(input)
+	smolCaves := make([]string, 0)
+
+	for _, n := range nodes {
+		if n.smol && n.name != startName && n.name != endName {
+			smolCaves = append(smolCaves, n.name)
+		}
+	}
+
+	wg := sync.WaitGroup{}
+	paths := make([][]string, 0, 10000)
+
+	for _, smolCave := range smolCaves {
+		wg.Add(1)
+
+		go func(smc string) {
+			defer wg.Done()
+
+			paths = append(paths, walkNodes(nodes[startName], []string{}, containsTwice(smc))...)
+		}(smolCave)
+	}
+
+	wg.Wait()
 
 	uniquePaths := make(map[string]struct{})
 	for _, p := range paths {

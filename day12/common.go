@@ -5,6 +5,11 @@ import (
 	"strings"
 )
 
+const (
+	startName = "start"
+	endName   = "end"
+)
+
 // getInputs reads the input.txt file and returns them as a slice of strings for each row.
 func getInputs(fn string) []string {
 	data, err := ioutil.ReadFile(fn)

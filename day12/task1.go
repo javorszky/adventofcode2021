@@ -2,7 +2,7 @@ package day12
 
 func task1(input []string) int {
 	nodes := parseIntoNodes(input)
-	paths := walkNodes(nodes["start"], []string{}, contains)
+	paths := walkNodes(nodes[startName], []string{}, contains)
 
 	return len(paths)
 }
@@ -20,8 +20,8 @@ func walkNodes(currentNode *node, currentPath []string, cntns func([]string, str
 	// Add the allowTwice of the current node to the path slice.
 	currentPath = append(currentPath, name)
 
-	// If we're at the "end" node, we have reached the end of our journey.
-	if name == "end" {
+	// If we're at the endName node, we have reached the end of our journey.
+	if name == endName {
 		return append(paths, currentPath)
 	}
 
