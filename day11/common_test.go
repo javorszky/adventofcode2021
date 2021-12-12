@@ -10,14 +10,14 @@ func Test_parseIntoGrid(t *testing.T) {
 	tests := []struct {
 		name  string
 		input []string
-		want  map[uint]int
+		want  map[uint]uint
 	}{
 		{
 			name: "parses horizontally",
 			input: []string{
 				"9123443232",
 			},
-			want: map[uint]int{
+			want: map[uint]uint{
 				0b00000000: 9,
 				0b00000001: 1,
 				0b00000010: 2,
@@ -44,7 +44,7 @@ func Test_parseIntoGrid(t *testing.T) {
 				"3",
 				"2",
 			},
-			want: map[uint]int{
+			want: map[uint]uint{
 				0b00000000: 9,
 				0b00010000: 1,
 				0b00100000: 2,
@@ -64,7 +64,7 @@ func Test_parseIntoGrid(t *testing.T) {
 				"344",
 				"321",
 			},
-			want: map[uint]int{
+			want: map[uint]uint{
 				0b00000000: 9,
 				0b00000001: 1,
 				0b00000010: 2,

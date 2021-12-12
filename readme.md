@@ -12,3 +12,5 @@ Here be solutions for aoc21 by moi!
 * [Day 08](day08/) - pattern matching and displays
 * [Day 09](day09/) - get local maxima, and count areas recursively
 * [Day 10](day10/) - cleanup on aisle 5! Error code boogaloo
+* [Day 11](day11/) - ⚡️ FLASH!!! AAAaaaaaaaaaa!!! Saviour of the
+  universe!!! [https://www.youtube.com/watch?v=hYTYqs-ytSk](https://www.youtube.com/watch?v=hYTYqs-ytSk)
