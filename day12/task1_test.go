@@ -137,7 +137,7 @@ func Test_walkNodes(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.ElementsMatchf(t, tt.want, walkNodes(tt.args.start(), tt.args.currentPath),
+			assert.ElementsMatchf(t, tt.want, walkNodes(tt.args.start(), tt.args.currentPath, contains),
 				"walkNodes(%v, %v)", tt.args.start, tt.args.currentPath)
 		})
 	}
