@@ -288,3 +288,130 @@ func Test_getSum(t *testing.T) {
 		})
 	}
 }
+
+func Test_simulate(t *testing.T) {
+	type args struct {
+		board func() map[uint]uint
+		ticks int
+	}
+
+	tests := []struct {
+		name  string
+		args  args
+		want  func() map[uint]uint
+		want1 int
+	}{
+		{
+			name: "example for 2 steps",
+			args: args{
+				board: func() map[uint]uint {
+					return parseIntoGrid([]string{
+						"5483143223",
+						"2745854711",
+						"5264556173",
+						"6141336146",
+						"6357385478",
+						"4167524645",
+						"2176841721",
+						"6882881134",
+						"4846848554",
+						"5283751526",
+					})
+				},
+				ticks: 2,
+			},
+			want: func() map[uint]uint {
+				return parseIntoGrid([]string{
+					"8807476555",
+					"5089087054",
+					"8597889608",
+					"8485769600",
+					"8700908800",
+					"6600088989",
+					"6800005943",
+					"0000007456",
+					"9000000876",
+					"8700006848",
+				})
+			},
+			want1: 35,
+		},
+		{
+			name: "example for 10 steps",
+			args: args{
+				board: func() map[uint]uint {
+					return parseIntoGrid([]string{
+						"5483143223",
+						"2745854711",
+						"5264556173",
+						"6141336146",
+						"6357385478",
+						"4167524645",
+						"2176841721",
+						"6882881134",
+						"4846848554",
+						"5283751526",
+					})
+				},
+				ticks: 10,
+			},
+			want: func() map[uint]uint {
+				return parseIntoGrid([]string{
+					"0481112976",
+					"0031112009",
+					"0041112504",
+					"0081111406",
+					"0099111306",
+					"0093511233",
+					"0442361130",
+					"5532252350",
+					"0532250600",
+					"0032240000",
+				})
+			},
+			want1: 204,
+		},
+		{
+			name: "example for 100 steps",
+			args: args{
+				board: func() map[uint]uint {
+					return parseIntoGrid([]string{
+						"5483143223",
+						"2745854711",
+						"5264556173",
+						"6141336146",
+						"6357385478",
+						"4167524645",
+						"2176841721",
+						"6882881134",
+						"4846848554",
+						"5283751526",
+					})
+				},
+				ticks: 100,
+			},
+			want: func() map[uint]uint {
+				return parseIntoGrid([]string{
+					"0397666866",
+					"0749766918",
+					"0053976933",
+					"0004297822",
+					"0004229892",
+					"0053222877",
+					"0532222966",
+					"9322228966",
+					"7922286866",
+					"6789998766",
+				})
+			},
+			want1: 1656,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := simulate(tt.args.board(), tt.args.ticks)
+			assert.Equalf(t, tt.want(), got, "simulate(%v, %v)", tt.args.board(), tt.args.ticks)
+			assert.Equalf(t, tt.want1, got1, "simulate(%v, %v)", tt.args.board(), tt.args.ticks)
+		})
+	}
+}

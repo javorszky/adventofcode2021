@@ -1,7 +1,6 @@
 package day11
 
 import (
-	"fmt"
 	"log"
 	"strings"
 )
@@ -21,35 +20,24 @@ func step(m map[uint]uint) (map[uint]uint, int) {
 	board, left := inc1(m)
 	leftLen := len(left)
 
-	fmt.Printf("leftlen is %d\n", leftLen)
-
 	for {
-		fmt.Printf("\n\nstarting a loop\n")
-
 		flashes := map[uint]uint{}
 
 		for k, v := range board {
 			if _, ok := left[k]; ok && v > 9 {
-				fmt.Printf("-- value at 0x%x is 9\n", k)
-
 				flashes[k] = 1
 
 				delete(left, k)
 			}
 		}
 
-		fmt.Printf("-- -- ranging over the flashes\n")
-
 		for k := range flashes {
 			for _, j := range getNeighbourCoords(k) {
 				if _, ok := left[j]; ok {
-					fmt.Printf("-- -- -- value at 0x%x was still in the left, incrementing that\n", j)
 					board[j]++
 				}
 			}
 		}
-
-		fmt.Printf("-- checking len of left %d with previous left len %d\n", len(left), leftLen)
 
 		if len(left) == leftLen {
 			break
@@ -148,6 +136,18 @@ func drain(m map[uint]uint) (map[uint]uint, int) {
 	}
 
 	return m, flashes
+}
+
+func simulate(board map[uint]uint, ticks int) (map[uint]uint, int) {
+	flashes := 0
+	f := 0
+
+	for i := 0; i < ticks; i++ {
+		board, f = step(board)
+		flashes += f
+	}
+
+	return board, flashes
 }
 
 func getSum(m map[uint]uint) string {
