@@ -15,8 +15,8 @@ func getInputs(fn string) []string {
 	return strings.Split(strings.TrimRight(string(data), "\n"), "\n")
 }
 
-func parseIntoGrid(input []string) map[uint]int {
-	m := make(map[uint]int)
+func parseIntoGrid(input []string) map[uint]uint {
+	m := make(map[uint]uint)
 
 	for row, line := range input {
 		for col, char := range line {
@@ -27,7 +27,7 @@ func parseIntoGrid(input []string) map[uint]int {
 	return m
 }
 
-var charToInt = map[int32]int{
+var charToInt = map[int32]uint{
 	0x30: 0,
 	0x31: 1,
 	0x32: 2,
@@ -38,4 +38,17 @@ var charToInt = map[int32]int{
 	0x37: 7,
 	0x38: 8,
 	0x39: 9,
+}
+
+var intToChar = []int32{
+	0x30,
+	0x31,
+	0x32,
+	0x33,
+	0x34,
+	0x35,
+	0x36,
+	0x37,
+	0x38,
+	0x39,
 }
