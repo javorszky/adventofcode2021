@@ -1,7 +1,6 @@
 package day13
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"strings"
@@ -16,17 +15,19 @@ func task2(dots, folds []string) string {
 
 	for _, f := range folds {
 		parts := strings.Split(f, "=")
+		nParts = nParts[:0]
+
 		for _, char := range parts[1] {
 			nParts = append(nParts, charToInt[char])
 		}
 
 		nLen := len(nParts)
+		n = 0
 
 		for ri, rn := range nParts {
 			n += rn * uint(math.Pow10(nLen-ri-1))
 		}
 
-		fmt.Printf("paper len incoming: %d%s", len(paper), util.NewLine)
 		switch parts[0] {
 		case "fold along x":
 			paper = foldLeft(paper, n)
@@ -35,11 +36,9 @@ func task2(dots, folds []string) string {
 		default:
 			log.Fatalf("something went wrong, bad part: %s%s", parts[0], util.NewLine)
 		}
-		fmt.Printf("paper len outgoing: %d%s", len(paper), util.NewLine)
-
 	}
-	return ""
-	//return visualize(paper)
+
+	return visualize(paper)
 }
 
 func visualize(paper map[uint]uint) string {

@@ -19,7 +19,8 @@ func getInputs(fn string) ([]string, []string) {
 
 	dotsAndFolds := strings.Split(string(data), util.NewLine+util.NewLine)
 
-	return strings.Split(dotsAndFolds[0], util.NewLine), strings.Split(strings.Trim(dotsAndFolds[1], util.NewLine), util.NewLine)
+	return strings.Split(dotsAndFolds[0], util.NewLine),
+		strings.Split(strings.Trim(dotsAndFolds[1], util.NewLine), util.NewLine)
 }
 
 // makePaper takes a slice of strings that look like `123,456`, and creates a map with binaries for the coordinates.
