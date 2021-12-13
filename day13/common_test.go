@@ -45,3 +45,97 @@ func Test_makePaper(t *testing.T) {
 		})
 	}
 }
+
+func Test_getVerticalFolded(t *testing.T) {
+	type args struct {
+		coord uint
+		fold  uint
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want uint
+	}{
+		{
+			name: "fold is below coordinate, ignores",
+			args: args{
+				coord: 234<<11 | 111,
+				fold:  199,
+			},
+			want: 234<<11 | 111,
+		},
+		{
+			name: "folds 2,14 at 7",
+			args: args{
+				coord: 2<<11 | 14,
+				fold:  7,
+			},
+			want: 2 << 11,
+		},
+		{
+			name: "folds 234,111 at 199 -> 164,111",
+			args: args{
+				// 234 to the right, 111 down
+				coord: 234<<11 | 111,
+				fold:  76,
+			},
+			want: 234<<11 | 41,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, getVerticalFolded(tt.args.coord, tt.args.fold),
+				"getVerticalFolded(%v, %v)", tt.args.coord, tt.args.fold)
+		})
+	}
+}
+
+func Test_foldUp(t *testing.T) {
+	type args struct {
+		paper func() map[uint]uint
+		x     uint
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want map[uint]uint
+	}{
+		{
+			name: "folds example up at 7",
+			args: args{
+				paper: func() map[uint]uint {
+					d, _ := getInputs("example_input.txt")
+
+					return makePaper(d)
+				},
+				x: 7,
+			},
+			want: map[uint]uint{
+				0 << 11:    1,
+				2 << 11:    1,
+				3 << 11:    1,
+				6 << 11:    1,
+				9 << 11:    1,
+				0<<11 | 1:  1,
+				4<<11 | 1:  1,
+				6<<11 | 2:  1,
+				10<<11 | 2: 1,
+				0<<11 | 3:  1,
+				4<<11 | 3:  1,
+				1<<11 | 4:  1,
+				3<<11 | 4:  1,
+				6<<11 | 4:  1,
+				8<<11 | 4:  1,
+				9<<11 | 4:  1,
+				10<<11 | 4: 1,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, foldUp(tt.args.paper(), tt.args.x), "foldUp(%v, %v)", tt.args.paper, tt.args.x)
+		})
+	}
+}

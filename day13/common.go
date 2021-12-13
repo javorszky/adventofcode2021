@@ -1,7 +1,6 @@
 package day13
 
 import (
-	"fmt"
 	"io/ioutil"
 	"math"
 	"strings"
@@ -23,12 +22,18 @@ func getInputs(fn string) ([]string, []string) {
 	return strings.Split(dotsAndFolds[0], util.NewLine), strings.Split(dotsAndFolds[1], util.NewLine)
 }
 
-// makePaper takes a slice of strings that look like `123,456`, and creates a with binaries for the coordinates.
+// makePaper takes a slice of strings that look like `123,456`, and creates a map with binaries for the coordinates.
 //
 // - The first coordinate, x, is the horizontal number, which means it's the columns, and lives in the first 11 bits.
 // - The second number, y, is the vertical displacement, which means row. It lives in the las 11 bits.
 //
 // For example, coordinates 533, 911 would be 0b00100001010 11110001111. 533 << 11 | 911.
+//
+//           533,        911
+//           col,        row
+// 0b00100001010 11110001111
+//
+// Note to self: draw better stuff.
 func makePaper(dots []string) map[uint]uint {
 	paper := make(map[uint]uint)
 	col := make([]uint, 0)
@@ -71,7 +76,6 @@ func makePaper(dots []string) map[uint]uint {
 			colAcc += cn * uint(math.Pow10(colLen-ci-1))
 		}
 
-		fmt.Printf("col: %d, row: %d, bin: 0b%022b%s", colAcc, rowAcc, colAcc<<11|rowAcc, util.NewLine)
 		paper[colAcc<<11|rowAcc] = 1
 	}
 
@@ -92,16 +96,28 @@ var charToInt = map[int32]uint{
 	0x2c: 10,
 }
 
-//
-//1
-//2
-//4
-//8
-//16 - 5
-//32
-//64
-//128
-//256
-//512 - 10
-//1024
-//2048
+func foldUp(paper map[uint]uint, y uint) map[uint]uint {
+	folded := make(map[uint]uint)
+
+	for k, v := range paper {
+		fc := getVerticalFolded(k, y)
+
+		folded[fc] = v | paper[fc]
+	}
+
+	return folded
+}
+
+// Coordinate (first) x increases to the right, so column.
+// Coordinate (second) y increases down, so row.
+// Variable fold is a horizontal line, so that's a row, so that's a y coordinate.
+func getVerticalFolded(coord, fold uint) uint {
+	col := coord >> 11
+	row := coord &^ (col << 11)
+
+	if row <= fold {
+		return coord
+	}
+
+	return col<<11 | fold<<1 - row
+}
