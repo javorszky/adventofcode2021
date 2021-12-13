@@ -108,6 +108,18 @@ func foldUp(paper map[uint]uint, y uint) map[uint]uint {
 	return folded
 }
 
+func foldLeft(paper map[uint]uint, y uint) map[uint]uint {
+	folded := make(map[uint]uint)
+
+	for k, v := range paper {
+		fc := getHorizontalFolded(k, y)
+
+		folded[fc] = v | paper[fc]
+	}
+
+	return folded
+}
+
 // Coordinate (first) x increases to the right, so column.
 // Coordinate (second) y increases down, so row.
 // Variable fold is a horizontal line, so that's a row, so that's a y coordinate.
@@ -120,4 +132,16 @@ func getVerticalFolded(coord, fold uint) uint {
 	}
 
 	return col<<11 | fold<<1 - row
+}
+
+// getHorizontalFolded will take a coordinate like 8,4, and folding along 5 vertical will return 2,4.
+func getHorizontalFolded(coord, fold uint) uint {
+	col := coord >> 11
+	row := coord &^ (col << 11)
+
+	if col <= fold {
+		return coord
+	}
+
+	return (fold<<1-col)<<11 | row
 }
