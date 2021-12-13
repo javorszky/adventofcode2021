@@ -6,45 +6,45 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_contains(t *testing.T) {
+func Test_parseIntoNodeMap(t *testing.T) {
 	type args struct {
-		path    []string
-		element string
+		input []string
 	}
 
 	tests := []struct {
 		name string
 		args args
-		want bool
+		want map[string][]string
 	}{
 		{
-			name: "contains returns true for exact match",
+			name: "parses super simple graph into nodemap",
 			args: args{
-				path:    []string{"ab", "bc", "DE", "de", "fg"},
-				element: "de",
+				input: []string{
+					"start-ak",
+					"end-ak",
+					"start-end",
+				},
 			},
-			want: true,
-		},
-		{
-			name: "contains returns true for exact match",
-			args: args{
-				path:    []string{"ab", "bc", "DE", "de", "fg"},
-				element: "xo",
+			want: map[string][]string{
+				"start": {"ak", "end"},
+				"end":   {"ak", "start"},
+				"ak":    {"start", "end"},
 			},
-			want: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, contains(tt.args.path, tt.args.element))
+			assert.Equalf(t, tt.want, parseIntoNodeMap(tt.args.input), "parseIntoNodeMap(%v)", tt.args.input)
 		})
 	}
 }
 
-func Test_walkNodes(t *testing.T) {
+func Test_walkNodeMap(t *testing.T) {
 	type args struct {
-		start       func() *node
+		currentNode string
+		allNodes    func() map[string][]string
 		currentPath []string
+		cntns       func([]string, string) bool
 	}
 
 	tests := []struct {
@@ -53,18 +53,18 @@ func Test_walkNodes(t *testing.T) {
 		want [][]string
 	}{
 		{
-			name: "walks nodes super simple",
+			name: "walks nodemap super simple",
 			args: args{
-				start: func() *node {
-					nodes := parseIntoNodes([]string{
+				currentNode: startName,
+				allNodes: func() map[string][]string {
+					return parseIntoNodeMap([]string{
 						"start-ak",
 						"ak-end",
 						"start-end",
 					})
-
-					return nodes["start"]
 				},
 				currentPath: []string{},
+				cntns:       contains,
 			},
 			want: [][]string{
 				{"start", "end"},
@@ -72,10 +72,11 @@ func Test_walkNodes(t *testing.T) {
 			},
 		},
 		{
-			name: "walks nodes super simple",
+			name: "walks nodemap small",
 			args: args{
-				start: func() *node {
-					nodes := parseIntoNodes([]string{
+				currentNode: startName,
+				allNodes: func() map[string][]string {
+					return parseIntoNodeMap([]string{
 						"start-A",
 						"start-b",
 						"A-c",
@@ -84,10 +85,9 @@ func Test_walkNodes(t *testing.T) {
 						"A-end",
 						"b-end",
 					})
-
-					return nodes["start"]
 				},
 				currentPath: []string{},
+				cntns:       contains,
 			},
 			want: [][]string{
 				{"start", "A", "b", "A", "c", "A", "end"},
@@ -103,14 +103,14 @@ func Test_walkNodes(t *testing.T) {
 			},
 		},
 		{
-			name: "walks nodes example slightly larger",
+			name: "walks nodemap slightly larger",
 			args: args{
-				start: func() *node {
-					nodes := parseIntoNodes(getInputs("example_input.txt"))
-
-					return nodes["start"]
+				currentNode: startName,
+				allNodes: func() map[string][]string {
+					return parseIntoNodeMap(getInputs("example_input.txt"))
 				},
 				currentPath: []string{},
+				cntns:       contains,
 			},
 			want: [][]string{
 				{"start", "HN", "dc", "HN", "end"},
@@ -137,63 +137,17 @@ func Test_walkNodes(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.ElementsMatchf(t, tt.want, walkNodes(tt.args.start(), tt.args.currentPath, contains),
-				"walkNodes(%v, %v)", tt.args.start, tt.args.currentPath)
-		})
-	}
-}
-
-func Test_task1(t *testing.T) {
-	type args struct {
-		fn string
-	}
-	tests := []struct {
-		name string
-		args args
-		f    func([]string) int
-		want int
-	}{
-		{
-			name: "nodes smallest ex",
-			args: args{fn: "example_input_small.txt"},
-			f:    task1,
-			want: 10,
-		},
-		{
-			name: "nodes ex",
-			args: args{fn: "example_input.txt"},
-			f:    task1,
-			want: 19,
-		},
-		{
-			name: "nodes large ex",
-			args: args{fn: "example_input_large.txt"},
-			f:    task1,
-			want: 226,
-		},
-		{
-			name: "map smallest ex",
-			args: args{fn: "example_input_small.txt"},
-			f:    task1Map,
-			want: 10,
-		},
-		{
-			name: "map ex",
-			args: args{fn: "example_input.txt"},
-			f:    task1Map,
-			want: 19,
-		},
-		{
-			name: "map large ex",
-			args: args{fn: "example_input_large.txt"},
-			f:    task1Map,
-			want: 226,
-		},
-	}
-	for _, tt := range tests {
-		input := benchInput(t, tt.args.fn)
-		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, task1(input), "task1(%v)", input)
+			assert.ElementsMatchf(t, tt.want, walkNodeMap(
+				tt.args.currentNode,
+				tt.args.allNodes(),
+				tt.args.currentPath,
+				tt.args.cntns,
+			),
+				"walkNodeMap(%v, %v, %v, %v)",
+				tt.args.currentNode,
+				tt.args.allNodes(),
+				tt.args.currentPath,
+				tt.args.cntns)
 		})
 	}
 }

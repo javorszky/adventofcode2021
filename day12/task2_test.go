@@ -100,49 +100,89 @@ func Test_task2(t *testing.T) {
 	}
 }
 
-func Benchmark_Task2(b *testing.B) {
+func Benchmark_Tasks(b *testing.B) {
 	benchmarks := []struct {
 		name string
 		fn   string
 		f    func([]string) int
 	}{
 		{
-			name: "linear smallex",
+			name: "1: nodes smallex",
+			fn:   "example_input_small.txt",
+			f:    task1,
+		},
+		{
+			name: "1: nodes ex",
+			fn:   "example_input.txt",
+			f:    task1,
+		},
+		{
+			name: "1: nodes largex",
+			fn:   "example_input_large.txt",
+			f:    task1,
+		},
+		{
+			name: "1: nodes actual",
+			fn:   "input.txt",
+			f:    task1,
+		},
+		{
+			name: "1: map smallex",
+			fn:   "example_input_small.txt",
+			f:    task1Map,
+		},
+		{
+			name: "1: map ex",
+			fn:   "example_input.txt",
+			f:    task1Map,
+		},
+		{
+			name: "1: map largex",
+			fn:   "example_input_large.txt",
+			f:    task1Map,
+		},
+		{
+			name: "1: map actual",
+			fn:   "input.txt",
+			f:    task1Map,
+		},
+		{
+			name: "2: linear smallex",
 			fn:   "example_input_small.txt",
 			f:    task2,
 		},
 		{
-			name: "linear ex",
+			name: "2: linear ex",
 			fn:   "example_input.txt",
 			f:    task2,
 		},
 		{
-			name: "linear largex",
+			name: "2: linear largex",
 			fn:   "example_input_large.txt",
 			f:    task2,
 		},
 		{
-			name: "linear actual",
+			name: "2: linear actual",
 			fn:   "input.txt",
 			f:    task2,
 		},
 		{
-			name: "concurrent smallex",
+			name: "2: concurrent smallex",
 			fn:   "example_input_small.txt",
 			f:    task2Concurrent,
 		},
 		{
-			name: "concurrent ex",
+			name: "2: concurrent ex",
 			fn:   "example_input.txt",
 			f:    task2Concurrent,
 		},
 		{
-			name: "concurrent largex",
+			name: "2: concurrent largex",
 			fn:   "example_input_large.txt",
 			f:    task2Concurrent,
 		},
 		{
-			name: "concurrent actual",
+			name: "2: concurrent actual",
 			fn:   "input.txt",
 			f:    task2Concurrent,
 		},
