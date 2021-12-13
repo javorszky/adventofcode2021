@@ -3,6 +3,8 @@ package day03
 import (
 	"fmt"
 	"log"
+
+	"github.com/javorszky/adventofcode2021/util"
 )
 
 func task2(input []uint, width int) interface{} {
@@ -23,7 +25,7 @@ func reduceList(input []uint, width int, reducer func(int, int) bool) (uint, err
 	newList := filterList(input, 1<<(width-1), reducer)
 
 	if len(newList) != 1 {
-		return 0, fmt.Errorf("length of new list is not 1, it's %d\n%v", len(newList), newList)
+		return 0, fmt.Errorf("length of new list is not 1, it's %d%s%v", len(newList), util.NewLine, newList)
 	}
 
 	return newList[0], nil
