@@ -15,3 +15,4 @@ Here be solutions for aoc21 by moi!
 * [Day 11](day11/) - ⚡️ FLASH!!! AAAaaaaaaaaaa!!! Saviour of the
   universe!!! [https://www.youtube.com/watch?v=hYTYqs-ytSk](https://www.youtube.com/watch?v=hYTYqs-ytSk)
 * [Day 12](day12/) - Don't just talk the talk, walk the walk too! I mean caves... I mean graph.
+* [Day 13](day13/) - remember, you should know when to fold in poker!
