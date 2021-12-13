@@ -4,6 +4,8 @@ import (
 	"log"
 	"math"
 	"strings"
+
+	"github.com/javorszky/adventofcode2021/util"
 )
 
 func task2(input []string) int {
@@ -26,9 +28,12 @@ func deduce(input string) int {
 	set.parse(allNums)
 
 	if !set.IsSolved() {
-		log.Fatalf("could not solve set for line\n[ %s ]\n"+
-			"current state:\n"+
-			"%#v\n", input, set.State())
+		log.Fatalf("could not solve set for line%s[ %s ]%s"+
+			"current state:%s"+
+			"%#v%s",
+			util.NewLine, input, util.NewLine,
+			util.NewLine,
+			set.State(), util.NewLine)
 	}
 
 	a := 0
