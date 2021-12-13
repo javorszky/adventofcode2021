@@ -5,6 +5,8 @@ import (
 	"log"
 	"strconv"
 	"strings"
+
+	"github.com/javorszky/adventofcode2021/util"
 )
 
 const (
@@ -32,7 +34,7 @@ func getInputs(fn string) []string {
 		panic(err)
 	}
 
-	return strings.Split(strings.TrimRight(string(data), "\n"), "\n\n")
+	return strings.Split(strings.TrimRight(string(data), util.NewLine), util.NewLine+util.NewLine)
 }
 
 func getParsed(inputs []string) ([]int, []bingoBoard) {
@@ -61,7 +63,7 @@ func parseBingoBoards(input []string) []bingoBoard {
 	b := make([]bingoBoard, 0)
 
 	for _, s := range input {
-		removedNewLines := strings.ReplaceAll(s, "\n", " ")
+		removedNewLines := strings.ReplaceAll(s, util.NewLine, " ")
 		removedMultipleSpaces := strings.ReplaceAll(removedNewLines, "  ", " ")
 		removedTrimmedEnds := strings.Trim(removedMultipleSpaces, " ")
 		sliceOfStringNumbers := strings.Split(removedTrimmedEnds, " ")

@@ -3,6 +3,8 @@ package day12
 import (
 	"io/ioutil"
 	"strings"
+
+	"github.com/javorszky/adventofcode2021/util"
 )
 
 const (
@@ -17,7 +19,7 @@ func getInputs(fn string) []string {
 		panic(err)
 	}
 
-	return strings.Split(strings.TrimRight(string(data), "\n"), "\n")
+	return strings.Split(strings.TrimRight(string(data), util.NewLine), util.NewLine)
 }
 
 type node struct {

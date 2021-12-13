@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
+
+	"github.com/javorszky/adventofcode2021/util"
 )
 
 // getInputs reads the input.txt file and returns them as a slice of strings for each row.
@@ -14,7 +16,7 @@ func getInputs(fn string) []int {
 		panic(err)
 	}
 
-	stringData := strings.Split(strings.TrimRight(string(data), "\n"), "\n")
+	stringData := strings.Split(strings.TrimRight(string(data), util.NewLine), util.NewLine)
 	intData := make([]int, len(stringData))
 
 	for i, line := range stringData {

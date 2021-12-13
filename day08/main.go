@@ -13,5 +13,5 @@ func Tasks() {
 	fmt.Printf("Task 1: There are a total of %d unique digits on display\n", output)
 
 	output2 := task2(input)
-	fmt.Printf("Task 1: The result is something: %d\n", output2)
+	fmt.Printf("Task 2: Adding up all the output values yields %d.\n", output2)
 }

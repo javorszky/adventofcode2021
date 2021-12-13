@@ -5,6 +5,8 @@ import (
 	"log"
 	"strconv"
 	"strings"
+
+	"github.com/javorszky/adventofcode2021/util"
 )
 
 const filename = "day06/input.txt"
@@ -29,7 +31,7 @@ func getInputs(fn string) string {
 		panic(err)
 	}
 
-	return strings.TrimRight(string(data), "\n")
+	return strings.TrimRight(string(data), util.NewLine)
 }
 
 func parseFishSplitAtoi(in string) []int {

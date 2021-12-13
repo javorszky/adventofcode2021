@@ -3,6 +3,8 @@ package day09
 import (
 	"io/ioutil"
 	"strings"
+
+	"github.com/javorszky/adventofcode2021/util"
 )
 
 // getInputs reads the input.txt file and returns them as a slice of strings for each row.
@@ -12,7 +14,7 @@ func getInputs(fn string) []string {
 		panic(err)
 	}
 
-	return strings.Split(strings.TrimRight(string(data), "\n"), "\n")
+	return strings.Split(strings.TrimRight(string(data), util.NewLine), util.NewLine)
 }
 
 func getLowestPoints(horz, verts [][]int) map[uint]int {
@@ -33,29 +35,11 @@ func getLowestPoints(horz, verts [][]int) map[uint]int {
 		}
 	}
 
-	//fmt.Printf("HCoords with row valley coords\n")
-	//for hc, hv := range binHCoords {
-	//	x, y := binToCoords(hc)
-	//	//fmt.Printf("[%2d, %2d]: %d\n", x, y, hv)
-	//}
-
-	//fmt.Printf("VCoords with column valley coords\n")
-	//for vc, vv := range binVCoords {
-	//	x, y := binToCoords(vc)
-	//	fmt.Printf("[%2d, %2d]: %d\n", x, y, vv)
-	//}
-
 	for key := range binHCoords {
 		if _, ok := binVCoords[key]; !ok {
 			delete(binHCoords, key)
 		}
 	}
-
-	//fmt.Printf("HCoords with row valley coords after double checking with vcoords\n")
-	//for hc, hv := range binHCoords {
-	//	x, y := binToCoords(hc)
-	//	fmt.Printf("[%2d, %2d]: %d\n", x, y, hv)
-	//}
 
 	return binHCoords
 }

@@ -6,6 +6,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/javorszky/adventofcode2021/util"
 )
 
 const filename = "day07/input.txt"
@@ -17,7 +19,7 @@ func getInputs(fn string) []string {
 		panic(err)
 	}
 
-	return strings.Split(strings.TrimRight(string(data), "\n"), ",")
+	return strings.Split(strings.TrimRight(string(data), util.NewLine), ",")
 }
 
 func parseToInts(in []string) []int {

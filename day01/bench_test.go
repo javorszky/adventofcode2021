@@ -10,6 +10,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/javorszky/adventofcode2021/util"
 )
 
 func TestCorrectness(t *testing.T) {
@@ -190,7 +192,7 @@ func okraBenchInput2(b testing.TB, filename string) []string {
 		log.Fatal(err)
 	}
 
-	values := strings.Split(strings.TrimRight(string(reader), "\n"), "\n")
+	values := strings.Split(strings.TrimRight(string(reader), util.NewLine), util.NewLine)
 
 	return values
 }

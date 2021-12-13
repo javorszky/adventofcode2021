@@ -3,6 +3,8 @@ package day11
 import (
 	"io/ioutil"
 	"strings"
+
+	"github.com/javorszky/adventofcode2021/util"
 )
 
 // getInputs reads the input.txt file and returns them as a slice of strings for each row.
@@ -12,7 +14,7 @@ func getInputs(fn string) []string {
 		panic(err)
 	}
 
-	return strings.Split(strings.TrimRight(string(data), "\n"), "\n")
+	return strings.Split(strings.TrimRight(string(data), util.NewLine), util.NewLine)
 }
 
 func parseIntoGrid(input []string) map[uint]uint {
