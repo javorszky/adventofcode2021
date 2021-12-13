@@ -9,7 +9,7 @@ func Tasks() {
 
 	dots, folds := getInputs(filename)
 
-	output := task1(dots)
+	output := task1(dots, folds)
 	fmt.Printf("Task 1: The result is something: %v\n", output)
 
 	output2 := task2(folds)

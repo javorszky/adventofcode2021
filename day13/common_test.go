@@ -17,6 +17,13 @@ func Test_makePaper(t *testing.T) {
 		want map[uint]uint
 	}{
 		{
+			name: "parses a single coordinate",
+			args: args{dots: []string{"533,911"}},
+			want: map[uint]uint{
+				0b0100001010101110001111: 1,
+			},
+		},
+		{
 			name: "parses small input into paper",
 			args: args{dots: []string{
 				"543,332",

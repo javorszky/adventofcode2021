@@ -1,9 +1,12 @@
 package day13
 
 import (
+	"fmt"
 	"io/ioutil"
 	"math"
 	"strings"
+
+	"github.com/javorszky/adventofcode2021/util"
 )
 
 //var folds = regexp.MustCompile(`^fold along (.)=(\d+)$`)
@@ -15,54 +18,61 @@ func getInputs(fn string) ([]string, []string) {
 		panic(err)
 	}
 
-	dotsAndFolds := strings.Split(string(data), "\n\n")
+	dotsAndFolds := strings.Split(string(data), util.NewLine+util.NewLine)
 
-	return strings.Split(dotsAndFolds[0], "\n"), strings.Split(dotsAndFolds[1], "\n")
+	return strings.Split(dotsAndFolds[0], util.NewLine), strings.Split(dotsAndFolds[1], util.NewLine)
 }
 
+// makePaper takes a slice of strings that look like `123,456`, and creates a with binaries for the coordinates.
+//
+// - The first coordinate, x, is the horizontal number, which means it's the columns, and lives in the first 11 bits.
+// - The second number, y, is the vertical displacement, which means row. It lives in the las 11 bits.
+//
+// For example, coordinates 533, 911 would be 0b00100001010 11110001111. 533 << 11 | 911.
 func makePaper(dots []string) map[uint]uint {
 	paper := make(map[uint]uint)
-	x := make([]uint, 0)
-	y := make([]uint, 0)
+	col := make([]uint, 0)
+	row := make([]uint, 0)
 	sawComma := true
 
 	for _, line := range dots {
 		// reset counters and accumulators.
 		sawComma = false
-		x = x[:0]
-		y = y[:0]
+		col = col[:0]
+		row = row[:0]
 
 		for _, char := range line {
 			num := charToInt[char]
-			// if it's a comma, set the comma
+			// if it's a comma, set the comma seen to true.
 			if num > 9 {
 				sawComma = true
 
 				continue
 			}
 			// if we've seen a comma, start accumulating into other slice.
-			if !sawComma {
-				x = append(x, num)
+			if sawComma {
+				row = append(row, num)
 			} else {
-				y = append(y, num)
+				col = append(col, num)
 			}
 		}
 
-		xacc := uint(0)
-		xlen := len(x)
+		rowAcc := uint(0)
+		rowLen := len(row)
 
-		for xi, xn := range x {
-			xacc += xn * uint(math.Pow10(xlen-xi-1))
+		for ri, rn := range row {
+			rowAcc += rn * uint(math.Pow10(rowLen-ri-1))
 		}
 
-		yacc := uint(0)
-		ylen := len(y)
+		colAcc := uint(0)
+		colLen := len(col)
 
-		for yi, yn := range y {
-			yacc += yn * uint(math.Pow10(ylen-yi-1))
+		for ci, cn := range col {
+			colAcc += cn * uint(math.Pow10(colLen-ci-1))
 		}
 
-		paper[xacc<<11|yacc] = 1
+		fmt.Printf("col: %d, row: %d, bin: 0b%022b%s", colAcc, rowAcc, colAcc<<11|rowAcc, util.NewLine)
+		paper[colAcc<<11|rowAcc] = 1
 	}
 
 	return paper
