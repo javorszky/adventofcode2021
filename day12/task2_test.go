@@ -57,39 +57,75 @@ func Test_task2(t *testing.T) {
 		want int
 	}{
 		{
-			name: "task 2 smol example",
+			name: "node smol example",
 			args: args{fn: "example_input_small.txt"},
 			f:    task2,
 			want: 36,
 		},
 		{
-			name: "task 2 example",
+			name: "node example",
 			args: args{fn: "example_input.txt"},
 			f:    task2,
 			want: 103,
 		},
 		{
-			name: "task 2 slightly larger example",
+			name: "node slightly larger example",
 			args: args{fn: "example_input_large.txt"},
 			f:    task2,
 			want: 3509,
 		},
 		{
-			name: "task 2 concurrently smol example",
+			name: "map smol example",
+			args: args{fn: "example_input_small.txt"},
+			f:    task2Map,
+			want: 36,
+		},
+		{
+			name: "map example",
+			args: args{fn: "example_input.txt"},
+			f:    task2Map,
+			want: 103,
+		},
+		{
+			name: "map slightly larger example",
+			args: args{fn: "example_input_large.txt"},
+			f:    task2Map,
+			want: 3509,
+		},
+		{
+			name: "node concurrently smol example",
 			args: args{fn: "example_input_small.txt"},
 			f:    task2Concurrent,
 			want: 36,
 		},
 		{
-			name: "task 2 concurrently example",
+			name: "node concurrently example",
 			args: args{fn: "example_input.txt"},
 			f:    task2Concurrent,
 			want: 103,
 		},
 		{
-			name: "task 2 concurrently slightly larger example",
+			name: "node concurrently slightly larger example",
 			args: args{fn: "example_input_large.txt"},
 			f:    task2Concurrent,
+			want: 3509,
+		},
+		{
+			name: "map concurrently smol example",
+			args: args{fn: "example_input_small.txt"},
+			f:    task2MapConcurrent,
+			want: 36,
+		},
+		{
+			name: "map concurrently example",
+			args: args{fn: "example_input.txt"},
+			f:    task2MapConcurrent,
+			want: 103,
+		},
+		{
+			name: "map concurrently slightly larger example",
+			args: args{fn: "example_input_large.txt"},
+			f:    task2MapConcurrent,
 			want: 3509,
 		},
 	}
@@ -147,44 +183,84 @@ func Benchmark_Tasks(b *testing.B) {
 			f:    task1Map,
 		},
 		{
-			name: "2: linear smallex",
+			name: "2: nodes smallex",
 			fn:   "example_input_small.txt",
 			f:    task2,
 		},
 		{
-			name: "2: linear ex",
+			name: "2: nodes ex",
 			fn:   "example_input.txt",
 			f:    task2,
 		},
 		{
-			name: "2: linear largex",
+			name: "2: nodes largex",
 			fn:   "example_input_large.txt",
 			f:    task2,
 		},
 		{
-			name: "2: linear actual",
+			name: "2: nodes actual",
 			fn:   "input.txt",
 			f:    task2,
 		},
 		{
-			name: "2: concurrent smallex",
+			name: "2: nodes concurrent smallex",
 			fn:   "example_input_small.txt",
 			f:    task2Concurrent,
 		},
 		{
-			name: "2: concurrent ex",
+			name: "2: nodes concurrent ex",
 			fn:   "example_input.txt",
 			f:    task2Concurrent,
 		},
 		{
-			name: "2: concurrent largex",
+			name: "2: nodes concurrent largex",
 			fn:   "example_input_large.txt",
 			f:    task2Concurrent,
 		},
 		{
-			name: "2: concurrent actual",
+			name: "2: nodes concurrent actual",
 			fn:   "input.txt",
 			f:    task2Concurrent,
+		},
+		{
+			name: "2: map smallex",
+			fn:   "example_input_small.txt",
+			f:    task2Map,
+		},
+		{
+			name: "2: map ex",
+			fn:   "example_input.txt",
+			f:    task2Map,
+		},
+		{
+			name: "2: map largex",
+			fn:   "example_input_large.txt",
+			f:    task2Map,
+		},
+		{
+			name: "2: map actual",
+			fn:   "input.txt",
+			f:    task2Map,
+		},
+		{
+			name: "2: map concurrent smallex",
+			fn:   "example_input_small.txt",
+			f:    task2MapConcurrent,
+		},
+		{
+			name: "2: map concurrent ex",
+			fn:   "example_input.txt",
+			f:    task2MapConcurrent,
+		},
+		{
+			name: "2: map concurrent largex",
+			fn:   "example_input_large.txt",
+			f:    task2MapConcurrent,
+		},
+		{
+			name: "2: map concurrent actual",
+			fn:   "input.txt",
+			f:    task2MapConcurrent,
 		},
 	}
 	for _, bm := range benchmarks {

@@ -40,16 +40,23 @@ func task2Concurrent(input []string) int {
 
 	wg := sync.WaitGroup{}
 	paths := make([][]string, 0, 10000)
+	queue := make(chan [][]string, 1)
 
 	for _, smolCave := range smolCaves {
 		wg.Add(1)
 
 		go func(smc string) {
-			defer wg.Done()
-
-			paths = append(paths, walkNodes(nodes[startName], []string{}, containsTwice(smc))...)
+			queue <- walkNodes(nodes[startName], []string{}, containsTwice(smc))
 		}(smolCave)
 	}
+
+	go func() {
+		for m := range queue {
+			paths = append(paths, m...)
+
+			wg.Done()
+		}
+	}()
 
 	wg.Wait()
 

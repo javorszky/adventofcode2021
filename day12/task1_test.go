@@ -147,6 +147,7 @@ func Test_task1(t *testing.T) {
 	type args struct {
 		fn string
 	}
+
 	tests := []struct {
 		name string
 		args args
