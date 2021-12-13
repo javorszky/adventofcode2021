@@ -41,7 +41,7 @@ func parseFishSplitAtoi(in string) []int {
 	for i, ns := range numStrings {
 		n, err := strconv.Atoi(ns)
 		if err != nil {
-			log.Fatalf("failed to convert string [%s] into int: %s\n", ns, err)
+			log.Fatalf("failed to convert string [%s] into int: %s%s", ns, err, util.NewLine)
 		}
 
 		out[i] = n
@@ -60,7 +60,7 @@ func parseFishWalkAtoi(in string) []int {
 		default:
 			n, err := strconv.Atoi(string(ns))
 			if err != nil {
-				log.Fatalf("failed to convert string [%s] into int: %s\n", string(ns), err)
+				log.Fatalf("failed to convert string [%s] into int: %s%s", string(ns), err, util.NewLine)
 			}
 
 			out = append(out, n)
@@ -106,7 +106,7 @@ func parseFishForAtoi(in string) []int {
 		default:
 			n, err := strconv.Atoi(string(in[i]))
 			if err != nil {
-				log.Fatalf("failed to convert string [%s] into int: %s\n", string(in[i]), err)
+				log.Fatalf("failed to convert string [%s] into int: %s%s", string(in[i]), err, util.NewLine)
 			}
 
 			out = append(out, n)
