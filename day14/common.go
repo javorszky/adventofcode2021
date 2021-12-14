@@ -49,12 +49,15 @@ var codePointToLetter = map[uint]string{
 	0b01011010: "Z",
 }
 
-func getBestMap(rules []string) map[uint][2]uint {
-	br := make(map[uint][2]uint)
+func getBestMap(rules []string) map[string][2]string {
+	br := make(map[string][2]string)
 
 	for _, line := range rules {
 		parts := strings.Split(line, " -> ")
-		br[uint(parts[0][0])<<8|uint(parts[0][1])] = [2]uint{uint(parts[0][0])<<8 | uint(parts[1][0]), uint(parts[1][0])<<8 | uint(parts[0][1])}
+		br[codePointToLetter[uint(parts[0][0])]+codePointToLetter[uint(parts[0][1])]] = [2]string{
+			codePointToLetter[uint(parts[0][0])] + codePointToLetter[uint(parts[1][0])],
+			codePointToLetter[uint(parts[1][0])] + codePointToLetter[uint(parts[0][1])],
+		}
 	}
 
 	return br

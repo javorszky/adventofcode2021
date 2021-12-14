@@ -164,7 +164,7 @@ func Test_task1(t *testing.T) {
 		want int
 	}{
 		{
-			name: "solves example",
+			name: "solves example slice",
 			args: args{
 				template: "NNCB",
 				rules: []string{
@@ -190,7 +190,7 @@ func Test_task1(t *testing.T) {
 			want: 1588,
 		},
 		{
-			name: "solves example",
+			name: "solves example linked list",
 			args: args{
 				template: "NNCB",
 				rules: []string{
@@ -213,6 +213,32 @@ func Test_task1(t *testing.T) {
 				},
 			},
 			fn:   task1LinkedList,
+			want: 1588,
+		},
+		{
+			name: "solves example counter",
+			args: args{
+				template: "NNCB",
+				rules: []string{
+					"CH -> B",
+					"HH -> N",
+					"CB -> H",
+					"NH -> C",
+					"HB -> C",
+					"HC -> B",
+					"HN -> C",
+					"NN -> C",
+					"BH -> H",
+					"NC -> B",
+					"NB -> B",
+					"BN -> B",
+					"BB -> N",
+					"BC -> B",
+					"CC -> N",
+					"CN -> C",
+				},
+			},
+			fn:   task1Counting,
 			want: 1588,
 		},
 	}

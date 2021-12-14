@@ -10,6 +10,7 @@ func Test_getBestMap(t *testing.T) {
 	type args struct {
 		rules []string
 	}
+
 	tests := []struct {
 		name string
 		args args
