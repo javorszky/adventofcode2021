@@ -13,10 +13,10 @@ func Tasks() {
 
 	template, rules := getInputs(filename)
 
-	output := task1(template, rules)
+	output := task1Counting(template, rules)
 	fmt.Printf("Task 1: The difference between the most common and least common element in the polymer is %d%s",
 		output, util.NewLine)
 
-	output2 := task2(template, rules)
+	output2 := task2Counting(template, rules)
 	fmt.Printf("Task 2: After 40 steps, the difference is %d%s", output2, util.NewLine)
 }

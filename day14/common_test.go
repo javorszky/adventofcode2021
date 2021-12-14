@@ -14,7 +14,7 @@ func Test_getBestMap(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want map[uint][2]uint
+		want map[string][2]string
 	}{
 		{
 			name: "parses a ruleset into the best map",
@@ -25,10 +25,10 @@ func Test_getBestMap(t *testing.T) {
 					"BV -> N",
 				},
 			},
-			want: map[uint][2]uint{
-				0b0100111001001110: {0b0100111001000010, 0b0100001001001110},
-				0b0100111001000010: {0b0100111001010110, 0b0101011001000010},
-				0b0100001001010110: {0b0100001001001110, 0b0100111001010110},
+			want: map[string][2]string{
+				"NN": {"NB", "BN"},
+				"NB": {"NV", "VB"},
+				"BV": {"BN", "NV"},
 			},
 		},
 	}

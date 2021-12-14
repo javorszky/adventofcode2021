@@ -265,6 +265,36 @@ func Benchmark_Tasks(b *testing.B) {
 			fn:       task1LinkedList,
 			filename: "example_input.txt",
 		},
+		{
+			name:     "task1 counter example",
+			fn:       task1Counting,
+			filename: "example_input.txt",
+		},
+		{
+			name:     "task2 counter example",
+			fn:       task2Counting,
+			filename: "example_input.txt",
+		},
+		{
+			name:     "task1 slice actual",
+			fn:       task1,
+			filename: "input.txt",
+		},
+		{
+			name:     "task1 linked list actual",
+			fn:       task1LinkedList,
+			filename: "input.txt",
+		},
+		{
+			name:     "task1 counter actual",
+			fn:       task1Counting,
+			filename: "input.txt",
+		},
+		{
+			name:     "task2 counter actual",
+			fn:       task2Counting,
+			filename: "input.txt",
+		},
 	}
 
 	for _, bm := range benchmarks {
