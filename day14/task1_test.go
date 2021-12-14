@@ -160,6 +160,7 @@ func Test_task1(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
+		fn   func(string, []string) int
 		want int
 	}{
 		{
@@ -185,12 +186,73 @@ func Test_task1(t *testing.T) {
 					"CN -> C",
 				},
 			},
+			fn:   task1,
+			want: 1588,
+		},
+		{
+			name: "solves example",
+			args: args{
+				template: "NNCB",
+				rules: []string{
+					"CH -> B",
+					"HH -> N",
+					"CB -> H",
+					"NH -> C",
+					"HB -> C",
+					"HC -> B",
+					"HN -> C",
+					"NN -> C",
+					"BH -> H",
+					"NC -> B",
+					"NB -> B",
+					"BN -> B",
+					"BB -> N",
+					"BC -> B",
+					"CC -> N",
+					"CN -> C",
+				},
+			},
+			fn:   task1LinkedList,
 			want: 1588,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, task1(tt.args.template, tt.args.rules), "task1(%v, %v)", tt.args.template, tt.args.rules)
+			assert.Equalf(t, tt.want, tt.fn(tt.args.template, tt.args.rules), "task1(%v, %v)", tt.args.template, tt.args.rules)
 		})
 	}
+}
+
+func Benchmark_Tasks(b *testing.B) {
+	benchmarks := []struct {
+		name     string
+		fn       func(string, []string) int
+		filename string
+	}{
+		{
+			name:     "task1 slice example",
+			fn:       task1,
+			filename: "example_input.txt",
+		},
+		{
+			name:     "task1 linked list example",
+			fn:       task1LinkedList,
+			filename: "example_input.txt",
+		},
+	}
+
+	for _, bm := range benchmarks {
+		template, rules := benchInput(b, bm.filename)
+		b.Run(bm.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				bm.fn(template, rules)
+			}
+		})
+	}
+}
+
+func benchInput(tb testing.TB, filename string) (string, []string) {
+	tb.Helper()
+
+	return getInputs(filename)
 }

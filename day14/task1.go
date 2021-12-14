@@ -1,13 +1,16 @@
 package day14
 
 import (
+	"fmt"
 	"strings"
 )
 
 func task1(template string, rules []string) int {
 	betterRules := parseBetterRules(rules)
-
 	polymer := parsePolymer(template)
+
+	possibilities := getPossibleLetters(polymer, betterRules)
+	fmt.Printf("\npossibilities be like: \n%v\n", possibilities)
 
 	for j := 0; j < 10; j++ {
 		polymer = work(polymer, betterRules)
@@ -65,4 +68,37 @@ func parseBetterRules(rules []string) map[uint]uint {
 	}
 
 	return br
+}
+
+func getPossibleLetters(template []uint, betterRules map[uint]uint) map[string]struct{} {
+	possibilities := make(map[string]struct{})
+	np := make([]uint, len(template))
+	copy(np, template)
+
+	pLen := len(possibilities)
+
+	for {
+		np = work(np, betterRules)
+		for _, cp := range np {
+			if _, ok := possibilities[codePointToLetter[cp]]; !ok {
+				possibilities[codePointToLetter[cp]] = struct{}{}
+			}
+		}
+
+		if len(possibilities) == pLen {
+			break
+		}
+
+		pLen = len(possibilities)
+	}
+
+	return possibilities
+}
+
+func drainSlice(s []uint) string {
+	var sb strings.Builder
+	for _, v := range s {
+		sb.WriteString(codePointToLetter[v])
+	}
+	return sb.String()
 }
