@@ -17,19 +17,19 @@ func getInputs(fn string) []string {
 	return strings.Split(strings.TrimRight(string(data), util.NewLine), util.NewLine)
 }
 
-func makeMap(input []string) map[int]int {
+func makeMap(input []string, register int) map[int]int {
 	m := make(map[int]int)
 
 	for i, v := range input {
 		for j, w := range v {
-			m[100*i+j] = charToInt[w]
+			m[register*i+j] = charToInt[w]
 		}
 	}
 
 	return m
 }
 
-func makeWalkOrder(in map[int]int, edge int) []int {
+func makeWalkOrder(in map[int]int, edge int, register int) []int {
 	order := make([]int, len(in))
 	c := 0
 
@@ -44,7 +44,7 @@ func makeWalkOrder(in map[int]int, edge int) []int {
 			y := j
 			x := i - j
 
-			order[c] = 100*x + y
+			order[c] = register*x + y
 			c++
 
 			if x == edge {
@@ -56,9 +56,9 @@ func makeWalkOrder(in map[int]int, edge int) []int {
 	return order
 }
 
-func split(in int) (int, int) {
-	x := in / 100
-	y := in - x*100
+func split(in int, register int) (int, int) {
+	x := in / register
+	y := in - x*register
 
 	return x, y
 }
