@@ -33,6 +33,21 @@ func Test_tasks(t *testing.T) {
 			want: 14,
 		},
 		{
+			name: "solves artificial input for task 1 with dijkstra",
+			args: args{
+				input: []string{
+					"199999",
+					"119999",
+					"919999",
+					"119999",
+					"199111",
+					"111191",
+				},
+			},
+			f:    task1Dijkstra,
+			want: 14,
+		},
+		{
 			name: "solves example input for task 1",
 			args: args{input: getInputs("example_input.txt")},
 			f:    task1,
@@ -45,6 +60,12 @@ func Test_tasks(t *testing.T) {
 			want: 40,
 		},
 		{
+			name: "solves example input for task 1 dijkstra",
+			args: args{input: getInputs("example_input.txt")},
+			f:    task1Dijkstra,
+			want: 40,
+		},
+		{
 			name: "solves actual input for task 1",
 			args: args{input: getInputs("input.txt")},
 			f:    task1,
@@ -54,6 +75,12 @@ func Test_tasks(t *testing.T) {
 			name: "solves actual input for task 1 map",
 			args: args{input: getInputs("input.txt")},
 			f:    task1Map,
+			want: 373,
+		},
+		{
+			name: "solves actual input for task 1 dijkstra",
+			args: args{input: getInputs("input.txt")},
+			f:    task1Dijkstra,
 			want: 373,
 		},
 		{
