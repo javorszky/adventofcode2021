@@ -21,8 +21,9 @@ func task2Map(input []string) int {
 	walkOrder := makeWalkOrderMap(bigField)
 	riskMap := makeRiskMapMap(bigField, walkOrder)
 	riskMap2 := makeRiskMapMapAgain(riskMap, bigField)
+	riskMap3 := makeRiskMapMapAgain(riskMap2, bigField)
 
-	return riskMap2[len(riskMap2)-1][len(riskMap2[len(riskMap2)-1])-1]
+	return riskMap3[len(riskMap3)-1][len(riskMap3[len(riskMap3)-1])-1]
 }
 
 func makeMapMapCopy(field map[int]map[int]int, shiftX, shiftY int) map[int]map[int]int {

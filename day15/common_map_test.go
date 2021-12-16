@@ -311,3 +311,288 @@ func Test_makeRiskMapMap(t *testing.T) {
 		})
 	}
 }
+
+func Test_makeRiskMapMapAgain(t *testing.T) {
+	oldRiskMap := map[int]map[int]int{
+		0: {
+			0: 0,
+			1: 9,
+			2: 18,
+			3: 27,
+			4: 36,
+			5: 45,
+		},
+		1: {
+			0: 1,
+			1: 2,
+			2: 11,
+			3: 20,
+			4: 29,
+			5: 38,
+		},
+		2: {
+			0: 10,
+			1: 3,
+			2: 12,
+			3: 21,
+			4: 30,
+			5: 39,
+		},
+		3: {
+			0: 11,
+			1: 4,
+			2: 13,
+			3: 22,
+			4: 31,
+			5: 40,
+		},
+		4: {
+			0: 12,
+			1: 13,
+			2: 22,
+			3: 23,
+			4: 24,
+			5: 25,
+		},
+		5: {
+			0: 13,
+			1: 14,
+			2: 15,
+			3: 16,
+			4: 25,
+			5: 26,
+		},
+	}
+	startingField := map[int]map[int]int{
+		0: {
+			0: 1,
+			1: 9,
+			2: 9,
+			3: 9,
+			4: 9,
+			5: 9,
+		},
+		1: {
+			0: 1,
+			1: 1,
+			2: 9,
+			3: 9,
+			4: 9,
+			5: 9,
+		},
+		2: {
+			0: 9,
+			1: 1,
+			2: 9,
+			3: 9,
+			4: 9,
+			5: 9,
+		},
+		3: {
+			0: 1,
+			1: 1,
+			2: 9,
+			3: 9,
+			4: 9,
+			5: 9,
+		},
+		4: {
+			0: 1,
+			1: 9,
+			2: 9,
+			3: 1,
+			4: 1,
+			5: 1,
+		},
+		5: {
+			0: 1,
+			1: 1,
+			2: 1,
+			3: 1,
+			4: 9,
+			5: 1,
+		},
+	}
+
+	type args struct {
+		oldRiskMap map[int]map[int]int
+		field      map[int]map[int]int
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want map[int]map[int]int
+	}{
+		{
+			name: "calculates refined risk map",
+			args: args{
+				oldRiskMap: oldRiskMap,
+				field:      startingField,
+			},
+			want: map[int]map[int]int{
+				0: {
+					0: 0,
+					1: 9,
+					2: 18,
+					3: 27,
+					4: 36,
+					5: 45,
+				},
+				1: {
+					0: 1,
+					1: 2,
+					2: 11,
+					3: 20,
+					4: 29,
+					5: 38,
+				},
+				2: {
+					0: 10,
+					1: 3,
+					2: 12,
+					3: 21,
+					4: 30,
+					5: 39,
+				},
+				3: {
+					0: 5,
+					1: 4,
+					2: 13,
+					3: 22,
+					4: 31,
+					5: 34,
+				},
+				4: {
+					0: 6,
+					1: 13,
+					2: 22,
+					3: 17,
+					4: 18,
+					5: 19,
+				},
+				5: {
+					0: 7,
+					1: 8,
+					2: 9,
+					3: 10,
+					4: 19,
+					5: 20,
+				},
+			},
+		},
+		{
+			name: "calculates riskmap again",
+			args: args{
+				// this is the output of running the original risk map through the again once.
+				oldRiskMap: map[int]map[int]int{
+					0: {
+						0: 0,
+						1: 9,
+						2: 18,
+						3: 27,
+						4: 36,
+						5: 45,
+					},
+					1: {
+						0: 1,
+						1: 2,
+						2: 11,
+						3: 20,
+						4: 29,
+						5: 38,
+					},
+					2: {
+						0: 10,
+						1: 3,
+						2: 12,
+						3: 21,
+						4: 30,
+						5: 39,
+					},
+					3: {
+						0: 5,
+						1: 4,
+						2: 13,
+						3: 22,
+						4: 31,
+						5: 34,
+					},
+					4: {
+						0: 6,
+						1: 13,
+						2: 22,
+						3: 17,
+						4: 18,
+						5: 19,
+					},
+					5: {
+						0: 7,
+						1: 8,
+						2: 9,
+						3: 10,
+						4: 19,
+						5: 20,
+					},
+				},
+				field: startingField,
+			},
+			want: map[int]map[int]int{
+				0: {
+					0: 0,
+					1: 9,
+					2: 18,
+					3: 27,
+					4: 36,
+					5: 45,
+				},
+				1: {
+					0: 1,
+					1: 2,
+					2: 11,
+					3: 20,
+					4: 29,
+					5: 38,
+				},
+				2: {
+					0: 10,
+					1: 3,
+					2: 12,
+					3: 21,
+					4: 30,
+					5: 39,
+				},
+				3: {
+					0: 5,
+					1: 4,
+					2: 13,
+					3: 22,
+					4: 27,
+					5: 28,
+				},
+				4: {
+					0: 6,
+					1: 13,
+					2: 18,
+					3: 11,
+					4: 12,
+					5: 13,
+				},
+				5: {
+					0: 7,
+					1: 8,
+					2: 9,
+					3: 10,
+					4: 19,
+					5: 14,
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, makeRiskMapMapAgain(tt.args.oldRiskMap, tt.args.field),
+				"makeRiskMapMapAgain(%v, %v)", tt.args.oldRiskMap, tt.args.field)
+		})
+	}
+}

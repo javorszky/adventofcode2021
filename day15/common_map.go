@@ -1,7 +1,5 @@
 package day15
 
-import "fmt"
-
 const (
 	bigNumber = 1 << 12
 )
@@ -93,6 +91,7 @@ func makeRiskMapMapAgain(oldRiskMap, field map[int]map[int]int) map[int]map[int]
 	riskMap := make(map[int]map[int]int)
 	riskMap[0] = map[int]int{0: 0}
 	width := len(oldRiskMap) - 1
+	//ranAgain := false
 
 	for row := 0; row <= width; row++ {
 		for col := 0; col <= width; col++ {
@@ -109,30 +108,24 @@ func makeRiskMapMapAgain(oldRiskMap, field map[int]map[int]int) map[int]map[int]
 			right := bigNumber
 			down := bigNumber
 
-			fmt.Printf("Pondering coord %d, %d: ", col, row)
-
 			// there is a left coordinate.
 			if col > 0 {
-				left = oldRiskMap[col-1][row]
-				fmt.Printf("left: %d ", left)
+				left = riskMap[row][col-1]
 			}
 
 			// there is a right coordinate
 			if col < width {
-				right = oldRiskMap[col+1][row]
-				fmt.Printf("right: %d ", right)
+				right = oldRiskMap[row][col+1]
 			}
 
 			// there is an up coordinate.
 			if row > 0 {
-				up = oldRiskMap[col][row-1]
-				fmt.Printf("up: %d ", up)
+				up = riskMap[row-1][col]
 			}
 
 			// there is a down coordinate.
 			if row < width {
-				down = oldRiskMap[col][row+1]
-				fmt.Printf("down: %d ", down)
+				down = oldRiskMap[row+1][col]
 			}
 
 			// find smaller between left and right.
@@ -157,8 +150,6 @@ func makeRiskMapMapAgain(oldRiskMap, field map[int]map[int]int) map[int]map[int]
 			if right < lowerRisk {
 				lowerRisk = right
 			}
-
-			fmt.Printf("lowes val: %d, risk here: %d\n", lowerRisk, field[row][col])
 
 			riskMap[row][col] = field[row][col] + lowerRisk
 		}

@@ -18,7 +18,7 @@ func Test_tasks(t *testing.T) {
 		want int
 	}{
 		{
-			name: "solves artificial input for task 1",
+			name: "solves artificial input for task 1 with map",
 			args: args{
 				input: []string{
 					"199999",
@@ -29,7 +29,7 @@ func Test_tasks(t *testing.T) {
 					"111191",
 				},
 			},
-			f:    task1,
+			f:    task1Map,
 			want: 14,
 		},
 		{
@@ -62,12 +62,12 @@ func Test_tasks(t *testing.T) {
 			f:    task2Map,
 			want: 315,
 		},
-		//{
-		//	name: "solves actual input for task 2 map",
-		//	args: args{input: getInputs("input.txt")},
-		//	f:    task2Map,
-		//	want: 373,
-		//},
+		{
+			name: "solves actual input for task 2 map",
+			args: args{input: getInputs("input.txt")},
+			f:    task2Map,
+			want: 2868,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
