@@ -24,9 +24,21 @@ func Test_tasks(t *testing.T) {
 			want: 40,
 		},
 		{
+			name: "solves example input for task 1 map",
+			args: args{input: getInputs("example_input.txt")},
+			f:    task1Map,
+			want: 40,
+		},
+		{
 			name: "solves actual input for task 1",
 			args: args{input: getInputs("input.txt")},
 			f:    task1,
+			want: 373,
+		},
+		{
+			name: "solves actual input for task 1 map",
+			args: args{input: getInputs("input.txt")},
+			f:    task1Map,
 			want: 373,
 		},
 		{
