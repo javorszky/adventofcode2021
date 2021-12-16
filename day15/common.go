@@ -56,6 +56,13 @@ func makeWalkOrder(in map[int]int, edge int) []int {
 	return order
 }
 
+func split(in int) (int, int) {
+	x := in / 100
+	y := in - x*100
+
+	return x, y
+}
+
 var charToInt = map[int32]int{
 	0x30: 0,
 	0x31: 1,

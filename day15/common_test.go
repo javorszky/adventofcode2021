@@ -179,3 +179,50 @@ func Test_makeWalkOrder(t *testing.T) {
 		})
 	}
 }
+
+func Test_split(t *testing.T) {
+	type args struct {
+		in int
+	}
+
+	tests := []struct {
+		name  string
+		args  args
+		want  int
+		want1 int
+	}{
+		{
+			name: "deals with 505",
+			args: args{
+				in: 505,
+			},
+			want:  5,
+			want1: 5,
+		},
+		{
+			name:  "deals with 99",
+			args:  args{in: 99},
+			want:  0,
+			want1: 99,
+		},
+		{
+			name:  "deals with 0",
+			args:  args{in: 0},
+			want:  0,
+			want1: 0,
+		},
+		{
+			name:  "deals with 100",
+			args:  args{in: 100},
+			want:  1,
+			want1: 0,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := split(tt.args.in)
+			assert.Equalf(t, tt.want, got, "split(%v)", tt.args.in)
+			assert.Equalf(t, tt.want1, got1, "split(%v)", tt.args.in)
+		})
+	}
+}
