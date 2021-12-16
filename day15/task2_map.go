@@ -1,11 +1,5 @@
 package day15
 
-import (
-	"fmt"
-	"strconv"
-	"strings"
-)
-
 func task2Map(input []string) int {
 	field := makeMapMap(input)
 	bigField := make(map[int]map[int]int)
@@ -26,7 +20,7 @@ func task2Map(input []string) int {
 
 	walkOrder := makeWalkOrderMap(bigField)
 	riskMap := makeRiskMapMap(bigField, walkOrder)
-	riskMap2 := makeRiskMapMapAgain(riskMap)
+	riskMap2 := makeRiskMapMapAgain(riskMap, bigField)
 
 	return riskMap2[len(riskMap2)-1][len(riskMap2[len(riskMap2)-1])-1]
 }
@@ -51,25 +45,26 @@ func makeMapMapCopy(field map[int]map[int]int, shiftX, shiftY int) map[int]map[i
 	return newField
 }
 
-func printCSV(field map[int]map[int]int) {
-	fmt.Printf("okay, csv this bish\n\n")
-
-	title := make([]string, len(field)+1)
-	title[0] = "cols"
-
-	for i := 0; i < len(field); i++ {
-		title[i+1] = strconv.Itoa(i)
-	}
-	fmt.Println(strings.Join(title, ","))
-
-	for rows, cols := range field {
-		row := make([]string, len(field)+1)
-		row[0] = strconv.Itoa(rows)
-
-		for col, value := range cols {
-			row[col+1] = strconv.Itoa(value)
-		}
-
-		fmt.Println(strings.Join(row, ","))
-	}
-}
+//
+//func printCSV(field map[int]map[int]int) {
+//	fmt.Printf("okay, csv this bish\n\n")
+//
+//	title := make([]string, len(field)+1)
+//	title[0] = "cols"
+//
+//	for i := 0; i < len(field); i++ {
+//		title[i+1] = strconv.Itoa(i)
+//	}
+//	fmt.Println(strings.Join(title, ","))
+//
+//	for rows, cols := range field {
+//		row := make([]string, len(field)+1)
+//		row[0] = strconv.Itoa(rows)
+//
+//		for col, value := range cols {
+//			row[col+1] = strconv.Itoa(value)
+//		}
+//
+//		fmt.Println(strings.Join(row, ","))
+//	}
+//}

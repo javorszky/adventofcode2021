@@ -5,7 +5,7 @@ func task1Map(input []string) int {
 	edge := len(field)
 	walkOrder := makeWalkOrderMap(field)
 	riskMap := makeRiskMapMap(field, walkOrder)
-	riskMap2 := makeRiskMapMapAgain(riskMap)
+	riskMap2 := makeRiskMapMapAgain(riskMap, field)
 
 	return riskMap2[edge-1][edge-1]
 }

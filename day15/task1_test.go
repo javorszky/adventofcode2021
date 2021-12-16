@@ -18,6 +18,21 @@ func Test_tasks(t *testing.T) {
 		want int
 	}{
 		{
+			name: "solves artificial input for task 1",
+			args: args{
+				input: []string{
+					"199999",
+					"119999",
+					"919999",
+					"119999",
+					"199111",
+					"111191",
+				},
+			},
+			f:    task1,
+			want: 14,
+		},
+		{
 			name: "solves example input for task 1",
 			args: args{input: getInputs("example_input.txt")},
 			f:    task1,
