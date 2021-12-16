@@ -1,7 +1,6 @@
 package day15
 
 import (
-	"fmt"
 	"io/ioutil"
 	"strings"
 
@@ -34,17 +33,23 @@ func makeWalkOrder(in map[int]int, edge int) []int {
 	order := make([]int, len(in))
 	c := 0
 
-	fmt.Printf("2xedge: %d\n", 2*edge)
-
-	for i := 0; i < 2*edge; i++ {
-		fmt.Printf("i: %d\n", i)
+	for i := 0; i <= 2*edge; i++ {
 		// sum of points must be i
-		for j := i; j >= 0; j-- {
-			fmt.Printf("i: %d, j: %d\n", i, j)
-			x := i
-			y := i - j
+		max := i
+		if edge < i {
+			max = edge
+		}
+
+		for j := max; j >= 0; j-- {
+			y := j
+			x := i - j
+
 			order[c] = 100*x + y
 			c++
+
+			if x == edge {
+				break
+			}
 		}
 	}
 
