@@ -81,3 +81,57 @@ func makeRiskMapMap(field map[int]map[int]int, order [][2]int) map[int]map[int]i
 
 	return riskMap
 }
+
+func makeRiskMapMapAgain(field map[int]map[int]int) map[int]map[int]int {
+	riskMap := make(map[int]map[int]int)
+	riskMap[0] = map[int]int{0: 0}
+	width := len(field) - 1
+
+	for row, cols := range field {
+		for col, value := range cols {
+			if row == 0 && col == 0 {
+				continue
+			}
+
+			if riskMap[row] == nil {
+				riskMap[row] = make(map[int]int)
+			}
+
+			up := bigNumber
+			left := bigNumber
+			right := bigNumber
+
+			// there is a left coordinate.
+			if col > 0 {
+				left = riskMap[col-1][row]
+			}
+
+			// there is a right coordinate
+			if col < width {
+				right = riskMap[col+1][row]
+			}
+
+			// there is an up coordinate.
+			if row > 0 {
+				up = riskMap[col][row-1]
+			}
+
+			lowerRisk := up
+			if left < up {
+				lowerRisk = left
+			}
+
+			diff := 0
+
+			// between up and left, the lower is whatever
+			if right < lowerRisk {
+				diff = lowerRisk - right
+				lowerRisk = right
+			}
+
+			riskMap[row][col] = value - diff
+		}
+	}
+
+	return riskMap
+}
