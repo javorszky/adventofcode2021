@@ -103,11 +103,11 @@ func Test_makeMapCopy(t *testing.T) {
 				shiftY:       2,
 			},
 			want: map[int]int{
-				3200:   6,
-				4200:   7,
-				3201:   8,
-				102299: 9,
-				26245:  1,
+				300200: 6,
+				301200: 7,
+				300201: 8,
+				399299: 9,
+				323245: 1,
 			},
 		},
 	}
@@ -128,4 +128,47 @@ func Test_makeMapCopy(t *testing.T) {
 				tt.args.shiftY)
 		})
 	}
+}
+
+func Benchmark_Task2(b *testing.B) {
+	benchmarks := []struct {
+		name     string
+		filename string
+		f        func([]string) int
+	}{
+		{
+			name:     "task 2 example map map",
+			filename: "example_input.txt",
+			f:        task2Map,
+		},
+		{
+			name:     "task 2 example dijkstra",
+			filename: "example_input.txt",
+			f:        task2Dijkstra,
+		},
+		{
+			name:     "task 2 actual map map",
+			filename: "input.txt",
+			f:        task2Map,
+		},
+		{
+			name:     "task 2 actual dijkstra",
+			filename: "input.txt",
+			f:        task2Dijkstra,
+		},
+	}
+	for _, bm := range benchmarks {
+		input := benchInput(b, bm.filename)
+		b.Run(bm.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				bm.f(input)
+			}
+		})
+	}
+}
+
+func benchInput(tb testing.TB, filename string) []string {
+	tb.Helper()
+
+	return getInputs(filename)
 }

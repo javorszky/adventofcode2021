@@ -17,3 +17,4 @@ Here be solutions for aoc21 by moi!
 * [Day 12](day12/) - Don't just talk the talk, walk the walk too! I mean caves... I mean graph.
 * [Day 13](day13/) - remember, you should know when to fold in poker!
 * [Day 14](day14/) - count the pairs, like fish
+* [Day 15](day15/) - pathfinding puzzle, excellent, A* rating, would recommend
