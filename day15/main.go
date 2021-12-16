@@ -9,9 +9,9 @@ func Tasks() {
 
 	input := getInputs(filename)
 
-	output := task1(input)
+	output := task1Map(input)
 	fmt.Printf("Task 1: Cost of lowest path is %d\n", output)
 
-	output2 := task2(input)
+	output2 := task2Map(input)
 	fmt.Printf("Task 2: Cost of lowest path with 5x5 grid is: %d\n", output2)
 }
