@@ -18,3 +18,4 @@ Here be solutions for aoc21 by moi!
 * [Day 13](day13/) - remember, you should know when to fold in poker!
 * [Day 14](day14/) - count the pairs, like fish
 * [Day 15](day15/) - pathfinding puzzle, excellent, A* rating, would recommend
+* [Day 16](day16/) - evaluate some strings and parse them real good!
