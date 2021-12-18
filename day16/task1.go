@@ -10,7 +10,7 @@ const (
 	subPacketNumber
 )
 
-func task1(input string) interface{} {
+func task1(input string) int {
 	reader := strings.NewReader(input)
 
 	built := newBuilder(reader).build()

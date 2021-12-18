@@ -60,6 +60,53 @@ func Test_builder_build(t *testing.T) {
 				value:         2021,
 			},
 		},
+		{
+			name: "parses an operator with two literal values in it correctly",
+			args: args{reader: strings.NewReader("00111000000000000110111101000101001010010001001000000000")},
+			want: &operator{
+				packetVersion: 1,
+				packetType:    6,
+				lengthTypeID:  subPacketLength,
+				subPackets: []packet{
+					&literal{
+						packetVersion: 6,
+						packetType:    4,
+						value:         10,
+					},
+					&literal{
+						packetVersion: 2,
+						packetType:    4,
+						value:         20,
+					},
+				},
+			},
+		},
+		{
+			name: "parses an operator with three literal values in it correctly",
+			args: args{reader: strings.NewReader("11101110000000001101010000001100100000100011000001100000")},
+			want: &operator{
+				packetVersion: 7,
+				packetType:    3,
+				lengthTypeID:  subPacketNumber,
+				subPackets: []packet{
+					&literal{
+						packetVersion: 2,
+						packetType:    4,
+						value:         1,
+					},
+					&literal{
+						packetVersion: 4,
+						packetType:    4,
+						value:         2,
+					},
+					&literal{
+						packetVersion: 1,
+						packetType:    4,
+						value:         3,
+					},
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

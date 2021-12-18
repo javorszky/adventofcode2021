@@ -138,3 +138,41 @@ func Test_operator(t *testing.T) {
 		})
 	}
 }
+
+func Test_task1_examples(t *testing.T) {
+	type args struct {
+		input string
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			name: "example 1: 8A004A801A8002F478",
+			args: args{input: hexToBinString("8A004A801A8002F478")},
+			want: 16,
+		},
+		{
+			name: "example 1: 620080001611562C8802118E34",
+			args: args{input: hexToBinString("620080001611562C8802118E34")},
+			want: 12,
+		},
+		{
+			name: "example 1: C0015000016115A2E0802F182340",
+			args: args{input: hexToBinString("C0015000016115A2E0802F182340")},
+			want: 23,
+		},
+		{
+			name: "example 1: A0016C880162017C3686B18A3D4780",
+			args: args{input: hexToBinString("A0016C880162017C3686B18A3D4780")},
+			want: 31,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, task1(tt.args.input), "task1(%v)", tt.args.input)
+		})
+	}
+}
