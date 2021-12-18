@@ -44,7 +44,7 @@ func Test_literal(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := literal{
+			l := &literal{
 				packetVersion: tt.fields.packetVersion,
 				packetType:    tt.fields.packetType,
 				value:         tt.fields.value,
@@ -86,12 +86,12 @@ func Test_operator(t *testing.T) {
 				packetVersion: 2,
 				packetType:    3,
 				subPackets: []packet{
-					literal{
+					&literal{
 						packetVersion: 1,
 						packetType:    2,
 						value:         3,
 					},
-					operator{
+					&operator{
 						packetVersion: 2,
 						packetType:    3,
 						lengthTypeID:  subPacketNumber,
@@ -104,12 +104,12 @@ func Test_operator(t *testing.T) {
 				packetVersion: 2,
 				packetType:    3,
 				subPackets: []packet{
-					literal{
+					&literal{
 						packetVersion: 1,
 						packetType:    2,
 						value:         3,
 					},
-					operator{
+					&operator{
 						packetVersion: 2,
 						packetType:    3,
 						lengthTypeID:  subPacketNumber,
@@ -123,7 +123,7 @@ func Test_operator(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := operator{
+			l := &operator{
 				packetVersion: tt.fields.packetVersion,
 				packetType:    tt.fields.packetType,
 				lengthTypeID:  tt.fields.lengthTypeID,

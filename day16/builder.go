@@ -1,7 +1,6 @@
 package day16
 
 import (
-	"io"
 	"log"
 	"strconv"
 	"strings"
@@ -21,7 +20,7 @@ const (
 type builder struct {
 	state     state
 	charCount int
-	reader    io.Reader
+	reader    *strings.Reader
 }
 
 func (b *builder) build() packet {
@@ -35,7 +34,7 @@ loop:
 			b.charCount += read
 			switch pT {
 			case 4:
-				p = literal{
+				p = &literal{
 					packetVersion: pV,
 					packetType:    pT,
 					value:         b.parseLiteral(),
@@ -44,7 +43,7 @@ loop:
 			default:
 				lengthID, read := b.parseLengthID()
 				b.charCount += read
-				p = operator{
+				p = &operator{
 					packetVersion: pV,
 					packetType:    pT,
 					lengthTypeID:  lengthID,
@@ -59,6 +58,9 @@ loop:
 				}
 			}
 		case subPacketsLen:
+			// 15 bit number
+			subLen := b.parseSubPacketsLen()
+			p.(*operator).SetSubPackets(b.parseSubPackets(subLen))
 		case subPacketsCount:
 		case lengthIDWork:
 
@@ -176,7 +178,36 @@ func (b *builder) parseLiteral() int {
 	return int(parsedInt)
 }
 
-func newBuilder(reader io.Reader) *builder {
+func (b *builder) parseSubPacketsLen() int {
+	spl := make([]byte, 15)
+	splRead, err := b.reader.Read(spl)
+
+	if err != nil || splRead != 15 {
+		log.Fatalf("error while trying to read 15 bits of subpacketlength: read %d, err: %s", splRead, err)
+	}
+
+	splInt, err := strconv.ParseInt(string(spl), 2, 16)
+	if err != nil {
+		log.Fatalf("error while converting binary string [%s] into int in parse subpacketslen: %s", string(spl), err)
+	}
+
+	return int(splInt)
+}
+
+func (b *builder) parseSubPackets(subLen int) []packet {
+	packets := make([]packet, 0)
+	subBytes := make([]byte, subLen)
+
+	subRead, err := b.reader.Read(subBytes)
+	if err != nil || subRead != subLen {
+		log.Fatalf("could not read the necessary number of bits in the reader: wanted %d, got %d, err %s",
+			subLen, subRead, err)
+	}
+
+	return packets
+}
+
+func newBuilder(reader *strings.Reader) *builder {
 	return &builder{
 		state:     headerWork,
 		reader:    reader,

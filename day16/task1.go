@@ -32,23 +32,23 @@ type literal struct {
 	value         int
 }
 
-func (l literal) LengthType() lengthType {
+func (l *literal) LengthType() lengthType {
 	return unknownLengthType
 }
 
-func (l literal) Version() int {
+func (l *literal) Version() int {
 	return l.packetVersion
 }
 
-func (l literal) Type() int {
+func (l *literal) Type() int {
 	return l.packetType
 }
 
-func (l literal) SubPackets() []packet {
+func (l *literal) SubPackets() []packet {
 	return nil
 }
 
-func (l literal) AllVersions() int {
+func (l *literal) AllVersions() int {
 	return l.Version()
 }
 
@@ -59,11 +59,11 @@ type operator struct {
 	subPackets    []packet
 }
 
-func (o operator) LengthType() lengthType {
+func (o *operator) LengthType() lengthType {
 	return o.lengthTypeID
 }
 
-func (o operator) AllVersions() int {
+func (o *operator) AllVersions() int {
 	av := o.Version()
 	for _, p := range o.subPackets {
 		av += p.AllVersions()
@@ -72,14 +72,18 @@ func (o operator) AllVersions() int {
 	return av
 }
 
-func (o operator) SubPackets() []packet {
+func (o *operator) SubPackets() []packet {
 	return o.subPackets
 }
 
-func (o operator) Version() int {
+func (o *operator) Version() int {
 	return o.packetVersion
 }
 
-func (o operator) Type() int {
+func (o *operator) Type() int {
 	return o.packetType
+}
+
+func (o *operator) SetSubPackets(packets []packet) {
+	o.subPackets = packets
 }

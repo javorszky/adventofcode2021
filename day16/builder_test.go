@@ -1,7 +1,6 @@
 package day16
 
 import (
-	"io"
 	"strings"
 	"testing"
 
@@ -10,7 +9,7 @@ import (
 
 func Test_builder_parseHeader(t *testing.T) {
 	type args struct {
-		reader io.Reader
+		reader *strings.Reader
 	}
 
 	tests := []struct {
@@ -42,7 +41,7 @@ func Test_builder_parseHeader(t *testing.T) {
 
 func Test_builder_build(t *testing.T) {
 	type args struct {
-		reader io.Reader
+		reader *strings.Reader
 	}
 
 	tests := []struct {
@@ -55,7 +54,7 @@ func Test_builder_build(t *testing.T) {
 			args: args{
 				reader: strings.NewReader("110100101111111000101000"),
 			},
-			want: literal{
+			want: &literal{
 				packetVersion: 6,
 				packetType:    4,
 				value:         2021,
