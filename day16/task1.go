@@ -13,7 +13,7 @@ const (
 func task1(input string) interface{} {
 	reader := strings.NewReader(input)
 
-	built := build(reader)
+	built := newBuilder().build(reader)
 
 	return built.AllVersions()
 }
