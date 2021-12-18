@@ -1,7 +1,6 @@
 package day16
 
 import (
-	"fmt"
 	"io"
 	"strings"
 	"testing"
@@ -15,30 +14,28 @@ func Test_builder_parseHeader(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		args    args
-		want    int
-		want1   int
-		wantErr assert.ErrorAssertionFunc
+		name  string
+		args  args
+		want  int
+		want1 int
+		want2 int
 	}{
 		{
-			name:    "parses version, type into ints",
-			args:    args{reader: strings.NewReader("001101")},
-			want:    1,
-			want1:   5,
-			wantErr: assert.NoError,
+			name:  "parses version, type into ints",
+			args:  args{reader: strings.NewReader("001101")},
+			want:  1,
+			want1: 5,
+			want2: 6,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := newBuilder()
 
-			got, got1, err := b.parseHeader(tt.args.reader)
-			if !tt.wantErr(t, err, fmt.Sprintf("parseHeader(%v)", tt.args.reader)) {
-				return
-			}
+			got, got1, got2 := b.parseHeader(tt.args.reader)
 			assert.Equalf(t, tt.want, got, "parseHeader(%v)", tt.args.reader)
 			assert.Equalf(t, tt.want1, got1, "parseHeader(%v)", tt.args.reader)
+			assert.Equalf(t, tt.want2, got2, "parseHeader(%v)", tt.args.reader)
 		})
 	}
 }
