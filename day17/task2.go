@@ -2,6 +2,7 @@ package day17
 
 import (
 	"fmt"
+	"sort"
 )
 
 func task2(coords []int) int {
@@ -12,27 +13,87 @@ func task2(coords []int) int {
 }
 
 func getFiringSolutions(xMin, xMax, yMin, yMax int) [][2]int {
-	firingSolutions := make([][2]int, 0)
 	xTargetSpeeds := getXTargetSpeeds(xMin, xMax)
 	yTargetSpeeds := getYTargetSpeeds(yMin, yMax)
-	acc := 0
 
-	fmt.Printf("yspeeds:\n\n%#v\n\n", yTargetSpeeds)
+	//fmt.Printf("xspeeds:\n\n%#v\n\n", xTargetSpeeds)
+	//fmt.Printf("yspeeds:\n\n%#v\n\n", yTargetSpeeds)
 
+	firingSolutions := make(map[int]map[int]struct{})
+	firingSolutions, scrubbed := getRightDownShots(firingSolutions, xTargetSpeeds, yTargetSpeeds)
+	firingSolutions = getRightUpShotsNotScrubbed(firingSolutions, scrubbed, xTargetSpeeds, yTargetSpeeds)
+	firingSolutions = getScrubbed(firingSolutions, yTargetSpeeds, scrubbed)
+
+	firingSolutionsButPairs := make([][2]int, 0)
+
+	for x, ys := range firingSolutions {
+		for y := range ys {
+			firingSolutionsButPairs = append(firingSolutionsButPairs, [2]int{x, y})
+		}
+	}
+
+	//fmt.Printf("Firing solutions:\n\n%#v\n\n", firingSolutionsButPairs)
+
+	return firingSolutionsButPairs
+}
+
+func getScrubbed(
+	firingSolutions map[int]map[int]struct{},
+	yTargetSpeeds map[int][]int,
+	scrubbed []int,
+) map[int]map[int]struct{} {
+	// shoot right and up. There are two speeds here, 16 and 17 right, so only counting the vertical up starting speeds,
+	// and only the unique ones. We disregard the largest one because the speeds here are the speed with which the probe
+	// moves just before the reaching the horizon on the way down, so if that would be shot down and grazing the bottom
+	// of the target, the next speed would be one faster, and it would miss the target area.
+	unique := make(map[int]struct{})
+
+	for _, v := range yTargetSpeeds {
+		for _, speed := range v {
+			unique[speed] = struct{}{}
+		}
+	}
+
+	//fmt.Printf("unique speeds: \n\n%#v\n\n", unique)
+
+	for _, xs := range scrubbed {
+		for k := range unique {
+			if _, ok := unique[k-1]; !ok {
+				continue
+			}
+
+			if firingSolutions[xs] == nil {
+				firingSolutions[xs] = make(map[int]struct{})
+			}
+
+			firingSolutions[xs][-k] = struct{}{}
+		}
+	}
+
+	return firingSolutions
+}
+
+func getRightDownShots(
+	firingSolutions map[int]map[int]struct{},
+	xTargets,
+	yTargets map[int][]int,
+) (map[int]map[int]struct{}, []int) {
 	// find the ones where the entire speed is scrubbed. To get that, the step count and the speed needs to match.
 	xScrubbed := make([]int, 0)
 	// shoot right and down
-	for k, v := range xTargetSpeeds {
-		if yv, ok := yTargetSpeeds[k]; ok {
-			acc += len(v) * len(yv)
-
+	for k, v := range xTargets {
+		if yv, ok := yTargets[k]; ok {
 			for _, xCoord := range v {
+				if firingSolutions[xCoord] == nil {
+					firingSolutions[xCoord] = make(map[int]struct{})
+				}
+
 				if k == xCoord {
 					xScrubbed = append(xScrubbed, xCoord)
 				}
 
 				for _, yCoord := range yv {
-					firingSolutions = append(firingSolutions, [2]int{xCoord, -yCoord})
+					firingSolutions[xCoord][yCoord] = struct{}{}
 				}
 			}
 		} else {
@@ -44,28 +105,124 @@ func getFiringSolutions(xMin, xMax, yMin, yMax int) [][2]int {
 		}
 	}
 
-	fmt.Printf("scrubbed speeds: %v\n", xScrubbed)
+	return firingSolutions, xScrubbed
+}
 
-	// shoot right and up. There are two speeds here, 16 and 17 right, so only counting the vertical up starting speeds,
-	// and only the unique ones
-	unique := make(map[int]struct{})
+func getRightUpShotsNotScrubbed(
+	firingSolutions map[int]map[int]struct{},
+	scrubbed []int,
+	xTargets,
+	yTargets map[int][]int,
+) map[int]map[int]struct{} {
+	// collect the horizontal speeds and their steps
+	speedsSteps := make(map[int]map[int]struct{})
 
-	for _, v := range yTargetSpeeds {
-		for _, speed := range v {
-			unique[speed] = struct{}{}
+	for step, speeds := range xTargets {
+		for _, speed := range speeds {
+			if speedsSteps[speed] == nil {
+				speedsSteps[speed] = make(map[int]struct{})
+			}
+
+			speedsSteps[speed][step] = struct{}{}
 		}
 	}
 
-	for _, xs := range xScrubbed {
-		for k := range unique {
-			firingSolutions = append(firingSolutions, [2]int{xs, k})
+	speedStepsSlice := make(map[int][]int)
+
+	for speed, steps := range speedsSteps {
+		if len(steps) < 2 {
+			continue
+		}
+
+		if speedStepsSlice[speed] == nil {
+			speedStepsSlice[speed] = make([]int, 0)
+		}
+
+		for step := range steps {
+			speedStepsSlice[speed] = append(speedStepsSlice[speed], step)
+		}
+
+		sort.Ints(speedStepsSlice[speed])
+	}
+
+	sort.Ints(scrubbed)
+
+	maxScrubbed := scrubbed[len(scrubbed)-1]
+	maxInitialVelocity := (maxScrubbed - 1) / 2
+
+	// speed, step, upright velocity. We check the step to make sure that there's a y target there with our down speed.
+	upRights := make(map[int]map[int]map[int]struct{})
+
+	for i := 1; i <= maxInitialVelocity; i++ {
+		diff := i * 2
+
+		for speed, steps := range speedsSteps {
+			if len(steps) < 2 {
+				continue
+			}
+
+			for step := range steps {
+				if _, ok := steps[step-diff]; ok {
+					if upRights[speed] == nil {
+						upRights[speed] = make(map[int]map[int]struct{})
+					}
+
+					if upRights[speed][step-diff] == nil {
+						upRights[speed][step-diff] = make(map[int]struct{})
+					}
+
+					upRights[speed][step-diff][i] = struct{}{}
+
+					if firingSolutions[step-diff] == nil {
+						firingSolutions[step-diff] = make(map[int]struct{})
+					}
+
+					firingSolutions[step-diff][i] = struct{}{}
+				}
+			}
 		}
 	}
 
-	//acc += 2 * len(unique)
-	//
-	//return acc
-	fmt.Printf("Firing solutions:\n\n%#v\n\n", firingSolutions)
+	crosschecked := make(map[int]map[int]struct{})
+
+	fmt.Printf("" +
+		"-----------------------\n" +
+		"-- checking uprights --\n" +
+		"-----------------------\n\n")
+	for speed, steps := range upRights {
+		fmt.Printf("checking speeds %d\n", speed)
+		for step, initialVelocities := range steps {
+			fmt.Printf("- checking for step %d, velocities: %v\n", step, initialVelocities)
+			for initialVelocity := range initialVelocities {
+				fmt.Printf("- - checking initialvelocity: %d\n", initialVelocity)
+				if _, ok := yTargets[step]; ok {
+					fmt.Printf("- - - ytargets had step %d in it with speeds: %v\n", step, yTargets[step])
+					for _, yspeed := range yTargets[step] {
+						if yspeed == -initialVelocity {
+							if firingSolutions[speed] == nil {
+								firingSolutions[speed] = make(map[int]struct{})
+							}
+
+							firingSolutions[speed][initialVelocity] = struct{}{}
+
+							if crosschecked[speed] == nil {
+								crosschecked[speed] = make(map[int]struct{})
+							}
+
+							crosschecked[speed][initialVelocity] = struct{}{}
+						}
+					}
+				} else {
+					fmt.Printf("- - - ytargets did not have step %d in it\n", step)
+				}
+			}
+		}
+	}
+
+	fmt.Printf("crosschecked\n\n%#v\n\n", crosschecked)
+
+	//fmt.Printf("new uprights\n\n%#v\n\n", upRights)
+	//fmt.Printf("speeds step slice:\n\n%#v\n\n", speedStepsSlice)
 
 	return firingSolutions
 }
