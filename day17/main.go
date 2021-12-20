@@ -11,7 +11,7 @@ func Tasks() {
 
 	output := task1(coords)
 	fmt.Printf("Task 1: Max height the probe reaches is %d\n", output)
-	//
-	//output2 := task2(input)
-	//fmt.Printf("Task 2: The result is something: %v\n", output2)
+
+	output2 := task2(coords)
+	fmt.Printf("Task 2: There are %d distinct firing solutions.\n", output2)
 }
