@@ -2,13 +2,113 @@ package day17
 
 import (
 	"errors"
+	"fmt"
 	"log"
 )
 
-func xFunc(initial, xMin, xMax int) (map[int]int, int, error) {
+type targetError string
+
+func (t targetError) Error() string {
+	return string(t)
+}
+
+const (
+	neverReachesError targetError = "will never reach it"
+	overshootsError   targetError = "overshoots it"
+)
+
+func task2Functions(coords []int) int {
+	xMin, xMax, yMin, yMax := coords[0], coords[1], coords[2], coords[3]
+
+	firingSolutions := firingSolutionsFuncs(xMin, xMax, yMin, yMax)
+
+	return len(firingSolutions)
+}
+
+func firingSolutionsFuncs(xMin, xMax, yMin, yMax int) map[string]struct{} {
+	// firingSolutionsX holds the steps -> initial velocities that will land in the target area horizontally.
+	firingSolutionsX := make(map[int]map[int]struct{})
+
+	// firingSolutionsY holds the steps -> initial velocities that will land in the target area vertically.
+	firingSolutionsY := make(map[int]map[int]struct{})
+
+	// scrub holds a tick -> initial velocity where the speed scrubs inside the target area.
+	scrubs := make([]int, 0)
+
+	// get X coordinates.
+	for i := 1; i < xMax+2; i++ {
+		hits, speed, dist, err := xFunc(i, xMin, xMax)
+		if errors.Is(err, neverReachesError) {
+			continue
+		}
+
+		if errors.Is(err, overshootsError) {
+			break
+		}
+
+		firingSolutionsX = mergeMaps(firingSolutionsX, hits)
+
+		if speed == 0 && dist >= xMin && dist <= xMax {
+			scrubs = append(scrubs, i)
+		}
+	}
+
+	// get Y coordinates
+	for i := -yMin + 3; i > yMin-3; i-- {
+		hits, _, err := yFunc(i, yMin, yMax)
+		if err != nil {
+			continue
+		}
+
+		firingSolutionsY = mergeMaps(firingSolutionsY, hits)
+	}
+
+	firingSolutionsXY := make(map[string]struct{})
+	// merge X and Y together
+	for tick, xInitials := range firingSolutionsX {
+		yInitials, ok := firingSolutionsY[tick]
+		if !ok {
+			continue
+		}
+
+		for x := range xInitials {
+			for y := range yInitials {
+				firingSolutionsXY[fmt.Sprintf("%d, %d", x, y)] = struct{}{}
+			}
+		}
+	}
+
+	for _, scrubbedSpeed := range scrubs {
+		for tick, yInitials := range firingSolutionsY {
+			if tick < scrubbedSpeed {
+				continue
+			}
+
+			for y := range yInitials {
+				firingSolutionsXY[fmt.Sprintf("%d, %d", scrubbedSpeed, y)] = struct{}{}
+			}
+		}
+	}
+
+	return firingSolutionsXY
+}
+
+func mergeMaps(mergeTo map[int]map[int]struct{}, mergeThis map[int]int) map[int]map[int]struct{} {
+	for k, v := range mergeThis {
+		if mergeTo[k] == nil {
+			mergeTo[k] = make(map[int]struct{})
+		}
+
+		mergeTo[k][v] = struct{}{}
+	}
+
+	return mergeTo
+}
+
+func xFunc(initial, xMin, xMax int) (map[int]int, int, int, error) {
 	// will always overshoot
 	if initial > xMax {
-		return nil, 0, errors.New("overshoots")
+		return nil, 0, initial, overshootsError
 	}
 	// Let's see how far it gets before it sheds all its weight
 	newSpeed, newDistance := xSpeed(initial, initial)
@@ -18,7 +118,7 @@ func xFunc(initial, xMin, xMax int) (map[int]int, int, error) {
 
 	// will never reach it
 	if newDistance < xMin {
-		return nil, newSpeed, errors.New("will never reach it")
+		return nil, newSpeed, newDistance, neverReachesError
 	}
 
 	hits := make(map[int]int)
@@ -34,7 +134,7 @@ func xFunc(initial, xMin, xMax int) (map[int]int, int, error) {
 		}
 	}
 
-	return hits, newSpeed, nil
+	return hits, newSpeed, newDistance, nil
 }
 
 // yFunc will determine whether probe launched with initial velocity will hit the target area or not.
@@ -44,7 +144,7 @@ func xFunc(initial, xMin, xMax int) (map[int]int, int, error) {
 func yFunc(initial, yMin, yMax int) (map[int]int, int, error) {
 	// overshooting it
 	if initial < yMin {
-		return nil, initial, errors.New("overshoots")
+		return nil, initial, overshootsError
 	}
 
 	hits := make(map[int]int)

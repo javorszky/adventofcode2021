@@ -148,17 +148,25 @@ func Test_task2(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
+		f    func([]int) int
 		want int
 	}{
 		{
 			name: "runs task 2 on test input",
 			args: args{coords: []int{20, 30, -10, -5}},
+			f:    task2,
+			want: 112,
+		},
+		{
+			name: "runs task 2 on test input",
+			args: args{coords: []int{20, 30, -10, -5}},
+			f:    task2Functions,
 			want: 112,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, task2(tt.args.coords), "task2(%v)", tt.args.coords)
+			assert.Equalf(t, tt.want, tt.f(tt.args.coords), "task2(%v)", tt.args.coords)
 		})
 	}
 }

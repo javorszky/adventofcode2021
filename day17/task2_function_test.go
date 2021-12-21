@@ -194,11 +194,12 @@ func Test_xFunc(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		args    args
-		want    map[int]int
-		want1   int
-		wantErr assert.ErrorAssertionFunc
+		name      string
+		args      args
+		wantHits  map[int]int
+		wantSpeed int
+		wantDist  int
+		wantErr   assert.ErrorAssertionFunc
 	}{
 		{
 			name: "will never reach it",
@@ -207,9 +208,10 @@ func Test_xFunc(t *testing.T) {
 				xMin:    12,
 				xMax:    19,
 			},
-			want:    nil,
-			want1:   0,
-			wantErr: assert.Error,
+			wantHits:  nil,
+			wantSpeed: 0,
+			wantDist:  10,
+			wantErr:   assert.Error,
 		},
 		{
 			name: "will overshoot it",
@@ -218,9 +220,10 @@ func Test_xFunc(t *testing.T) {
 				xMin:    12,
 				xMax:    19,
 			},
-			want:    nil,
-			want1:   0,
-			wantErr: assert.Error,
+			wantHits:  nil,
+			wantSpeed: 0,
+			wantDist:  20,
+			wantErr:   assert.Error,
 		},
 		{
 			name: "will skip over it",
@@ -229,9 +232,10 @@ func Test_xFunc(t *testing.T) {
 				xMin:    12,
 				xMax:    19,
 			},
-			want:    map[int]int{},
-			want1:   9,
-			wantErr: assert.NoError,
+			wantHits:  map[int]int{},
+			wantSpeed: 9,
+			wantDist:  21,
+			wantErr:   assert.NoError,
 		},
 		{
 			name: "produces hits, but scrubs inside target area",
@@ -240,38 +244,42 @@ func Test_xFunc(t *testing.T) {
 				xMin:    12,
 				xMax:    19,
 			},
-			want: map[int]int{
+			wantHits: map[int]int{
 				3: 5,
 				4: 5,
 				5: 5,
 			},
-			want1:   0,
-			wantErr: assert.NoError,
+			wantSpeed: 0,
+			wantDist:  15,
+			wantErr:   assert.NoError,
 		},
 		{
 			name: "produces hits, but scrubs outside target area",
 			args: args{
-				initial: 7,
+				initial: 6,
 				xMin:    12,
-				xMax:    19,
+				xMax:    20,
 			},
-			want: map[int]int{
-				2: 7,
-				3: 7,
+			wantHits: map[int]int{
+				3: 6,
+				4: 6,
+				5: 6,
 			},
-			want1:   3,
-			wantErr: assert.NoError,
+			wantSpeed: 0,
+			wantDist:  21,
+			wantErr:   assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			hits, newSpeed, err := xFunc(tt.args.initial, tt.args.xMin, tt.args.xMax)
+			hits, newSpeed, dist, err := xFunc(tt.args.initial, tt.args.xMin, tt.args.xMax)
 
 			if !tt.wantErr(t, err, fmt.Sprintf("xFunc(%v, %v, %v)", tt.args.initial, tt.args.xMin, tt.args.xMax)) {
 				return
 			}
-			assert.Equalf(t, tt.want, hits, "xFunc(%v, %v, %v)", tt.args.initial, tt.args.xMin, tt.args.xMax)
-			assert.Equalf(t, tt.want1, newSpeed, "xFunc(%v, %v, %v)", tt.args.initial, tt.args.xMin, tt.args.xMax)
+			assert.Equalf(t, tt.wantHits, hits, "xFunc(%v, %v, %v)", tt.args.initial, tt.args.xMin, tt.args.xMax)
+			assert.Equalf(t, tt.wantSpeed, newSpeed, "xFunc(%v, %v, %v)", tt.args.initial, tt.args.xMin, tt.args.xMax)
+			assert.Equalf(t, tt.wantDist, dist, "xFunc(%v, %v, %v)", tt.args.initial, tt.args.xMin, tt.args.xMax)
 		})
 	}
 }
@@ -351,6 +359,220 @@ func Test_yFunc(t *testing.T) {
 			}
 			assert.Equalf(t, tt.want, got, "yFunc(%v, %v, %v)", tt.args.initial, tt.args.yMin, tt.args.yMax)
 			assert.Equalf(t, tt.want1, got1, "yFunc(%v, %v, %v)", tt.args.initial, tt.args.yMin, tt.args.yMax)
+		})
+	}
+}
+
+func Test_mergeMaps(t *testing.T) {
+	type args struct {
+		mergeTo   map[int]map[int]struct{}
+		mergeThis map[int]int
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want map[int]map[int]struct{}
+	}{
+		{
+			name: "merges maps where no new exist yet",
+			args: args{
+				mergeTo: map[int]map[int]struct{}{
+					1: {
+						2: {},
+					},
+				},
+				mergeThis: map[int]int{
+					3: 4,
+				},
+			},
+			want: map[int]map[int]struct{}{
+				1: {
+					2: {},
+				},
+				3: {
+					4: {},
+				},
+			},
+		},
+		{
+			name: "merges maps where some exist already",
+			args: args{
+				mergeTo: map[int]map[int]struct{}{
+					1: {
+						2: {},
+					},
+					3: {
+						4: {},
+					},
+				},
+				mergeThis: map[int]int{
+					3: 4,
+					4: 5,
+				},
+			},
+			want: map[int]map[int]struct{}{
+				1: {
+					2: {},
+				},
+				3: {
+					4: {},
+				},
+				4: {
+					5: {},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, mergeMaps(tt.args.mergeTo, tt.args.mergeThis),
+				"mergeMaps(%v, %v)", tt.args.mergeTo, tt.args.mergeThis)
+		})
+	}
+}
+
+func Test_firingSolutionsFuncs(t *testing.T) {
+	type args struct {
+		xMin int
+		xMax int
+		yMin int
+		yMax int
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want map[string]struct{}
+	}{
+		{
+			name: "produces firing solutions for example",
+			args: args{
+				xMin: 20,
+				xMax: 30,
+				yMin: -10,
+				yMax: -5,
+			},
+			want: map[string]struct{}{
+				"6, 0":    {},
+				"6, 1":    {},
+				"6, 2":    {},
+				"6, 3":    {},
+				"6, 4":    {},
+				"6, 5":    {},
+				"6, 6":    {},
+				"6, 7":    {},
+				"6, 8":    {},
+				"6, 9":    {},
+				"7, -1":   {},
+				"7, 0":    {},
+				"7, 1":    {},
+				"7, 2":    {},
+				"7, 3":    {},
+				"7, 4":    {},
+				"7, 5":    {},
+				"7, 6":    {},
+				"7, 7":    {},
+				"7, 8":    {},
+				"7, 9":    {},
+				"8, -2":   {},
+				"8, -1":   {},
+				"8, 0":    {},
+				"8, 1":    {},
+				"9, -2":   {},
+				"9, -1":   {},
+				"9, 0":    {},
+				"10, -2":  {},
+				"10, -1":  {},
+				"11, -4":  {},
+				"11, -3":  {},
+				"11, -2":  {},
+				"11, -1":  {},
+				"12, -4":  {},
+				"12, -3":  {},
+				"12, -2":  {},
+				"13, -4":  {},
+				"13, -3":  {},
+				"13, -2":  {},
+				"14, -4":  {},
+				"14, -3":  {},
+				"14, -2":  {},
+				"15, -4":  {},
+				"15, -3":  {},
+				"15, -2":  {},
+				"20, -10": {},
+				"20, -9":  {},
+				"20, -8":  {},
+				"20, -7":  {},
+				"20, -6":  {},
+				"20, -5":  {},
+				"21, -10": {},
+				"21, -9":  {},
+				"21, -7":  {},
+				"21, -8":  {},
+				"21, -6":  {},
+				"21, -5":  {},
+				"22, -10": {},
+				"22, -9":  {},
+				"22, -8":  {},
+				"22, -7":  {},
+				"22, -6":  {},
+				"22, -5":  {},
+				"23, -10": {},
+				"23, -9":  {},
+				"23, -8":  {},
+				"23, -7":  {},
+				"23, -6":  {},
+				"23, -5":  {},
+				"24, -10": {},
+				"24, -9":  {},
+				"24, -8":  {},
+				"24, -7":  {},
+				"24, -6":  {},
+				"24, -5":  {},
+				"25, -10": {},
+				"25, -9":  {},
+				"25, -8":  {},
+				"25, -7":  {},
+				"25, -6":  {},
+				"25, -5":  {},
+				"26, -10": {},
+				"26, -9":  {},
+				"26, -8":  {},
+				"26, -7":  {},
+				"26, -6":  {},
+				"26, -5":  {},
+				"27, -10": {},
+				"27, -9":  {},
+				"27, -8":  {},
+				"27, -7":  {},
+				"27, -6":  {},
+				"27, -5":  {},
+				"28, -10": {},
+				"28, -9":  {},
+				"28, -8":  {},
+				"28, -7":  {},
+				"28, -6":  {},
+				"28, -5":  {},
+				"29, -10": {},
+				"29, -9":  {},
+				"29, -8":  {},
+				"29, -7":  {},
+				"29, -6":  {},
+				"29, -5":  {},
+				"30, -10": {},
+				"30, -9":  {},
+				"30, -8":  {},
+				"30, -7":  {},
+				"30, -6":  {},
+				"30, -5":  {},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, firingSolutionsFuncs(tt.args.xMin, tt.args.xMax, tt.args.yMin, tt.args.yMax),
+				"firingSolutionsFuncs(%v, %v, %v, %v)", tt.args.xMin, tt.args.xMax, tt.args.yMin, tt.args.yMax)
 		})
 	}
 }
