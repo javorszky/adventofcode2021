@@ -184,3 +184,76 @@ func Test_ySpeed(t *testing.T) {
 		})
 	}
 }
+
+func Test_xFunc(t *testing.T) {
+	type args struct {
+		initial int
+		xMin    int
+		xMax    int
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want map[int]int
+	}{
+		{
+			name: "will never reach it",
+			args: args{
+				initial: 4,
+				xMin:    12,
+				xMax:    19,
+			},
+			want: nil,
+		},
+		{
+			name: "will overshoot it",
+			args: args{
+				initial: 20,
+				xMin:    12,
+				xMax:    19,
+			},
+			want: nil,
+		},
+		{
+			name: "will skip over it",
+			args: args{
+				initial: 11,
+				xMin:    12,
+				xMax:    19,
+			},
+			want: map[int]int{},
+		},
+		{
+			name: "produces hits, but scrubs inside target area",
+			args: args{
+				initial: 5,
+				xMin:    12,
+				xMax:    19,
+			},
+			want: map[int]int{
+				3: 5,
+				4: 5,
+				5: 5,
+			},
+		},
+		{
+			name: "produces hits, but scrubs outside target area",
+			args: args{
+				initial: 7,
+				xMin:    12,
+				xMax:    19,
+			},
+			want: map[int]int{
+				2: 7,
+				3: 7,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, xFunc(tt.args.initial, tt.args.xMin, tt.args.xMax),
+				"xFunc(%v, %v, %v)", tt.args.initial, tt.args.xMin, tt.args.xMax)
+		})
+	}
+}

@@ -1,7 +1,33 @@
 package day17
 
-func xFunc(initial, xMin, xMax int) ([]int, bool) {
-	return nil, false
+import "log"
+
+func xFunc(initial, xMin, xMax int) map[int]int {
+	// will always overshoot
+	if initial > xMax {
+		return nil
+	}
+	// Let's see how far it gets before it sheds all its weight
+	newSpeed, newDistance := xSpeed(initial, initial)
+	if newSpeed != 0 {
+		log.Fatalf("x should have scrubbed all its speed")
+	}
+
+	// will never reach it
+	if newDistance < xMin {
+		return nil
+	}
+
+	hits := make(map[int]int)
+
+	for i := 1; i <= initial; i++ {
+		_, distance := xSpeed(initial, i)
+		if distance >= xMin && distance <= xMax {
+			hits[i] = initial
+		}
+	}
+
+	return hits
 }
 
 // xSpeed takes in an initial speed and the ticks it wants info of, and returns the new speed after that ticks, and the
@@ -35,22 +61,8 @@ func xSpeed(initial, tick int) (int, int) {
 // It also returns the vertical coordinate. Positive for above the horizon, negative for below.
 func ySpeed(initial, tick int) (int, int) {
 	speed := initial - tick
-	// h is vertical distance - the probe falls up during stuff
-	// k is horizontal distance - the ticks
-	//	y = a(x - h)2 + k
-	// one point is 0,0
-	// to figure out h,k, we need the sum
-	sum := sumFirst(initial)
-	smolSum := sumFirst(speed)
-	// y = a(x - sum)^2 + tick
-	// 0 = a(0 - sum)^2 + tick
-	// -tick/a = -sum^2
-	// -3/a = -3^2
-	// -3/a = 9
-	// -3/9 = a
-	// a = 1/3
 
-	return speed, sum - smolSum
+	return speed, sumFirst(initial) - sumFirst(speed)
 }
 
 func sumFirst(n int) int {
