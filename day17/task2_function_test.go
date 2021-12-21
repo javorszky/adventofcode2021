@@ -257,3 +257,68 @@ func Test_xFunc(t *testing.T) {
 		})
 	}
 }
+
+func Test_yFunc(t *testing.T) {
+	type args struct {
+		initial int
+		yMin    int
+		yMax    int
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want map[int]int
+	}{
+		{
+			name: "overshoots it",
+			args: args{
+				initial: -130,
+				yMin:    -128,
+				yMax:    -83,
+			},
+			want: nil,
+		},
+		{
+			name: "skips over it",
+			args: args{
+				initial: -82,
+				yMin:    -128,
+				yMax:    -83,
+			},
+			want: map[int]int{},
+		},
+		{
+			name: "gets hits",
+			args: args{
+				initial: -4,
+				yMin:    -128,
+				yMax:    -83,
+			},
+			want: map[int]int{
+				10: -4,
+				11: -4,
+				12: -4,
+			},
+		},
+		{
+			name: "gets hits but positive launch",
+			args: args{
+				initial: 6,
+				yMin:    -128,
+				yMax:    -83,
+			},
+			want: map[int]int{
+				21: 6,
+				22: 6,
+				23: 6,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, yFunc(tt.args.initial, tt.args.yMin, tt.args.yMax),
+				"yFunc(%v, %v, %v)", tt.args.initial, tt.args.yMin, tt.args.yMax)
+		})
+	}
+}

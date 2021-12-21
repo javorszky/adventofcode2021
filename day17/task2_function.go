@@ -30,6 +30,37 @@ func xFunc(initial, xMin, xMax int) map[int]int {
 	return hits
 }
 
+// yFunc will determine whether probe launched with initial velocity will hit the target area or not.
+//
+// Bear in mind that yMin is the lower bound, the bigger negative number, the further away from 0. Argument yMax,
+// consequently, is the point closer to the horizon of where the sub is.
+func yFunc(initial, yMin, yMax int) map[int]int {
+	// overshooting it
+	if initial < yMin {
+		return nil
+	}
+
+	hits := make(map[int]int)
+	i := 0
+
+	for {
+		_, distance := ySpeed(initial, i)
+
+		// we're already lower, there will be no more hits.
+		if distance < yMin {
+			break
+		}
+
+		if distance <= yMax && distance >= yMin {
+			hits[i] = initial
+		}
+
+		i++
+	}
+
+	return hits
+}
+
 // xSpeed takes in an initial speed and the ticks it wants info of, and returns the new speed after that ticks, and the
 // distance travelled in those ticks.
 //
