@@ -5,10 +5,10 @@ import (
 	"log"
 )
 
-func xFunc(initial, xMin, xMax int) map[int]int {
+func xFunc(initial, xMin, xMax int) (map[int]int, int, error) {
 	// will always overshoot
 	if initial > xMax {
-		return nil
+		return nil, 0, errors.New("overshoots")
 	}
 	// Let's see how far it gets before it sheds all its weight
 	newSpeed, newDistance := xSpeed(initial, initial)
@@ -18,19 +18,23 @@ func xFunc(initial, xMin, xMax int) map[int]int {
 
 	// will never reach it
 	if newDistance < xMin {
-		return nil
+		return nil, newSpeed, errors.New("will never reach it")
 	}
 
 	hits := make(map[int]int)
 
 	for i := 1; i <= initial; i++ {
-		_, distance := xSpeed(initial, i)
-		if distance >= xMin && distance <= xMax {
+		newSpeed, newDistance = xSpeed(initial, i)
+		if newDistance > xMax {
+			break
+		}
+
+		if newDistance >= xMin && newDistance <= xMax {
 			hits[i] = initial
 		}
 	}
 
-	return hits
+	return hits, newSpeed, nil
 }
 
 // yFunc will determine whether probe launched with initial velocity will hit the target area or not.

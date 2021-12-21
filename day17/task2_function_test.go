@@ -194,9 +194,11 @@ func Test_xFunc(t *testing.T) {
 	}
 
 	tests := []struct {
-		name string
-		args args
-		want map[int]int
+		name    string
+		args    args
+		want    map[int]int
+		want1   int
+		wantErr assert.ErrorAssertionFunc
 	}{
 		{
 			name: "will never reach it",
@@ -205,7 +207,9 @@ func Test_xFunc(t *testing.T) {
 				xMin:    12,
 				xMax:    19,
 			},
-			want: nil,
+			want:    nil,
+			want1:   0,
+			wantErr: assert.Error,
 		},
 		{
 			name: "will overshoot it",
@@ -214,7 +218,9 @@ func Test_xFunc(t *testing.T) {
 				xMin:    12,
 				xMax:    19,
 			},
-			want: nil,
+			want:    nil,
+			want1:   0,
+			wantErr: assert.Error,
 		},
 		{
 			name: "will skip over it",
@@ -223,7 +229,9 @@ func Test_xFunc(t *testing.T) {
 				xMin:    12,
 				xMax:    19,
 			},
-			want: map[int]int{},
+			want:    map[int]int{},
+			want1:   9,
+			wantErr: assert.NoError,
 		},
 		{
 			name: "produces hits, but scrubs inside target area",
@@ -237,6 +245,8 @@ func Test_xFunc(t *testing.T) {
 				4: 5,
 				5: 5,
 			},
+			want1:   0,
+			wantErr: assert.NoError,
 		},
 		{
 			name: "produces hits, but scrubs outside target area",
@@ -249,12 +259,19 @@ func Test_xFunc(t *testing.T) {
 				2: 7,
 				3: 7,
 			},
+			want1:   3,
+			wantErr: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, xFunc(tt.args.initial, tt.args.xMin, tt.args.xMax),
-				"xFunc(%v, %v, %v)", tt.args.initial, tt.args.xMin, tt.args.xMax)
+			hits, newSpeed, err := xFunc(tt.args.initial, tt.args.xMin, tt.args.xMax)
+
+			if !tt.wantErr(t, err, fmt.Sprintf("xFunc(%v, %v, %v)", tt.args.initial, tt.args.xMin, tt.args.xMax)) {
+				return
+			}
+			assert.Equalf(t, tt.want, hits, "xFunc(%v, %v, %v)", tt.args.initial, tt.args.xMin, tt.args.xMax)
+			assert.Equalf(t, tt.want1, newSpeed, "xFunc(%v, %v, %v)", tt.args.initial, tt.args.xMin, tt.args.xMax)
 		})
 	}
 }
