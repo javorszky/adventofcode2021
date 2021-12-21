@@ -1,6 +1,7 @@
 package day17
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -266,9 +267,11 @@ func Test_yFunc(t *testing.T) {
 	}
 
 	tests := []struct {
-		name string
-		args args
-		want map[int]int
+		name      string
+		args      args
+		want      map[int]int
+		want1     int
+		wantError assert.ErrorAssertionFunc
 	}{
 		{
 			name: "overshoots it",
@@ -277,7 +280,9 @@ func Test_yFunc(t *testing.T) {
 				yMin:    -128,
 				yMax:    -83,
 			},
-			want: nil,
+			want:      nil,
+			want1:     -130,
+			wantError: assert.Error,
 		},
 		{
 			name: "skips over it",
@@ -286,7 +291,9 @@ func Test_yFunc(t *testing.T) {
 				yMin:    -128,
 				yMax:    -83,
 			},
-			want: map[int]int{},
+			want:      map[int]int{},
+			want1:     -84,
+			wantError: assert.NoError,
 		},
 		{
 			name: "gets hits",
@@ -300,6 +307,8 @@ func Test_yFunc(t *testing.T) {
 				11: -4,
 				12: -4,
 			},
+			want1:     -17,
+			wantError: assert.NoError,
 		},
 		{
 			name: "gets hits but positive launch",
@@ -313,12 +322,18 @@ func Test_yFunc(t *testing.T) {
 				22: 6,
 				23: 6,
 			},
+			want1:     -18,
+			wantError: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, yFunc(tt.args.initial, tt.args.yMin, tt.args.yMax),
-				"yFunc(%v, %v, %v)", tt.args.initial, tt.args.yMin, tt.args.yMax)
+			got, got1, gotErr := yFunc(tt.args.initial, tt.args.yMin, tt.args.yMax)
+			if !tt.wantError(t, gotErr, fmt.Sprintf("yFunc(%v, %v, %v)", tt.args.initial, tt.args.yMin, tt.args.yMax)) {
+				return
+			}
+			assert.Equalf(t, tt.want, got, "yFunc(%v, %v, %v)", tt.args.initial, tt.args.yMin, tt.args.yMax)
+			assert.Equalf(t, tt.want1, got1, "yFunc(%v, %v, %v)", tt.args.initial, tt.args.yMin, tt.args.yMax)
 		})
 	}
 }

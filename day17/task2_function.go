@@ -1,6 +1,9 @@
 package day17
 
-import "log"
+import (
+	"errors"
+	"log"
+)
 
 func xFunc(initial, xMin, xMax int) map[int]int {
 	// will always overshoot
@@ -34,17 +37,19 @@ func xFunc(initial, xMin, xMax int) map[int]int {
 //
 // Bear in mind that yMin is the lower bound, the bigger negative number, the further away from 0. Argument yMax,
 // consequently, is the point closer to the horizon of where the sub is.
-func yFunc(initial, yMin, yMax int) map[int]int {
+func yFunc(initial, yMin, yMax int) (map[int]int, int, error) {
 	// overshooting it
 	if initial < yMin {
-		return nil
+		return nil, initial, errors.New("overshoots")
 	}
 
 	hits := make(map[int]int)
 	i := 0
+	escapeVelocity := 0
+	distance := 0
 
 	for {
-		_, distance := ySpeed(initial, i)
+		escapeVelocity, distance = ySpeed(initial, i)
 
 		// we're already lower, there will be no more hits.
 		if distance < yMin {
@@ -58,7 +63,7 @@ func yFunc(initial, yMin, yMax int) map[int]int {
 		i++
 	}
 
-	return hits
+	return hits, escapeVelocity, nil
 }
 
 // xSpeed takes in an initial speed and the ticks it wants info of, and returns the new speed after that ticks, and the
