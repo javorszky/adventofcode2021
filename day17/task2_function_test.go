@@ -90,3 +90,97 @@ func Test_xSpeed(t *testing.T) {
 		})
 	}
 }
+
+func Test_ySpeed(t *testing.T) {
+	type args struct {
+		initial int
+		tick    int
+	}
+
+	tests := []struct {
+		name  string
+		args  args
+		want  int
+		want1 int
+	}{
+		{
+			name: "15, 0 returns 15,0",
+			args: args{
+				initial: 15,
+				tick:    0,
+			},
+			want:  15,
+			want1: 0,
+		},
+		{
+			name: "15, 1 returns 14,15",
+			args: args{
+				initial: 15,
+				tick:    1,
+			},
+			want:  14,
+			want1: 15,
+		},
+		{
+			name: "15, 15 returns 0,120",
+			args: args{
+				initial: 15,
+				tick:    15,
+			},
+			want:  0,
+			want1: 120,
+		},
+		{
+			name: "15, 16 returns -1,120",
+			args: args{
+				initial: 15,
+				tick:    16,
+			},
+			want:  -1,
+			want1: 120,
+		},
+		{
+			name: "15, 17 returns -2,119",
+			args: args{
+				initial: 15,
+				tick:    17,
+			},
+			want:  -2,
+			want1: 119,
+		},
+		{
+			name: "15, 18 returns -3,117",
+			args: args{
+				initial: 15,
+				tick:    18,
+			},
+			want:  -3,
+			want1: 117,
+		},
+		{
+			name: "15, 30 returns -15,15",
+			args: args{
+				initial: 15,
+				tick:    30,
+			},
+			want:  -15,
+			want1: 15,
+		},
+		{
+			name: "15, 31 returns -16,0",
+			args: args{
+				initial: 15,
+				tick:    31,
+			},
+			want:  -16,
+			want1: 0,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := ySpeed(tt.args.initial, tt.args.tick)
+			assert.Equalf(t, tt.want, got, "ySpeed(%v, %v)", tt.args.initial, tt.args.tick)
+			assert.Equalf(t, tt.want1, got1, "ySpeed(%v, %v)", tt.args.initial, tt.args.tick)
+		})
+	}
+}
