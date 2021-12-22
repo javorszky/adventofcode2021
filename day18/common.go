@@ -51,14 +51,28 @@ func addNodes(left, right *node) *node {
 	}
 }
 
-//
-//func inOrder(tree *node) {
-//	if tree != nil {
-//		inOrder(tree.left)
-//		fmt.Printf("value of current node: %d\n", tree.value)
-//		inOrder(tree.right)
-//	}
-//}
+func gatherNodesFromLeft(root *node) []*node {
+	nodes := make([]*node, 0)
+
+	var inOrder func(*node)
+
+	inOrder = func(tree *node) {
+		if tree != nil {
+			inOrder(tree.left)
+
+			if isLeaf(tree) {
+				nodes = append(nodes, tree)
+			}
+
+			inOrder(tree.right)
+		}
+	}
+
+	inOrder(root)
+
+	return nodes
+}
+
 //
 //func preOrder(tree *node) {
 //	if tree != nil {

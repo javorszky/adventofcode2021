@@ -246,3 +246,50 @@ func Test_addNodes(t *testing.T) {
 		})
 	}
 }
+
+func Test_gatherNodesFromLeft(t *testing.T) {
+	type args struct {
+		root *node
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want []*node
+	}{
+		{
+			name: "gathers small tree",
+			args: args{
+				root: &node{
+					left: &node{
+						left: &node{value: 1},
+						right: &node{
+							left:  &node{value: 2},
+							right: &node{value: 3},
+						},
+					},
+					right: &node{
+						left: &node{value: 4},
+						right: &node{
+							left:  &node{value: 5},
+							right: &node{value: 6},
+						},
+					},
+				},
+			},
+			want: []*node{
+				{value: 1},
+				{value: 2},
+				{value: 3},
+				{value: 4},
+				{value: 5},
+				{value: 6},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, gatherNodesFromLeft(tt.args.root), "gatherNodesFromLeft(%v)", tt.args.root)
+		})
+	}
+}
