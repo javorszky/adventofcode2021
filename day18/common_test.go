@@ -169,3 +169,80 @@ func Test_isPair(t *testing.T) {
 		})
 	}
 }
+
+func Test_addNodes(t *testing.T) {
+	type args struct {
+		left  *node
+		right *node
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want *node
+	}{
+		{
+			name: "adds two nodes together",
+			args: args{
+				left: &node{
+					left: &node{
+						left: &node{value: 1},
+						right: &node{
+							left:  &node{value: 8},
+							right: &node{value: 7},
+						},
+					},
+					right: &node{value: 6},
+				},
+				right: &node{value: 5},
+			},
+			want: &node{
+				left: &node{
+					left: &node{
+						left: &node{value: 1},
+						right: &node{
+							left:  &node{value: 8},
+							right: &node{value: 7},
+						},
+					},
+					right: &node{value: 6},
+				},
+				right: &node{value: 5},
+			},
+		},
+		{
+			name: "adds same two nodes together, but other way",
+			args: args{
+				right: &node{
+					left: &node{
+						left: &node{value: 1},
+						right: &node{
+							left:  &node{value: 8},
+							right: &node{value: 7},
+						},
+					},
+					right: &node{value: 6},
+				},
+				left: &node{value: 5},
+			},
+			want: &node{
+				left: &node{value: 5},
+				right: &node{
+					left: &node{
+						left: &node{value: 1},
+						right: &node{
+							left:  &node{value: 8},
+							right: &node{value: 7},
+						},
+					},
+					right: &node{value: 6},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, addNodes(tt.args.left, tt.args.right), "addNodes(%v, %v)", tt.args.left, tt.args.right)
+		})
+	}
+}

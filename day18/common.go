@@ -44,6 +44,13 @@ func isPair(in *node) bool {
 	return in.left != nil && in.right != nil && isLeaf(in.left) && isLeaf(in.right)
 }
 
+func addNodes(left, right *node) *node {
+	return &node{
+		left:  left,
+		right: right,
+	}
+}
+
 //
 //func inOrder(tree *node) {
 //	if tree != nil {
