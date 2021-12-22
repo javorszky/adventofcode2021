@@ -11,17 +11,6 @@ import (
 	"github.com/javorszky/adventofcode2021/util"
 )
 
-const (
-	notLeafError nodeError = "not a Leaf, can't split"
-	valueTooLow  nodeError = "value too low to split"
-)
-
-type nodeError string
-
-func (n nodeError) Error() string {
-	return string(n)
-}
-
 // getInputs reads the input.txt file and returns them as a slice of strings for each row.
 func getInputs(fn string) []string {
 	data, err := ioutil.ReadFile(fn)
