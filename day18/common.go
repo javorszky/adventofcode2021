@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -127,6 +128,7 @@ func runExplosion(root *node) {
 	for _, n := range tierFour {
 		if isPair(n) {
 			explodeThis = n
+
 			break
 		}
 	}
@@ -172,59 +174,39 @@ func runExplosion(root *node) {
 	explodeThis.right = nil
 }
 
-//
-//func preOrder(tree *node) {
-//	if tree != nil {
-//		fmt.Printf("value of current node: %d\n", tree.value)
-//		preOrder(tree.left)
-//		preOrder(tree.right)
-//	}
-//}
-//
-//func postOrder(tree *node) {
-//	if tree != nil {
-//		postOrder(tree.left)
-//		postOrder(tree.right)
-//		fmt.Printf("value of current node: %d\n", tree.value)
-//	}
-//}
+func runSplit(root *node) {
+	var splitThis *node
 
-func Split(n *node) error {
-	if n.left != nil || n.right != nil {
-		return notLeafError
+	for _, leaf := range gatherNodesFromLeft(root) {
+		if leaf.value >= 10 {
+			splitThis = leaf
+
+			break
+		}
 	}
 
-	if n.value < 10 {
-		return valueTooLow
+	if splitThis == nil {
+		return
 	}
 
-	l := n.value / 2
-	r := n.value - l
+	left := splitThis.value / 2
+	right := splitThis.value - left
 
-	leftNode := &node{
-		value: l,
-		left:  nil,
-		right: nil,
-	}
+	leftNode := &node{value: left}
+	rightNode := &node{value: right}
 
-	rightNode := &node{
-		value: r,
-		left:  nil,
-		right: nil,
-	}
-
-	n.value = 0
-	n.left = leftNode
-	n.right = rightNode
-
-	return nil
+	splitThis.value = 0
+	splitThis.left = leftNode
+	splitThis.right = rightNode
 }
 
+var reOnlyDigits = regexp.MustCompile(`^\d+$`)
+
 func parse(in string) *node {
-	if len(in) == 1 {
+	if reOnlyDigits.MatchString(in) {
 		value, err := strconv.Atoi(in)
 		if err != nil {
-			log.Fatalf("string is 1 long, should be an int, is [%s], but encountered error: %s", in, err)
+			log.Fatalf("string is only a number, should be an int, is [%s], but encountered error: %s", in, err)
 		}
 
 		return &node{

@@ -506,3 +506,29 @@ func Test_runExplosion(t *testing.T) {
 		})
 	}
 }
+
+func Test_runSplit(t *testing.T) {
+	tests := []struct {
+		name string
+		in   string
+		out  string
+	}{
+		{
+			name: "splits example - 1",
+			in:   "[[[[0,7],4],[15,[0,13]]],[1,1]]",
+			out:  "[[[[0,7],4],[[7,8],[0,13]]],[1,1]]",
+		},
+		{
+			name: "splits example - 2",
+			in:   "[[[[0,7],4],[[7,8],[0,13]]],[1,1]]",
+			out:  "[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			root := parse(tt.in)
+			runSplit(root)
+			assert.Equalf(t, tt.out, root.String(), "running split on %s", tt.in)
+		})
+	}
+}
