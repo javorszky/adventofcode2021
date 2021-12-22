@@ -82,3 +82,48 @@ func Test_parse(t *testing.T) {
 		})
 	}
 }
+
+func Test_isLeaf(t *testing.T) {
+	type args struct {
+		in *node
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "node is leaf with val 0",
+			args: args{in: &node{
+				value: 0,
+				left:  nil,
+				right: nil,
+			}},
+			want: true,
+		},
+		{
+			name: "node is leaf with val 1-9",
+			args: args{in: &node{
+				value: 4,
+				left:  nil,
+				right: nil,
+			}},
+			want: true,
+		},
+		{
+			name: "node is leaf with val 32",
+			args: args{in: &node{
+				value: 32,
+				left:  nil,
+				right: nil,
+			}},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, isLeaf(tt.args.in), "isLeaf(%v)", tt.args.in)
+		})
+	}
+}

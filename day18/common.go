@@ -36,6 +36,10 @@ type node struct {
 	right *node
 }
 
+func isLeaf(in *node) bool {
+	return in.left == nil && in.right == nil
+}
+
 //
 //func inOrder(tree *node) {
 //	if tree != nil {
