@@ -113,13 +113,13 @@ func gatherNodesAtTiers(root *node) map[int][]*node {
 // runExplosion will run one set of explosion on the tree.
 //
 // "If any pair is nested inside four pairs, the leftmost such pair explodes." - day 18 task 1.
-func runExplosion(root *node) *node {
+func runExplosion(root *node) {
 	tiers := gatherNodesAtTiers(root)
 	tierFour, ok := tiers[4]
 
 	if !ok {
 		// nothing to do
-		return root
+		return
 	}
 
 	var explodeThis *node
@@ -127,12 +127,13 @@ func runExplosion(root *node) *node {
 	for _, n := range tierFour {
 		if isPair(n) {
 			explodeThis = n
+			break
 		}
 	}
 
 	if explodeThis == nil {
 		// there were no pairs on level 4, nothing to do
-		return root
+		return
 	}
 
 	leftToRight := gatherNodesFromLeft(root)
@@ -169,8 +170,6 @@ func runExplosion(root *node) *node {
 	explodeThis.value = 0
 	explodeThis.left = nil
 	explodeThis.right = nil
-
-	return root
 }
 
 //

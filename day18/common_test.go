@@ -469,3 +469,40 @@ func Test_node_String(t *testing.T) {
 		})
 	}
 }
+
+func Test_runExplosion(t *testing.T) {
+	tests := []struct {
+		name string
+		in   string
+		out  string
+	}{
+		{
+			name: "single explosion example - 1",
+			in:   "[[[[[9,8],1],2],3],4]",
+			out:  "[[[[0,9],2],3],4]",
+		},
+		{
+			name: "single explosion example - 2",
+			in:   "[7,[6,[5,[4,[3,2]]]]]",
+			out:  "[7,[6,[5,[7,0]]]]",
+		},
+		{
+			name: "single explosion example - 3",
+			in:   "[[6,[5,[4,[3,2]]]],1]",
+			out:  "[[6,[5,[7,0]]],3]",
+		},
+		{
+			name: "single explosion example - 4",
+			in:   "[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]",
+			out:  "[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := parse(tt.in)
+			runExplosion(r)
+
+			assert.Equalf(t, tt.out, r.String(), "run explosion on tree %s", tt.in)
+		})
+	}
+}
