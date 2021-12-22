@@ -1,6 +1,7 @@
 package day18
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -34,6 +35,18 @@ type node struct {
 	value int
 	left  *node
 	right *node
+}
+
+func (n *node) String() string {
+	if (n.left == nil && n.right != nil) || (n.left != nil && n.right == nil) {
+		log.Fatalf("found a node where one of the branches has a thing, the other does not. It should not have happened")
+	}
+
+	if n.left == nil && n.right == nil {
+		return fmt.Sprintf("%d", n.value)
+	}
+
+	return fmt.Sprintf("[%s,%s]", n.left.String(), n.right.String())
 }
 
 func isLeaf(in *node) bool {
@@ -97,9 +110,67 @@ func gatherNodesAtTiers(root *node) map[int][]*node {
 	return nodes
 }
 
+// runExplosion will run one set of explosion on the tree.
+//
+// "If any pair is nested inside four pairs, the leftmost such pair explodes." - day 18 task 1.
 func runExplosion(root *node) *node {
 	tiers := gatherNodesAtTiers(root)
+	tierFour, ok := tiers[4]
+
+	if !ok {
+		// nothing to do
+		return root
+	}
+
+	var explodeThis *node
+
+	for _, n := range tierFour {
+		if isPair(n) {
+			explodeThis = n
+		}
+	}
+
+	if explodeThis == nil {
+		// there were no pairs on level 4, nothing to do
+		return root
+	}
+
 	leftToRight := gatherNodesFromLeft(root)
+	left := explodeThis.left
+	right := explodeThis.right
+
+	var (
+		leafToLeft  *node
+		leafToRight *node
+	)
+
+	for i, leaf := range leftToRight {
+		if leaf == left {
+			if i > 0 {
+				leafToLeft = leftToRight[i-1]
+			}
+		}
+
+		if leaf == right {
+			if i < len(leftToRight)-1 {
+				leafToRight = leftToRight[i+1]
+			}
+		}
+	}
+
+	if leafToRight != nil {
+		leafToRight.value += right.value
+	}
+
+	if leafToLeft != nil {
+		leafToLeft.value += left.value
+	}
+
+	explodeThis.value = 0
+	explodeThis.left = nil
+	explodeThis.right = nil
+
+	return root
 }
 
 //

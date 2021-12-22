@@ -422,3 +422,50 @@ func Test_gatherPairsBelowFour(t *testing.T) {
 		})
 	}
 }
+
+func Test_node_String(t *testing.T) {
+	type fields struct {
+		value int
+		left  *node
+		right *node
+	}
+
+	tests := []struct {
+		name   string
+		fields fields
+		want   string
+	}{
+		{
+			name: "returns the string representation of a tree",
+			fields: fields{
+				value: 0,
+				left: &node{
+					left: &node{value: 3},
+					right: &node{
+						left: &node{value: 2},
+						right: &node{
+							left:  &node{value: 7},
+							right: &node{value: 4},
+						},
+					},
+				},
+				right: &node{
+					left:  &node{value: 5},
+					right: &node{value: 8},
+				},
+			},
+			want: "[[3,[2,[7,4]]],[5,8]]",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			n := &node{
+				value: tt.fields.value,
+				left:  tt.fields.left,
+				right: tt.fields.right,
+			}
+			assert.Equalf(t, tt.want, n.String(), "String()")
+			assert.Equalf(t, n, parse(n.String()), "re parsing the node from the string")
+		})
+	}
+}
