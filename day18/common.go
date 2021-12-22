@@ -1,7 +1,7 @@
 package day18
 
 import (
-	"errors"
+	"fmt"
 	"io/ioutil"
 	"strings"
 
@@ -30,34 +30,36 @@ func getInputs(fn string) []string {
 }
 
 type node struct {
-	parent *node
-	value  int
-	left   *node
-	right  *node
-	depth  int
+	value int
+	left  *node
+	right *node
 }
 
-func (n *node) Left() *node {
-	return n.left
+func inOrder(tree *node) {
+	if tree != nil {
+		inOrder(tree.left)
+		fmt.Printf("value of current node: %d\n", tree.value)
+		inOrder(tree.right)
+	}
 }
 
-func (n *node) Right() *node {
-	return n.right
+func preOrder(tree *node) {
+	if tree != nil {
+		fmt.Printf("value of current node: %d\n", tree.value)
+		preOrder(tree.left)
+		preOrder(tree.right)
+	}
 }
 
-func (n *node) Self() int {
-	return n.value
+func postOrder(tree *node) {
+	if tree != nil {
+		postOrder(tree.left)
+		postOrder(tree.right)
+		fmt.Printf("value of current node: %d\n", tree.value)
+	}
 }
 
-func (n *node) Parent() *node {
-	return n.parent
-}
-
-func (n *node) Depth() int {
-	return n.depth
-}
-
-func (n *node) Split() error {
+func Split(n *node) error {
 	if n.left != nil || n.right != nil {
 		return notLeafError
 	}
@@ -70,19 +72,15 @@ func (n *node) Split() error {
 	r := n.value - l
 
 	leftNode := &node{
-		parent: n,
-		value:  l,
-		left:   nil,
-		right:  nil,
-		depth:  n.depth + 1,
+		value: l,
+		left:  nil,
+		right: nil,
 	}
 
 	rightNode := &node{
-		parent: n,
-		value:  r,
-		left:   nil,
-		right:  nil,
-		depth:  n.depth + 1,
+		value: r,
+		left:  nil,
+		right: nil,
 	}
 
 	n.value = 0
@@ -90,45 +88,4 @@ func (n *node) Split() error {
 	n.right = rightNode
 
 	return nil
-}
-
-func leaf(value int, parent *node) *node {
-	depth := 0
-	if parent != nil {
-		depth = parent.Depth() + 1
-	}
-
-	return &node{
-		parent: parent,
-		value:  value,
-		left:   nil,
-		right:  nil,
-		depth:  depth,
-	}
-}
-
-func branch(left, right, parent *node) (*node, error) {
-	depth := 0
-	if parent != nil {
-		depth = parent.Depth() + 1
-	}
-
-	if left == nil || right == nil {
-		return nil, errors.New("can't create branch with nil left / right")
-	}
-
-	thisNode := &node{
-		parent: parent,
-		value:  0,
-		left:   left,
-		right:  right,
-		depth:  depth,
-	}
-
-	left.parent = thisNode
-	left.depth = depth + 1
-	right.parent = thisNode
-	right.depth = depth + 1
-
-	return thisNode, nil
 }
