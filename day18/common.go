@@ -73,7 +73,7 @@ func gatherNodesFromLeft(root *node) []*node {
 	return nodes
 }
 
-func gatherPairsBelowFour(root *node) map[int][]*node {
+func gatherNodesAtTiers(root *node) map[int][]*node {
 	nodes := make(map[int][]*node)
 
 	var inOrder func(*node, int)
@@ -95,6 +95,11 @@ func gatherPairsBelowFour(root *node) map[int][]*node {
 	inOrder(root, 0)
 
 	return nodes
+}
+
+func runExplosion(root *node) *node {
+	tiers := gatherNodesAtTiers(root)
+	leftToRight := gatherNodesFromLeft(root)
 }
 
 //

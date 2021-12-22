@@ -418,7 +418,7 @@ func Test_gatherPairsBelowFour(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, gatherPairsBelowFour(tt.args.root), "gatherPairsBelowFour(%v)", tt.args.root)
+			assert.Equalf(t, tt.want, gatherNodesAtTiers(tt.args.root), "gatherNodesAtTiers(%v)", tt.args.root)
 		})
 	}
 }
