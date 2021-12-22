@@ -1,8 +1,9 @@
 package day18
 
 import (
-	"fmt"
 	"io/ioutil"
+	"log"
+	"strconv"
 	"strings"
 
 	"github.com/javorszky/adventofcode2021/util"
@@ -35,29 +36,30 @@ type node struct {
 	right *node
 }
 
-func inOrder(tree *node) {
-	if tree != nil {
-		inOrder(tree.left)
-		fmt.Printf("value of current node: %d\n", tree.value)
-		inOrder(tree.right)
-	}
-}
-
-func preOrder(tree *node) {
-	if tree != nil {
-		fmt.Printf("value of current node: %d\n", tree.value)
-		preOrder(tree.left)
-		preOrder(tree.right)
-	}
-}
-
-func postOrder(tree *node) {
-	if tree != nil {
-		postOrder(tree.left)
-		postOrder(tree.right)
-		fmt.Printf("value of current node: %d\n", tree.value)
-	}
-}
+//
+//func inOrder(tree *node) {
+//	if tree != nil {
+//		inOrder(tree.left)
+//		fmt.Printf("value of current node: %d\n", tree.value)
+//		inOrder(tree.right)
+//	}
+//}
+//
+//func preOrder(tree *node) {
+//	if tree != nil {
+//		fmt.Printf("value of current node: %d\n", tree.value)
+//		preOrder(tree.left)
+//		preOrder(tree.right)
+//	}
+//}
+//
+//func postOrder(tree *node) {
+//	if tree != nil {
+//		postOrder(tree.left)
+//		postOrder(tree.right)
+//		fmt.Printf("value of current node: %d\n", tree.value)
+//	}
+//}
 
 func Split(n *node) error {
 	if n.left != nil || n.right != nil {
@@ -88,4 +90,73 @@ func Split(n *node) error {
 	n.right = rightNode
 
 	return nil
+}
+
+func parse(in string) *node {
+	if len(in) == 1 {
+		value, err := strconv.Atoi(in)
+		if err != nil {
+			log.Fatalf("string is 1 long, should be an int, is [%s], but encountered error: %s", in, err)
+		}
+
+		return &node{
+			value: value,
+			left:  nil,
+			right: nil,
+		}
+	}
+
+	// Trim the two ends of it. If the input is correct, they should be [].
+	in = in[1 : len(in)-1]
+
+	// find the middle comma, and parse the two sides
+	var left strings.Builder
+
+	var right strings.Builder
+
+	writeLeft := true
+	numSquares := 0
+
+	for _, ch := range in {
+		switch string(ch) {
+		case "[":
+			numSquares++
+
+			if writeLeft {
+				left.WriteString(string(ch))
+			} else {
+				right.WriteString(string(ch))
+			}
+		case "]":
+			numSquares--
+
+			if writeLeft {
+				left.WriteString(string(ch))
+			} else {
+				right.WriteString(string(ch))
+			}
+		case ",":
+			if numSquares == 0 {
+				writeLeft = false
+			} else {
+				if writeLeft {
+					left.WriteString(string(ch))
+				} else {
+					right.WriteString(string(ch))
+				}
+			}
+		default:
+			if writeLeft {
+				left.WriteString(string(ch))
+			} else {
+				right.WriteString(string(ch))
+			}
+		}
+	}
+
+	return &node{
+		value: 0,
+		left:  parse(left.String()),
+		right: parse(right.String()),
+	}
 }
