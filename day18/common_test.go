@@ -293,3 +293,132 @@ func Test_gatherNodesFromLeft(t *testing.T) {
 		})
 	}
 }
+
+func Test_gatherPairsBelowFour(t *testing.T) {
+	type args struct {
+		root *node
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want map[int][]*node
+	}{
+		{
+			name: "gathers nodes in tiers",
+			args: args{
+				root: &node{ // 0
+					left: &node{ // 1
+						left: &node{ // 2
+							left: &node{value: 9}, // 3
+							right: &node{ // 3
+								left:  &node{value: 1}, // 4
+								right: &node{value: 8}, // 4
+							},
+						},
+						right: &node{value: 2}, // 2
+					},
+					right: &node{ // 1
+						left: &node{ // 2
+							left: &node{value: 7}, // 3
+							right: &node{ // 3
+								left:  &node{value: 3}, // 4
+								right: &node{value: 6}, // 4
+							},
+						},
+						right: &node{value: 4}, // 2
+					},
+				},
+			},
+			want: map[int][]*node{
+				0: { // 0
+					&node{
+						left: &node{
+							left: &node{
+								left: &node{value: 9},
+								right: &node{
+									left:  &node{value: 1},
+									right: &node{value: 8},
+								},
+							},
+							right: &node{value: 2},
+						},
+						right: &node{
+							left: &node{
+								left: &node{value: 7},
+								right: &node{
+									left:  &node{value: 3},
+									right: &node{value: 6},
+								},
+							},
+							right: &node{value: 4},
+						},
+					},
+				}, // 0
+				1: {
+					&node{
+						left: &node{
+							left: &node{value: 9},
+							right: &node{
+								left:  &node{value: 1},
+								right: &node{value: 8},
+							},
+						},
+						right: &node{value: 2},
+					},
+					&node{
+						left: &node{
+							left: &node{value: 7},
+							right: &node{
+								left:  &node{value: 3},
+								right: &node{value: 6},
+							},
+						},
+						right: &node{value: 4},
+					},
+				}, // 1
+				2: {
+					&node{
+						left: &node{value: 9},
+						right: &node{
+							left:  &node{value: 1},
+							right: &node{value: 8},
+						},
+					},
+					&node{value: 2},
+					&node{ // 2
+						left: &node{value: 7}, // 3
+						right: &node{ // 3
+							left:  &node{value: 3}, // 4
+							right: &node{value: 6}, // 4
+						},
+					},
+					&node{value: 4},
+				}, // 2
+				3: {
+					&node{value: 9},
+					&node{ // 3
+						left:  &node{value: 1}, // 4
+						right: &node{value: 8}, // 4
+					},
+					&node{value: 7},
+					&node{ // 3
+						left:  &node{value: 3}, // 4
+						right: &node{value: 6}, // 4
+					},
+				}, // 3
+				4: {
+					&node{value: 1},
+					&node{value: 8},
+					&node{value: 3},
+					&node{value: 6},
+				}, // 4
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, gatherPairsBelowFour(tt.args.root), "gatherPairsBelowFour(%v)", tt.args.root)
+		})
+	}
+}

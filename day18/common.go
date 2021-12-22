@@ -73,6 +73,30 @@ func gatherNodesFromLeft(root *node) []*node {
 	return nodes
 }
 
+func gatherPairsBelowFour(root *node) map[int][]*node {
+	nodes := make(map[int][]*node)
+
+	var inOrder func(*node, int)
+
+	inOrder = func(tree *node, depth int) {
+		if tree != nil {
+			if nodes[depth] == nil {
+				nodes[depth] = make([]*node, 0)
+			}
+
+			inOrder(tree.left, depth+1)
+
+			nodes[depth] = append(nodes[depth], tree)
+
+			inOrder(tree.right, depth+1)
+		}
+	}
+
+	inOrder(root, 0)
+
+	return nodes
+}
+
 //
 //func preOrder(tree *node) {
 //	if tree != nil {
