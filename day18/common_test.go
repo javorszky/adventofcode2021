@@ -127,3 +127,45 @@ func Test_isLeaf(t *testing.T) {
 		})
 	}
 }
+
+func Test_isPair(t *testing.T) {
+	type args struct {
+		in *node
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "returns yes for pair",
+			args: args{in: &node{
+				left:  &node{value: 1},
+				right: &node{value: 2},
+			}},
+			want: true,
+		},
+		{
+			name: "returns no for a leaf",
+			args: args{in: &node{value: 3}},
+			want: false,
+		},
+		{
+			name: "returns no for a complex node",
+			args: args{in: &node{
+				left: &node{value: 4},
+				right: &node{
+					left:  &node{value: 9},
+					right: &node{value: 7},
+				},
+			}},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, isPair(tt.args.in), "isPair(%v)", tt.args.in)
+		})
+	}
+}

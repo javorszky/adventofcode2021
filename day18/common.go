@@ -40,6 +40,10 @@ func isLeaf(in *node) bool {
 	return in.left == nil && in.right == nil
 }
 
+func isPair(in *node) bool {
+	return in.left != nil && in.right != nil && isLeaf(in.left) && isLeaf(in.right)
+}
+
 //
 //func inOrder(tree *node) {
 //	if tree != nil {
