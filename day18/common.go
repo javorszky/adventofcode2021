@@ -29,7 +29,8 @@ type node struct {
 
 func (n *node) String() string {
 	if (n.left == nil && n.right != nil) || (n.left != nil && n.right == nil) {
-		log.Fatalf("found a node where one of the branches has a thing, the other does not. It should not have happened")
+		log.Fatalf("String: found a node where one of the branches has a thing, the other does not. " +
+			"It should not have happened")
 	}
 
 	if n.left == nil && n.right == nil {
@@ -37,6 +38,19 @@ func (n *node) String() string {
 	}
 
 	return fmt.Sprintf("[%s,%s]", n.left.String(), n.right.String())
+}
+
+func (n *node) Magnitude() int {
+	if (n.left == nil && n.right != nil) || (n.left != nil && n.right == nil) {
+		log.Fatalf("Magnitude: found a node where one of the branches has a thing, the other does not. " +
+			"It should not have happened")
+	}
+
+	if n.left == nil && n.right == nil {
+		return n.value
+	}
+
+	return 3*n.left.Magnitude() + 2*n.right.Magnitude()
 }
 
 func isLeaf(in *node) bool {
@@ -48,10 +62,14 @@ func isPair(in *node) bool {
 }
 
 func addNodes(left, right *node) *node {
-	return &node{
+	addedNode := &node{
 		left:  left,
 		right: right,
 	}
+
+	reduce(addedNode)
+
+	return addedNode
 }
 
 func gatherNodesFromLeft(root *node) []*node {

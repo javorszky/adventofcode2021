@@ -172,77 +172,37 @@ func Test_isPair(t *testing.T) {
 
 func Test_addNodes(t *testing.T) {
 	type args struct {
-		left  *node
-		right *node
+		left  string
+		right string
 	}
 
 	tests := []struct {
 		name string
 		args args
-		want *node
+		want string
 	}{
+		{
+			name: "adds two nodes smallest example",
+			args: args{
+				left:  "[[[[4,3],4],4],[7,[[8,4],9]]]",
+				right: "[1,1]",
+			},
+			want: "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]",
+		},
 		{
 			name: "adds two nodes together",
 			args: args{
-				left: &node{
-					left: &node{
-						left: &node{value: 1},
-						right: &node{
-							left:  &node{value: 8},
-							right: &node{value: 7},
-						},
-					},
-					right: &node{value: 6},
-				},
-				right: &node{value: 5},
+				left:  "[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]",
+				right: "[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]",
 			},
-			want: &node{
-				left: &node{
-					left: &node{
-						left: &node{value: 1},
-						right: &node{
-							left:  &node{value: 8},
-							right: &node{value: 7},
-						},
-					},
-					right: &node{value: 6},
-				},
-				right: &node{value: 5},
-			},
-		},
-		{
-			name: "adds same two nodes together, but other way",
-			args: args{
-				right: &node{
-					left: &node{
-						left: &node{value: 1},
-						right: &node{
-							left:  &node{value: 8},
-							right: &node{value: 7},
-						},
-					},
-					right: &node{value: 6},
-				},
-				left: &node{value: 5},
-			},
-			want: &node{
-				left: &node{value: 5},
-				right: &node{
-					left: &node{
-						left: &node{value: 1},
-						right: &node{
-							left:  &node{value: 8},
-							right: &node{value: 7},
-						},
-					},
-					right: &node{value: 6},
-				},
-			},
+			want: "[[[[4,0],[5,4]],[[7,7],[6,0]]],[[8,[7,7]],[[7,9],[5,0]]]]",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, addNodes(tt.args.left, tt.args.right), "addNodes(%v, %v)", tt.args.left, tt.args.right)
+			lNode := parse(tt.args.left)
+			rNode := parse(tt.args.right)
+			assert.Equalf(t, tt.want, addNodes(lNode, rNode).String(), "addNodes(%v, %v)", tt.args.left, tt.args.right)
 		})
 	}
 }
@@ -529,6 +489,36 @@ func Test_runSplit(t *testing.T) {
 			root := parse(tt.in)
 			runSplit(root)
 			assert.Equalf(t, tt.out, root.String(), "running split on %s", tt.in)
+		})
+	}
+}
+
+func Test_node_Magnitude(t *testing.T) {
+	tests := []struct {
+		name string
+		in   string
+		want int
+	}{
+		{
+			name: "[9,1]",
+			in:   "[9,1]",
+			want: 29,
+		},
+		{
+			name: "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]",
+			in:   "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]",
+			want: 1384,
+		},
+		{
+			name: "[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]",
+			in:   "[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]",
+			want: 3488,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			n := parse(tt.in)
+			assert.Equalf(t, tt.want, n.Magnitude(), "Magnitude()")
 		})
 	}
 }
