@@ -1,5 +1,5 @@
 package day19
 
-func task2(input []string) interface{} {
+func task2(input []probe) interface{} {
 	return input
 }
