@@ -2,7 +2,10 @@ package day19
 
 import (
 	"fmt"
+	"log"
 	"math"
+	"strconv"
+	"strings"
 )
 
 type position struct {
@@ -12,39 +15,6 @@ type position struct {
 func (p position) String() string {
 	return fmt.Sprintf("%d, %d, %d", p.x, p.y, p.z)
 }
-
-//
-//const (
-//	xPzP int = iota
-//	xPyP
-//	xPzM
-//	xPyM
-//
-//	xMzP
-//	xMyP
-//	xMzM
-//	xMyM
-//
-//	yPzP
-//	yPxP
-//	yPzM
-//	yPxM
-//
-//	yMzP
-//	yMxP
-//	yMzM
-//	yMxM
-//
-//	zPxP
-//	zPyP
-//	zPxM
-//	zPyM
-//
-//	zMxP
-//	zMyP
-//	zMxM
-//	zMyM
-//)
 
 func (p position) rotations() [24]position {
 	return [24]position{
@@ -94,13 +64,26 @@ func distance(p1, p2 position) float64 {
 	return math.Sqrt(x*x + y*y + z*z)
 }
 
-// rotations
-// z 90
-// z 180
-// z 270
-// x 90
-// x 180
-// x 270
-// y 90
-// y 180
-// y 270
+func parseBeacon(s string) position {
+	parts := strings.Split(s, ",")
+	if len(parts) != 3 {
+		log.Fatalf("tryng to parse beacon, expecting three numbers, got %d: %s", len(parts), s)
+	}
+
+	numbers := make([]int, 3)
+
+	for j, p := range parts {
+		n, err := strconv.Atoi(p)
+		if err != nil {
+			log.Fatalf("tried to convert string [%s] to int, but failed in beacon: %s", p, err)
+		}
+
+		numbers[j] = n
+	}
+
+	return position{
+		x: numbers[0],
+		y: numbers[1],
+		z: numbers[2],
+	}
+}
