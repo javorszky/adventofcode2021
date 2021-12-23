@@ -3,7 +3,6 @@ package day19
 import (
 	"fmt"
 	"log"
-	"math"
 	"strconv"
 	"strings"
 )
@@ -56,12 +55,12 @@ func (p position) rotations() [24]position {
 	}
 }
 
-func distance(p1, p2 position) float64 {
-	x := float64(p1.x - p2.x)
-	y := float64(p1.y - p2.y)
-	z := float64(p1.z - p2.z)
+func distance(p1, p2 position) int {
+	x := p1.x - p2.x
+	y := p1.y - p2.y
+	z := p1.z - p2.z
 
-	return math.Sqrt(x*x + y*y + z*z)
+	return x*x + y*y + z*z
 }
 
 func parseBeacon(s string) position {
