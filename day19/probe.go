@@ -44,8 +44,9 @@ func parseProbes(input string) []probe {
 		}
 
 		p := probe{
-			name:    strings.Trim(lines[0], "- "),
-			beacons: beaconSlice,
+			name:      strings.Trim(lines[0], "- "),
+			beacons:   beaconSlice,
+			distances: parseDistances(beaconSlice),
 		}
 
 		probes[i] = p
@@ -56,33 +57,30 @@ func parseProbes(input string) []probe {
 
 func parseDistances(beaconSlice beacons) []int {
 	distances := make([]int, 0, (len(beaconSlice)*(len(beaconSlice)-1))/2)
+	by := beaconSlice[0]
+	normalizedBeacons := make(beacons, len(beaconSlice))
 
 	sort.Sort(beaconSlice)
 
-	for i, beacon := range beaconSlice {
-		for _, otherBeacon := range beaconSlice[i+1:] {
+	for i, b := range beaconSlice {
+		normalizedBeacons[i] = shiftPositionBy(b, by)
+	}
+
+	for i, beacon := range normalizedBeacons {
+		for _, otherBeacon := range normalizedBeacons[i+1:] {
 			distances = append(distances, distance(beacon, otherBeacon))
 		}
 	}
 
 	sort.Ints(distances)
 
-	return nil
+	return distances
 }
 
-func findLowestPoint(beacons []position) position {
-	xes := make([]int, len(beacons))
-	for i, beacon := range beacons {
-		xes[i] = beacon.x
+func shiftPositionBy(shiftThis, by position) position {
+	return position{
+		x: shiftThis.x - by.x,
+		y: shiftThis.y - by.y,
+		z: shiftThis.z - by.z,
 	}
-
-	sort.Ints(xes)
-
-	lowestBeacons := make([]position, 0)
-	for _, beacon := range beacons {
-		if beacon.x == xes[0] {
-			lowestBeacons = append(lowestBeacons, beacon)
-		}
-	}
-
 }
