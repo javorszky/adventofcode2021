@@ -1,6 +1,7 @@
 package day19
 
 import (
+	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -108,6 +109,57 @@ func Test_position_rotations(t *testing.T) {
 			}
 
 			assert.ElementsMatchf(t, tt.want, gotStrings, "position.rotations()")
+		})
+	}
+}
+
+func Test_distance(t *testing.T) {
+	type args struct {
+		p1 position
+		p2 position
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want float64
+	}{
+		{
+			name: "negatives",
+			args: args{
+				p1: position{
+					x: 1,
+					y: 2,
+					z: 3,
+				},
+				p2: position{
+					x: 3,
+					y: 4,
+					z: 5,
+				},
+			},
+			want: math.Sqrt(12),
+		},
+		{
+			name: "positives",
+			args: args{
+				p1: position{
+					x: 12,
+					y: 22,
+					z: 53,
+				},
+				p2: position{
+					x: 3,
+					y: 4,
+					z: 5,
+				},
+			},
+			want: math.Sqrt(2709),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, distance(tt.args.p1, tt.args.p2), "distance(%v, %v)", tt.args.p1, tt.args.p2)
 		})
 	}
 }

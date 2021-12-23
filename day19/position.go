@@ -1,6 +1,9 @@
 package day19
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 type position struct {
 	x, y, z int
@@ -81,6 +84,14 @@ func (p position) rotations() [24]position {
 		{x: -p.z, y: -p.y, z: -p.x}, // zmxm
 		{x: p.y, y: -p.z, z: -p.x},  // zmym
 	}
+}
+
+func distance(p1, p2 position) float64 {
+	x := float64(p1.x - p2.x)
+	y := float64(p1.y - p2.y)
+	z := float64(p1.z - p2.z)
+
+	return math.Sqrt(x*x + y*y + z*z)
 }
 
 // rotations
