@@ -73,14 +73,6 @@ func parseDistances(beaconSlice beacons) map[int][][2]position {
 	return distances
 }
 
-func shiftPositionBy(shiftThis, by position) position {
-	return position{
-		x: shiftThis.x - by.x,
-		y: shiftThis.y - by.y,
-		z: shiftThis.z - by.z,
-	}
-}
-
 func findCenterPoint(beacons beacons) position {
 	x, y, z := 0, 0, 0
 	for _, kevin := range beacons {

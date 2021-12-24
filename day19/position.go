@@ -86,3 +86,11 @@ func parseBeacon(s string) position {
 		z: numbers[2],
 	}
 }
+
+func shiftPositionBy(shiftThis, by position) position {
+	return position{
+		x: shiftThis.x - by.x,
+		y: shiftThis.y - by.y,
+		z: shiftThis.z - by.z,
+	}
+}
