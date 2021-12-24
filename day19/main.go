@@ -5,13 +5,15 @@ import "fmt"
 const filename = "day19/input.txt"
 
 func Tasks() {
-	fmt.Printf("\nDay n\n------\n")
+	fmt.Printf("\nDay 19\n------\n")
 
-	input := getInputs(filename)
+	probes := getInputs(filename)
 
-	output := task1(input)
+	output := task1(probes)
 	fmt.Printf("Task 1: The result is something: %v\n", output)
-
-	output2 := task2(input)
-	fmt.Printf("Task 2: The result is something: %v\n", output2)
 }
+
+//
+//output2 := task2(input)
+//fmt.Printf("Task 2: The result is something: %v\n", output2)
+//}

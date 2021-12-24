@@ -43,10 +43,13 @@ func parseProbes(input string) []probe {
 			beaconSlice[j] = parseBeacon(positionString)
 		}
 
+		distances := parseDistancesFromCenterpoint(beaconSlice)
+		sort.Ints(distances)
+
 		p := probe{
 			name:      strings.Trim(lines[0], "- "),
 			beacons:   beaconSlice,
-			distances: parseDistances(beaconSlice),
+			distances: distances,
 		}
 
 		probes[i] = p
