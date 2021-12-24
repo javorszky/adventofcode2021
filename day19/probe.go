@@ -57,10 +57,11 @@ func parseProbes(input string) []probe {
 
 func parseDistances(beaconSlice beacons) []int {
 	distances := make([]int, 0, (len(beaconSlice)*(len(beaconSlice)-1))/2)
-	by := beaconSlice[0]
 	normalizedBeacons := make(beacons, len(beaconSlice))
 
 	sort.Sort(beaconSlice)
+
+	by := beaconSlice[0]
 
 	for i, b := range beaconSlice {
 		normalizedBeacons[i] = shiftPositionBy(b, by)
@@ -77,10 +78,43 @@ func parseDistances(beaconSlice beacons) []int {
 	return distances
 }
 
+func parseDistancesFromCenterpoint(beaconSlice beacons) []int {
+	distances := make([]int, len(beaconSlice))
+	normalizedBeacons := make(beacons, len(beaconSlice))
+	centerPoint := findCenterPoint(beaconSlice)
+
+	for i, b := range beaconSlice {
+		normalizedBeacons[i] = shiftPositionBy(b, centerPoint)
+	}
+
+	for i, beacon := range normalizedBeacons {
+		distances[i] = distance(beacon, centerPoint)
+	}
+
+	sort.Ints(distances)
+
+	return distances
+}
+
 func shiftPositionBy(shiftThis, by position) position {
 	return position{
 		x: shiftThis.x - by.x,
 		y: shiftThis.y - by.y,
 		z: shiftThis.z - by.z,
+	}
+}
+
+func findCenterPoint(beacons beacons) position {
+	x, y, z := 0, 0, 0
+	for _, kevin := range beacons {
+		x += kevin.x
+		y += kevin.y
+		z += kevin.z
+	}
+
+	return position{
+		x: x / len(beacons),
+		y: y / len(beacons),
+		z: z / len(beacons),
 	}
 }
