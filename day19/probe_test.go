@@ -18,6 +18,65 @@ func Test_parseProbes(t *testing.T) {
 		want []probe
 	}{
 		{
+			name: "tests baby 3d example",
+			args: args{
+				fn: `--- scanner 0 ---
+9,2,-3
+8,5,1
+-2,6,3
+0,0,11`,
+			},
+			want: []probe{
+				{
+					name: "scanner 0",
+					beacons: beacons{
+						{x: 9, y: 2, z: -3},
+						{x: 8, y: 5, z: 1},
+						{x: -2, y: 6, z: 3},
+						{x: 0, y: 0, z: 11},
+					},
+					distances: map[int][][2]position{
+						26: {
+							{
+								{x: 9, y: 2, z: -3},
+								{x: 8, y: 5, z: 1},
+							},
+						},
+						173: {
+							{
+								{x: 9, y: 2, z: -3},
+								{x: -2, y: 6, z: 3},
+							},
+						},
+						281: {
+							{
+								{x: 9, y: 2, z: -3},
+								{x: 0, y: 0, z: 11},
+							},
+						},
+						189: {
+							{
+								{x: 8, y: 5, z: 1},
+								{x: 0, y: 0, z: 11},
+							},
+						},
+						105: {
+							{
+								{x: 8, y: 5, z: 1},
+								{x: -2, y: 6, z: 3},
+							},
+						},
+						104: {
+							{
+								{x: -2, y: 6, z: 3},
+								{x: 0, y: 0, z: 11},
+							},
+						},
+					},
+				},
+			},
+		},
+		{
 			name: "tests small 3d example",
 			args: args{
 				fn: `--- scanner 0 ---
@@ -47,6 +106,109 @@ func Test_parseProbes(t *testing.T) {
 						{x: 5, y: 6, z: -4},
 						{x: 8, y: 0, z: 7},
 					},
+					distances: map[int][][2]position{
+						5: {
+							{
+								// double checked
+								{x: -1, y: -1, z: 1},
+								{x: -2, y: -3, z: 1},
+							},
+							{
+								// double checked
+								{x: -3, y: -3, z: 3},
+								{x: -2, y: -3, z: 1},
+							},
+						},
+						3: {
+							{
+								// double checked
+								{x: -1, y: -1, z: 1},
+								{x: -2, y: -2, z: 2},
+							},
+							{
+								// double checked
+								{x: -2, y: -2, z: 2},
+								{x: -3, y: -3, z: 3},
+							},
+						},
+						12: {
+							{
+								// double checked
+								{x: -1, y: -1, z: 1},
+								{x: -3, y: -3, z: 3},
+							},
+						},
+						194: {
+							{
+								// double checked
+								{x: -3, y: -3, z: 3},
+								{x: 5, y: 6, z: -4},
+							},
+						},
+						146: {
+							{
+								// double checked
+								{x: -3, y: -3, z: 3},
+								{x: 8, y: 0, z: 7},
+							},
+						},
+						145: {
+							{
+								// double checked
+								{x: -2, y: -3, z: 1},
+								{x: 8, y: 0, z: 7},
+							},
+						},
+						2: {
+							{
+								// double checked
+								{x: -2, y: -2, z: 2},
+								{x: -2, y: -3, z: 1},
+							},
+						},
+						155: {
+							{
+								// double checked
+								{x: -2, y: -3, z: 1},
+								{x: 5, y: 6, z: -4},
+							},
+						},
+						149: {
+							{
+								// double checked
+								{x: -2, y: -2, z: 2},
+								{x: 5, y: 6, z: -4},
+							},
+						},
+						129: {
+							{
+								// double checked
+								{x: -2, y: -2, z: 2},
+								{x: 8, y: 0, z: 7},
+							},
+						},
+						118: {
+							{
+								// double checked
+								{x: -1, y: -1, z: 1},
+								{x: 8, y: 0, z: 7},
+							},
+						},
+						110: {
+							{
+								// double checked
+								{x: -1, y: -1, z: 1},
+								{x: 5, y: 6, z: -4},
+							},
+						},
+						166: {
+							{
+								// double checked
+								{x: 5, y: 6, z: -4},
+								{x: 8, y: 0, z: 7},
+							},
+						},
+					},
 				},
 				{
 					name: "scanner 1",
@@ -57,6 +219,109 @@ func Test_parseProbes(t *testing.T) {
 						{x: 2, y: -1, z: 3},
 						{x: -5, y: 4, z: -6},
 						{x: -8, y: -7, z: 0},
+					},
+					distances: map[int][][2]position{
+						3: {
+							{
+								// double checked
+								{x: 1, y: -1, z: 1},
+								{x: 2, y: -2, z: 2},
+							},
+							{
+								// double checked
+								{x: 2, y: -2, z: 2},
+								{x: 3, y: -3, z: 3},
+							},
+						},
+						12: {
+							{
+								// double checked
+								{x: 1, y: -1, z: 1},
+								{x: 3, y: -3, z: 3},
+							},
+						},
+						5: {
+							{
+								// double checked
+								{x: 1, y: -1, z: 1},
+								{x: 2, y: -1, z: 3},
+							},
+							{
+								// double checked
+								{x: 3, y: -3, z: 3},
+								{x: 2, y: -1, z: 3},
+							},
+						},
+						110: {
+							{
+								// double checked
+								{x: 1, y: -1, z: 1},
+								{x: -5, y: 4, z: -6},
+							},
+						},
+						118: {
+							{
+								// double checked
+								{x: 1, y: -1, z: 1},
+								{x: -8, y: -7, z: 0},
+							},
+						},
+						2: {
+							{
+								// double checked
+								{x: 2, y: -2, z: 2},
+								{x: 2, y: -1, z: 3},
+							},
+						},
+						149: {
+							{
+								// double checked
+								{x: 2, y: -2, z: 2},
+								{x: -5, y: 4, z: -6},
+							},
+						},
+						129: {
+							{
+								// double checked
+								{x: 2, y: -2, z: 2},
+								{x: -8, y: -7, z: 0},
+							},
+						},
+						146: {
+							{
+								// double checked
+								{x: 3, y: -3, z: 3},
+								{x: -8, y: -7, z: 0},
+							},
+						},
+						194: {
+							{
+								// double checked
+								{x: 3, y: -3, z: 3},
+								{x: -5, y: 4, z: -6},
+							},
+						},
+						155: {
+							{
+								// double checked
+								{x: 2, y: -1, z: 3},
+								{x: -5, y: 4, z: -6},
+							},
+						},
+						145: {
+							{
+								// double checked
+								{x: 2, y: -1, z: 3},
+								{x: -8, y: -7, z: 0},
+							},
+						},
+						166: {
+							{
+								// double checked
+								{x: -5, y: 4, z: -6},
+								{x: -8, y: -7, z: 0},
+							},
+						},
 					},
 				},
 			},
@@ -228,7 +493,7 @@ func Test_parseDistances(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []int
+		want map[int][][2]position
 	}{
 		{
 			name: "parses distances for three beacons",
@@ -237,16 +502,32 @@ func Test_parseDistances(t *testing.T) {
 				{x: 3, y: 1, z: -5},
 				{x: -3, y: -2, z: 7},
 			}},
-			want: []int{
-				89,
-				189,
-				206,
+			want: map[int][][2]position{
+				89: {
+					{
+						{x: 3, y: 9, z: 0},
+						{x: 3, y: 1, z: -5},
+					},
+				},
+				189: {
+					{
+						{x: 3, y: 1, z: -5},
+						{x: -3, y: -2, z: 7},
+					},
+				},
+				206: {
+					{
+						{x: 3, y: 9, z: 0},
+						{x: -3, y: -2, z: 7},
+					},
+				},
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, parseDistances(tt.args.beaconSlice), "parseDistances(%v)", tt.args.beaconSlice)
+			assert.Equal(t, tt.want, parseDistances(tt.args.beaconSlice),
+				"parseDistances(%v)", tt.args.beaconSlice)
 		})
 	}
 }
@@ -294,114 +575,6 @@ func Test_findCenterPoint(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equalf(t, tt.want, findCenterPoint(tt.args.beacons), "findCenterPoint(%v)", tt.args.beacons)
-		})
-	}
-}
-
-func Test_parseDistancesFromCenterpoint(t *testing.T) {
-	type args struct {
-		beaconSlice beacons
-		transform   func(beacons) beacons
-	}
-
-	tests := []struct {
-		name string
-		args args
-		want []int
-	}{
-		{
-			name: "parses distances from center point",
-			args: args{
-				beaconSlice: beacons{
-					{x: 5, y: 5, z: 5},
-					{x: 4, y: 2, z: -4},
-					{x: 1, y: -5, z: 0},
-					{x: -10, y: 3, z: -1},
-				},
-				transform: func(b beacons) beacons {
-					return b
-				},
-			},
-			want: []int{
-				59,
-				32,
-				50,
-				102,
-			},
-		},
-		{
-			name: "parses distances from center point shifted by some value",
-			args: args{
-				beaconSlice: beacons{
-					{x: 5, y: 5, z: 5},
-					{x: 4, y: 2, z: -4},
-					{x: 1, y: -5, z: 0},
-					{x: -10, y: 3, z: -1},
-				},
-				transform: func(b beacons) beacons {
-					p := position{
-						x: -324,
-						y: 992,
-						z: 45,
-					}
-
-					newBeacons := make(beacons, len(b))
-					for i, oldB := range b {
-						newBeacons[i] = shiftPositionBy(oldB, p)
-					}
-
-					return newBeacons
-				},
-			},
-			want: []int{
-				59,
-				32,
-				50,
-				102,
-			},
-		},
-		{
-			name: "parses distances from center point shifted and rotated by some value",
-			args: args{
-				beaconSlice: beacons{
-					{x: 5, y: 5, z: 5},
-					{x: 4, y: 2, z: -4},
-					{x: 1, y: -5, z: 0},
-					{x: -10, y: 3, z: -1},
-				},
-				transform: func(b beacons) beacons {
-					p := position{
-						x: -324,
-						y: 992,
-						z: 45,
-					}
-
-					newBeacons := make(beacons, len(b))
-					for i, oldB := range b {
-						newBeacons[i] = shiftPositionBy(oldB, p)
-					}
-
-					newBeaconsRotated := make(beacons, len(b))
-					for i, oldB := range newBeacons {
-						rs := oldB.rotations()
-						newBeaconsRotated[i] = rs[9]
-					}
-
-					return newBeaconsRotated
-				},
-			},
-			want: []int{
-				59,
-				32,
-				50,
-				102,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			assert.ElementsMatchf(t, tt.want, parseDistancesFromCenterpoint(tt.args.beaconSlice),
-				"parseDistancesFromCenterpoint(%v)", tt.args.beaconSlice)
 		})
 	}
 }

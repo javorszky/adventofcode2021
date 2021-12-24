@@ -1,7 +1,6 @@
 package day19
 
 import (
-	"sort"
 	"strings"
 
 	"github.com/javorszky/adventofcode2021/util"
@@ -10,7 +9,7 @@ import (
 type probe struct {
 	name      string
 	beacons   []position
-	distances []int
+	distances map[int][][2]position
 }
 
 type beacons []position
@@ -43,8 +42,7 @@ func parseProbes(input string) []probe {
 			beaconSlice[j] = parseBeacon(positionString)
 		}
 
-		distances := parseDistancesFromCenterpoint(beaconSlice)
-		sort.Ints(distances)
+		distances := parseDistances(beaconSlice)
 
 		p := probe{
 			name:      strings.Trim(lines[0], "- "),
@@ -58,43 +56,19 @@ func parseProbes(input string) []probe {
 	return probes
 }
 
-func parseDistances(beaconSlice beacons) []int {
-	distances := make([]int, 0, (len(beaconSlice)*(len(beaconSlice)-1))/2)
-	normalizedBeacons := make(beacons, len(beaconSlice))
+func parseDistances(beaconSlice beacons) map[int][][2]position {
+	distances := make(map[int][][2]position)
 
-	sort.Sort(beaconSlice)
+	for i, beacon := range beaconSlice {
+		for _, otherBeacon := range beaconSlice[i+1:] {
+			d := distance(beacon, otherBeacon)
+			if distances[d] == nil {
+				distances[d] = make([][2]position, 0)
+			}
 
-	by := beaconSlice[0]
-
-	for i, b := range beaconSlice {
-		normalizedBeacons[i] = shiftPositionBy(b, by)
-	}
-
-	for i, beacon := range normalizedBeacons {
-		for _, otherBeacon := range normalizedBeacons[i+1:] {
-			distances = append(distances, distance(beacon, otherBeacon))
+			distances[d] = append(distances[d], [2]position{beacon, otherBeacon})
 		}
 	}
-
-	sort.Ints(distances)
-
-	return distances
-}
-
-func parseDistancesFromCenterpoint(beaconSlice beacons) []int {
-	distances := make([]int, len(beaconSlice))
-	normalizedBeacons := make(beacons, len(beaconSlice))
-	centerPoint := findCenterPoint(beaconSlice)
-
-	for i, b := range beaconSlice {
-		normalizedBeacons[i] = shiftPositionBy(b, centerPoint)
-	}
-
-	for i, beacon := range normalizedBeacons {
-		distances[i] = distance(beacon, centerPoint)
-	}
-
-	sort.Ints(distances)
 
 	return distances
 }

@@ -1,7 +1,6 @@
 package day19
 
 import (
-	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -122,7 +121,7 @@ func Test_distance(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want float64
+		want int
 	}{
 		{
 			name: "negatives",
@@ -138,7 +137,7 @@ func Test_distance(t *testing.T) {
 					z: 5,
 				},
 			},
-			want: math.Sqrt(12),
+			want: 12,
 		},
 		{
 			name: "positives",
@@ -154,7 +153,7 @@ func Test_distance(t *testing.T) {
 					z: 5,
 				},
 			},
-			want: math.Sqrt(2709),
+			want: 2709,
 		},
 	}
 	for _, tt := range tests {

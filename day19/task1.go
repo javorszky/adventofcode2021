@@ -9,7 +9,6 @@ func task1(input []probe) int {
 }
 
 func compareProbes(p1, p2 probe) {
-
 	fmt.Printf("distances for probe 1:\n%v\n\n", p1.distances)
 	fmt.Printf("distances for probe 2:\n%v\n\n", p2.distances)
 }
