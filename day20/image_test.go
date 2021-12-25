@@ -99,15 +99,37 @@ func TestImage_tick(t *testing.T) {
 				yMax:        6,
 			},
 		},
+		{
+			name:  "ticks example start twice",
+			img:   img,
+			ticks: 2,
+			want: Image{
+				image: [][]pixel{
+					{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, lightPx, darkPx},
+					{darkPx, lightPx, darkPx, darkPx, lightPx, darkPx, lightPx, darkPx, darkPx},
+					{lightPx, darkPx, lightPx, darkPx, darkPx, darkPx, lightPx, lightPx, lightPx},
+					{lightPx, darkPx, darkPx, darkPx, lightPx, lightPx, darkPx, lightPx, darkPx},
+					{lightPx, darkPx, darkPx, darkPx, darkPx, darkPx, lightPx, darkPx, lightPx},
+					{darkPx, lightPx, darkPx, lightPx, lightPx, lightPx, lightPx, lightPx, darkPx},
+					{darkPx, darkPx, lightPx, darkPx, lightPx, lightPx, lightPx, lightPx, lightPx},
+					{darkPx, darkPx, darkPx, lightPx, lightPx, darkPx, lightPx, lightPx, darkPx},
+					{darkPx, darkPx, darkPx, darkPx, lightPx, lightPx, lightPx, darkPx, darkPx},
+				},
+				enhancement: Enhancement{s: enhance},
+				xMax:        8,
+				yMax:        8,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			localImg := tt.img
 			for i := 0; i < tt.ticks; i++ {
-				localImg = tt.img.tick()
+				localImg = localImg.tick()
 			}
 
-			assert.Equalf(t, tt.want, localImg, "tick()")
+			assert.Equalf(t, tt.want, localImg,
+				"want:\n\n%s\n\nactual:\n\n%s\n\n", tt.want.String(), localImg.String())
 		})
 	}
 }

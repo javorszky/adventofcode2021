@@ -56,14 +56,14 @@ func (i Image) tick() Image {
 					checkRow := row + deltaRow
 					checkCol := col + deltaCol
 
-					if checkRow < 1 || checkCol < 1 || checkRow > i.xMax || checkCol > i.yMax {
+					if checkRow < 1 || checkCol < 1 || checkRow > i.xMax+1 || checkCol > i.yMax+1 {
 						subPixel[c] = darkPx
 						c++
 
 						continue
 					}
 
-					subPixel[c] = i.image[checkRow][checkCol]
+					subPixel[c] = i.image[checkRow-1][checkCol-1]
 					c++
 				}
 			}
