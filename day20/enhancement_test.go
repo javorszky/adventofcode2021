@@ -35,7 +35,7 @@ func TestEnhancement_subPixel(t *testing.T) {
 	}
 
 	type args struct {
-		in []byte
+		in [9]pixel
 	}
 
 	enhancementMap := "##..##...#..#.#...#.....##....#.#..#.#.####...#####..#.######...#......#.##.#..######.########" +
@@ -53,25 +53,25 @@ func TestEnhancement_subPixel(t *testing.T) {
 		{
 			name:   "using actual input enhancement map, correctly returns pixel by coordinate 13",
 			fields: fields{s: enhancementMap},
-			args:   args{in: []byte(".....##.#")},
+			args:   args{in: [9]pixel{darkPx, darkPx, darkPx, darkPx, darkPx, lightPx, lightPx, darkPx, lightPx}},
 			want:   darkPx,
 		},
 		{
 			name:   "using actual input enhancement map, correctly returns pixel by coordinate 12",
 			fields: fields{s: enhancementMap},
-			args:   args{in: []byte(".....##..")},
+			args:   args{in: [9]pixel{darkPx, darkPx, darkPx, darkPx, darkPx, lightPx, lightPx, darkPx, darkPx}},
 			want:   lightPx,
 		},
 		{
 			name:   "using actual input enhancement map, correctly returns the very first pixel",
 			fields: fields{s: enhancementMap},
-			args:   args{in: []byte(".........")},
+			args:   args{in: [9]pixel{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx}},
 			want:   lightPx,
 		},
 		{
 			name:   "using actual input enhancement map, correctly returns the very last pixel",
 			fields: fields{s: enhancementMap},
-			args:   args{in: []byte("#########")},
+			args:   args{in: [9]pixel{lightPx, lightPx, lightPx, lightPx, lightPx, lightPx, lightPx, lightPx, lightPx}},
 			want:   darkPx,
 		},
 	}

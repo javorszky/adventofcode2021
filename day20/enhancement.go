@@ -20,18 +20,14 @@ func NewEnhancement(s string) Enhancement {
 	return Enhancement{s: s}
 }
 
-func (e Enhancement) subPixel(in []byte) pixel {
+func (e Enhancement) subPixel(in [9]pixel) pixel {
 	idx := 0
-
-	if len(in) != 9 {
-		log.Fatalf("input subpixel is not 9 long")
-	}
 
 	for i, sp := range in {
 		switch sp {
-		case 0x2e:
+		case darkPx:
 			// dot, do nothing
-		case 0x23:
+		case lightPx:
 			// hash
 			idx += 1 << ((len(in) - 1) - i)
 		default:
