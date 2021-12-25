@@ -18,21 +18,21 @@ func (p position) String() string {
 func (p position) rotations() [24]position {
 	return [24]position{
 		// Double checked
-		{x: p.x, y: p.y, z: p.z},   // xpzp, self
+		{x: p.x, y: p.y, z: p.z},   // xpzp, self 0
 		{x: p.x, y: -p.z, z: p.y},  // xpyp
 		{x: p.x, y: -p.y, z: -p.z}, // xpzm (z minus also flips y by 180)
 		{x: p.x, y: p.z, z: -p.y},  // xpym
 
 		// Double checked
-		{x: -p.x, y: -p.y, z: p.z},  // xmzp
+		{x: -p.x, y: -p.y, z: p.z},  // xmzp 4
 		{x: -p.x, y: -p.z, z: -p.y}, // xmym
 		{x: -p.x, y: p.y, z: -p.z},  // xmzm
 		{x: -p.x, y: p.z, z: p.y},   // xmyp
 
 		// Double checked
-		{x: -p.y, y: p.x, z: p.z},  // ypzp
-		{x: -p.z, y: p.x, z: -p.y}, // ypxm
-		{x: p.y, y: p.x, z: -p.z},  // ypzm
+		{x: -p.y, y: p.x, z: p.z},  // ypzp 8
+		{x: -p.z, y: p.x, z: -p.y}, // ypxm 9
+		{x: p.y, y: p.x, z: -p.z},  // ypzm 10
 		{x: p.z, y: p.x, z: p.y},   // ypxp
 
 		// Double checked
