@@ -39,13 +39,17 @@ func (e Enhancement) subPixel(in []byte) pixel {
 		}
 	}
 
-	switch e.s[idx] {
+	return parseChar(e.s[idx])
+}
+
+func parseChar(c byte) pixel {
+	switch c {
 	case 0x23:
 		return lightPx
 	case 0x2e:
 		return darkPx
 	default:
-		log.Fatalf("Enhancement has weird character in it: [%s]", string(e.s[idx]))
+		log.Fatalf("Enhancement has weird character in it: [%s]", string(c))
 
 		return unknownPx
 	}
