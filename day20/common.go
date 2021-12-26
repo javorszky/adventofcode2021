@@ -8,11 +8,13 @@ import (
 )
 
 // getInputs reads the input.txt file and returns them as a slice of strings for each row.
-func getInputs(fn string) []string {
+func getInputs(fn string) (string, string) {
 	data, err := ioutil.ReadFile(fn)
 	if err != nil {
 		panic(err)
 	}
 
-	return strings.Split(strings.TrimRight(string(data), util.NewLine), util.NewLine)
+	parts := strings.Split(strings.TrimSpace(string(data)), util.NewLine+util.NewLine)
+
+	return parts[0], parts[1]
 }

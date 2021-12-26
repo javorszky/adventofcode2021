@@ -1,5 +1,5 @@
 package day20
 
-func task2(input []string) interface{} {
-	return input
+func task2(enhance, image string) interface{} {
+	return 1
 }

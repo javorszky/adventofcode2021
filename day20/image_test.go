@@ -36,21 +36,24 @@ func TestNewImage(t *testing.T) {
 			},
 			want: Image{
 				image: [][]pixel{
-					{lightPx, darkPx, darkPx, lightPx, darkPx},
-					{lightPx, darkPx, darkPx, darkPx, darkPx},
-					{lightPx, lightPx, darkPx, darkPx, lightPx},
-					{darkPx, darkPx, lightPx, darkPx, darkPx},
-					{darkPx, darkPx, lightPx, lightPx, lightPx},
+					{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx},
+					{darkPx, lightPx, darkPx, darkPx, lightPx, darkPx, darkPx},
+					{darkPx, lightPx, darkPx, darkPx, darkPx, darkPx, darkPx},
+					{darkPx, lightPx, lightPx, darkPx, darkPx, lightPx, darkPx},
+					{darkPx, darkPx, darkPx, lightPx, darkPx, darkPx, darkPx},
+					{darkPx, darkPx, darkPx, lightPx, lightPx, lightPx, darkPx},
+					{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx},
 				},
 				enhancement: Enhancement{s: enhance},
-				xMax:        4,
-				yMax:        4,
+				xMax:        6,
+				yMax:        6,
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, NewImage(tt.args.img, tt.args.enhance), "NewImage(%v, %v)", tt.args.img, tt.args.enhance)
+			newImage := NewImage(tt.args.img, tt.args.enhance)
+			assert.Equalf(t, tt.want, newImage, "expected:\n\n%s\n\nactual:\n\n%s\n\n", tt.want.String(), newImage.String())
 		})
 	}
 }
@@ -63,15 +66,20 @@ func TestImage_tick(t *testing.T) {
 		"...#.#.......#.......##..####..#...#.#.#...##..#.#..###..#####........#..####......#..#"
 	img := Image{
 		image: [][]pixel{
-			{lightPx, darkPx, darkPx, lightPx, darkPx},
-			{lightPx, darkPx, darkPx, darkPx, darkPx},
-			{lightPx, lightPx, darkPx, darkPx, lightPx},
-			{darkPx, darkPx, lightPx, darkPx, darkPx},
-			{darkPx, darkPx, lightPx, lightPx, lightPx},
+			{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx},
+			{darkPx, lightPx, darkPx, darkPx, lightPx, darkPx, darkPx},
+			{darkPx, lightPx, darkPx, darkPx, darkPx, darkPx, darkPx},
+			{darkPx, lightPx, lightPx, darkPx, darkPx, lightPx, darkPx},
+			{darkPx, darkPx, darkPx, lightPx, darkPx, darkPx, darkPx},
+			{darkPx, darkPx, darkPx, lightPx, lightPx, lightPx, darkPx},
+			{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx},
 		},
 		enhancement: Enhancement{s: enhance},
-		xMax:        4,
-		yMax:        4,
+		xMax:        6,
+		yMax:        6,
+		outside:     darkPx,
+		allDark:     darkPx,
+		allLit:      lightPx,
 	}
 
 	tests := []struct {
@@ -86,17 +94,24 @@ func TestImage_tick(t *testing.T) {
 			ticks: 1,
 			want: Image{
 				image: [][]pixel{
-					{darkPx, lightPx, lightPx, darkPx, lightPx, lightPx, darkPx},
-					{lightPx, darkPx, darkPx, lightPx, darkPx, lightPx, darkPx},
-					{lightPx, lightPx, darkPx, lightPx, darkPx, darkPx, lightPx},
-					{lightPx, lightPx, lightPx, lightPx, darkPx, darkPx, lightPx},
-					{darkPx, lightPx, darkPx, darkPx, lightPx, lightPx, darkPx},
-					{darkPx, darkPx, lightPx, lightPx, darkPx, darkPx, lightPx},
-					{darkPx, darkPx, darkPx, lightPx, darkPx, lightPx, darkPx},
+					{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx},
+
+					{darkPx, darkPx, lightPx, lightPx, darkPx, lightPx, lightPx, darkPx, darkPx},
+					{darkPx, lightPx, darkPx, darkPx, lightPx, darkPx, lightPx, darkPx, darkPx},
+					{darkPx, lightPx, lightPx, darkPx, lightPx, darkPx, darkPx, lightPx, darkPx},
+					{darkPx, lightPx, lightPx, lightPx, lightPx, darkPx, darkPx, lightPx, darkPx},
+					{darkPx, darkPx, lightPx, darkPx, darkPx, lightPx, lightPx, darkPx, darkPx},
+					{darkPx, darkPx, darkPx, lightPx, lightPx, darkPx, darkPx, lightPx, darkPx},
+					{darkPx, darkPx, darkPx, darkPx, lightPx, darkPx, lightPx, darkPx, darkPx},
+
+					{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx},
 				},
 				enhancement: Enhancement{s: enhance},
-				xMax:        6,
-				yMax:        6,
+				xMax:        8,
+				yMax:        8,
+				outside:     darkPx,
+				allDark:     darkPx,
+				allLit:      lightPx,
 			},
 		},
 		{
@@ -105,19 +120,26 @@ func TestImage_tick(t *testing.T) {
 			ticks: 2,
 			want: Image{
 				image: [][]pixel{
-					{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, lightPx, darkPx},
-					{darkPx, lightPx, darkPx, darkPx, lightPx, darkPx, lightPx, darkPx, darkPx},
-					{lightPx, darkPx, lightPx, darkPx, darkPx, darkPx, lightPx, lightPx, lightPx},
-					{lightPx, darkPx, darkPx, darkPx, lightPx, lightPx, darkPx, lightPx, darkPx},
-					{lightPx, darkPx, darkPx, darkPx, darkPx, darkPx, lightPx, darkPx, lightPx},
-					{darkPx, lightPx, darkPx, lightPx, lightPx, lightPx, lightPx, lightPx, darkPx},
-					{darkPx, darkPx, lightPx, darkPx, lightPx, lightPx, lightPx, lightPx, lightPx},
-					{darkPx, darkPx, darkPx, lightPx, lightPx, darkPx, lightPx, lightPx, darkPx},
-					{darkPx, darkPx, darkPx, darkPx, lightPx, lightPx, lightPx, darkPx, darkPx},
+					{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx},
+
+					{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, lightPx, darkPx, darkPx},
+					{darkPx, darkPx, lightPx, darkPx, darkPx, lightPx, darkPx, lightPx, darkPx, darkPx, darkPx},
+					{darkPx, lightPx, darkPx, lightPx, darkPx, darkPx, darkPx, lightPx, lightPx, lightPx, darkPx},
+					{darkPx, lightPx, darkPx, darkPx, darkPx, lightPx, lightPx, darkPx, lightPx, darkPx, darkPx},
+					{darkPx, lightPx, darkPx, darkPx, darkPx, darkPx, darkPx, lightPx, darkPx, lightPx, darkPx},
+					{darkPx, darkPx, lightPx, darkPx, lightPx, lightPx, lightPx, lightPx, lightPx, darkPx, darkPx},
+					{darkPx, darkPx, darkPx, lightPx, darkPx, lightPx, lightPx, lightPx, lightPx, lightPx, darkPx},
+					{darkPx, darkPx, darkPx, darkPx, lightPx, lightPx, darkPx, lightPx, lightPx, darkPx, darkPx},
+					{darkPx, darkPx, darkPx, darkPx, darkPx, lightPx, lightPx, lightPx, darkPx, darkPx, darkPx},
+
+					{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx},
 				},
 				enhancement: Enhancement{s: enhance},
-				xMax:        8,
-				yMax:        8,
+				xMax:        10,
+				yMax:        10,
+				outside:     darkPx,
+				allDark:     darkPx,
+				allLit:      lightPx,
 			},
 		},
 	}
@@ -171,6 +193,46 @@ func TestImage_String(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equalf(t, tt.want, tt.img.String(), "String()")
+		})
+	}
+}
+
+func TestImage_Lights(t *testing.T) {
+	enhance := "..#.#..#####.#.#.#.###.##.....###.##.#..###.####..#####..#....#..#..##..###..######.###...####..#..##" +
+		"###..##..#.#####...##.#.#..#.##..#.#......#.###.######.###.####...#.##.##..#..#..#####.....#.#....###..#.##." +
+		".....#.....#..#..#..##..#...##.######.####.####.#.#...#.......#..#.#.#...####.##.#......#..#...##.#.##..#..." +
+		"##.#.##..###.#......#.#.......#.#.#.####.###.##...#.....####.#..#..#.##.#....##..#.####....##...##..#...#..." +
+		"...#.#.......#.......##..####..#...#.#.#...##..#.#..###..#####........#..####......#..#"
+
+	tests := []struct {
+		name string
+		img  Image
+		want int
+	}{
+		{
+			name: "counts lights correctly",
+			img: Image{
+				image: [][]pixel{
+					{darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, darkPx, lightPx, darkPx},
+					{darkPx, lightPx, darkPx, darkPx, lightPx, darkPx, lightPx, darkPx, darkPx},
+					{lightPx, darkPx, lightPx, darkPx, darkPx, darkPx, lightPx, lightPx, lightPx},
+					{lightPx, darkPx, darkPx, darkPx, lightPx, lightPx, darkPx, lightPx, darkPx},
+					{lightPx, darkPx, darkPx, darkPx, darkPx, darkPx, lightPx, darkPx, lightPx},
+					{darkPx, lightPx, darkPx, lightPx, lightPx, lightPx, lightPx, lightPx, darkPx},
+					{darkPx, darkPx, lightPx, darkPx, lightPx, lightPx, lightPx, lightPx, lightPx},
+					{darkPx, darkPx, darkPx, lightPx, lightPx, darkPx, lightPx, lightPx, darkPx},
+					{darkPx, darkPx, darkPx, darkPx, lightPx, lightPx, lightPx, darkPx, darkPx},
+				},
+				enhancement: Enhancement{s: enhance},
+				xMax:        8,
+				yMax:        8,
+			},
+			want: 35,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, tt.img.Lights(), "Lights()")
 		})
 	}
 }
