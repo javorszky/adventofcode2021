@@ -62,5 +62,21 @@ func (u *Universe) Marshal(s string) {
 func simulateMultiverses(p1, p2 int) int {
 	rollPossibilities := calculatePossibilities()
 
+	//universe := Universe{
+	//	p1Step:  p1,
+	//	p1Score: 0,
+	//	p2Step:  p2,
+	//	p2Score: 0,
+	//}
+
+	//possibilityMap := map[string]int{
+	//	universe.String(): 1,
+	//}
+	//
+	//// Roll for player 1 first
+	//for rollValue, frequency := range rollPossibilities {
+	//
+	//}
+
 	return len(rollPossibilities)
 }
