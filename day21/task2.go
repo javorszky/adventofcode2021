@@ -1,5 +1,5 @@
 package day21
 
-func task2(input []string) interface{} {
-	return "not done yet"
+func task2(p1, p2 int) int {
+	return 0
 }
