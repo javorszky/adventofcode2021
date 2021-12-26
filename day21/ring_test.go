@@ -68,9 +68,8 @@ func Test_node_rotateBy(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			n := assembledTask1()
 
-			got, got1 := n.rotateBy(tt.v)
+			got := n.rotateBy(tt.v)
 			assert.Equalf(t, tt.want, got.value(), "rotateBy(%v)", tt.v)
-			assert.Equalf(t, tt.want, got1, "rotateBy(%v)", tt.v)
 		})
 	}
 }

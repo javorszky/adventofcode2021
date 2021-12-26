@@ -63,11 +63,11 @@ func (n *node) rotateTo(v int) *node {
 	return rotate
 }
 
-func (n *node) rotateBy(v int) (*node, int) {
+func (n *node) rotateBy(v int) *node {
 	ring := n
 	for i := 0; i < v%10; i++ {
 		ring = ring.next()
 	}
 
-	return ring, ring.value()
+	return ring
 }

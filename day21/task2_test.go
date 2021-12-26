@@ -87,3 +87,30 @@ func TestUniverse_Marshal(t *testing.T) {
 		})
 	}
 }
+
+func Test_task2(t *testing.T) {
+	type args struct {
+		p1 int
+		p2 int
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			name: "run example universe simulation",
+			args: args{
+				p1: 4,
+				p2: 8,
+			},
+			want: 444356092776315,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, task2(tt.args.p1, tt.args.p2), "task2(%v, %v)", tt.args.p1, tt.args.p2)
+		})
+	}
+}

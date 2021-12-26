@@ -24,7 +24,7 @@ func task1(player1, player2 int) int {
 			c++
 		}
 
-		p1Ring, _ = p1Ring.rotateBy(p1Step)
+		p1Ring = p1Ring.rotateBy(p1Step)
 
 		p1Score += p1Ring.value()
 
@@ -41,7 +41,7 @@ func task1(player1, player2 int) int {
 			c++
 		}
 
-		p2Ring, _ = p2Ring.rotateBy(p2Step)
+		p2Ring = p2Ring.rotateBy(p2Step)
 
 		p2Score += p2Ring.value()
 
