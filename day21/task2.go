@@ -1,6 +1,7 @@
 package day21
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -21,6 +22,7 @@ func calculatePossibilities() map[int]int64 {
 		for j := 1; j <= 3; j++ {
 			for k := 1; k <= 3; k++ {
 				poss[i+j+k]++
+				fmt.Printf("%d / %d / %d  = %d\n", i, j, k, i+j+k)
 			}
 		}
 	}
@@ -39,7 +41,7 @@ type universePossibilities struct {
 
 func simulateMultiverses(p1, p2 int) wins {
 	rollPossibilities := calculatePossibilities()
-
+	fmt.Printf("%#v\n", rollPossibilities)
 	universe := Universe{
 		p1Step:  p1,
 		p1Score: 0,
