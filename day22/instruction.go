@@ -15,7 +15,7 @@ const (
 )
 
 type instruction struct {
-	xfrom, xto, yfrom, yto, zfrom, zto int
+	xFrom, xTo, yFrom, yTo, zFrom, zTo int
 	flip                               flip
 }
 
@@ -48,12 +48,12 @@ func parseInstruction(s string) instruction {
 	}
 
 	return instruction{
-		xfrom: numbers[0],
-		xto:   numbers[1],
-		yfrom: numbers[2],
-		yto:   numbers[3],
-		zfrom: numbers[4],
-		zto:   numbers[5],
+		xFrom: numbers[0],
+		xTo:   numbers[1],
+		yFrom: numbers[2],
+		yTo:   numbers[3],
+		zFrom: numbers[4],
+		zTo:   numbers[5],
 		flip:  ins,
 	}
 }
