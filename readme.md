@@ -21,3 +21,6 @@ Here be solutions for aoc21 by moi!
 * [Day 16](day16/) - evaluate some strings and parse them real good!
 * [Day 17](day17/) - parabolic functions and sums culminating in some combinatronics and firing solutions
 * [Day 18](day18/) - snail math - binary tree traversal
+* [Day 19](day19/) - ON HOLD: I'm close, but can't figure out what I'm doing wrong...
+* [Day 20](day20/) - CSI: AdventOfCode. Zoom in. ENHANCE!
+* [Day 21](day21/) - "How many did you see?" - "14,000,605" - "How many do we win?" - "One..." 
