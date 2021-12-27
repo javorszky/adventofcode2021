@@ -97,7 +97,7 @@ func Test_task2(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want int
+		want int64
 	}{
 		{
 			name: "run example universe simulation",
@@ -110,7 +110,10 @@ func Test_task2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, task2(tt.args.p1, tt.args.p2), "task2(%v, %v)", tt.args.p1, tt.args.p2)
+			got := task2(tt.args.p1, tt.args.p2)
+			assert.Equalf(t, tt.want, got, ""+
+				"expected %d\n"+
+				"got      %d\n", tt.want, got)
 		})
 	}
 }
