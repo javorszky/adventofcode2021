@@ -5,11 +5,16 @@ import "fmt"
 const filename = "day22/input.txt"
 
 func Tasks() {
-	fmt.Printf("\nDay n\n------\n")
+	fmt.Printf("\nDay 22\n------\n")
 
 	input := getInputs(filename)
 
-	output := task1(input)
+	insts := make([]instruction, len(input))
+	for i, line := range input {
+		insts[i] = parseInstruction(line)
+	}
+
+	output := task1(insts)
 	fmt.Printf("Task 1: The result is something: %v\n", output)
 
 	output2 := task2(input)
