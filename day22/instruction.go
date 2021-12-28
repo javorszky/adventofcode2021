@@ -177,7 +177,7 @@ func findOverlapBox(box, otherBox instruction) (instruction, error) {
 	}, nil
 }
 
-// find faces, 6 of them
+// find faces, 6 of them.
 func findTopFace(box, overlapBox instruction) []instruction {
 	// there is no face here, the overlap box is at the edge
 	if box.zTo == overlapBox.zTo {
@@ -217,22 +217,82 @@ func findBottomFace(box, overlapBox instruction) []instruction {
 }
 
 func findFrontFace(box, overlapBox instruction) []instruction {
-	return nil
+	// there is no face here, the overlap box is at the front edge
+	if box.xTo == overlapBox.xTo {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: overlapBox.xTo,
+			xTo:   box.xTo,
+			yFrom: overlapBox.yFrom,
+			yTo:   overlapBox.yTo,
+			zFrom: overlapBox.zFrom,
+			zTo:   overlapBox.zTo,
+			flip:  box.flip,
+		},
+	}
 }
 
 func findBackFace(box, overlapBox instruction) []instruction {
-	return nil
+	// there is no face here, the overlap box is at the back edge
+	if box.xFrom == overlapBox.xFrom {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: box.xFrom,
+			xTo:   overlapBox.xFrom,
+			yFrom: overlapBox.yFrom,
+			yTo:   overlapBox.yTo,
+			zFrom: overlapBox.zFrom,
+			zTo:   overlapBox.zTo,
+			flip:  box.flip,
+		},
+	}
 }
 
 func findLeftFace(box, overlapBox instruction) []instruction {
-	return nil
+	// there is no face here, the overlap box is at the left edge
+	if box.yFrom == overlapBox.yFrom {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: overlapBox.xFrom,
+			xTo:   overlapBox.xTo,
+			yFrom: box.yFrom,
+			yTo:   overlapBox.yFrom,
+			zFrom: overlapBox.zFrom,
+			zTo:   overlapBox.zTo,
+			flip:  box.flip,
+		},
+	}
 }
 
 func findRightFace(box, overlapBox instruction) []instruction {
-	return nil
+	// there is no face here, the overlap box is at the right edge
+	if box.yTo == overlapBox.yTo {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: overlapBox.xFrom,
+			xTo:   overlapBox.xTo,
+			yFrom: overlapBox.yTo,
+			yTo:   box.yTo,
+			zFrom: overlapBox.zFrom,
+			zTo:   overlapBox.zTo,
+			flip:  box.flip,
+		},
+	}
 }
 
-// find edges, 12 of them
+// find edges, 12 of them.
 func findTopLeftEdge(box, overlapBox instruction) []instruction {
 	return nil
 }
@@ -281,7 +341,7 @@ func findBackRightEdge(box, overlapBox instruction) []instruction {
 	return nil
 }
 
-// find corners, 8 of them
+// find corners, 8 of them.
 func findTopBackLeftCorner(box, overlapBox instruction) []instruction {
 	return nil
 }
