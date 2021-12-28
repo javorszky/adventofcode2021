@@ -4241,7 +4241,13 @@ func Test_overlapAndMerge(t *testing.T) {
 					flip:  off,
 				},
 			},
-			want: nil,
+			want: []instruction{
+				{xFrom: -20, xTo: -5, yFrom: -20, yTo: -5, zFrom: -20, zTo: -5, flip: 1},
+				{xFrom: -5, xTo: 5, yFrom: -20, yTo: 5, zFrom: -20, zTo: -5, flip: 1},
+				{xFrom: -20, xTo: 5, yFrom: -20, yTo: -5, zFrom: -5, zTo: 5, flip: 1},
+				{xFrom: -20, xTo: -5, yFrom: -5, yTo: 5, zFrom: -20, zTo: 5, flip: 1},
+				{xFrom: -5, xTo: 20, yFrom: -5, yTo: 20, zFrom: -5, zTo: 20, flip: 2},
+			},
 		},
 	}
 	for _, tt := range tests {

@@ -87,8 +87,8 @@ func parseInstruction(s string) instruction {
 func overlapAndMerge(box, otherBox instruction) []instruction {
 	overlaps := overlap(box, otherBox)
 	checked := make(map[string]instruction)
-	//merged := make([]instruction, 0)
-	merges := make([]instruction, 0)
+
+	var merges []instruction
 
 	for {
 		for i, overlapBox := range overlaps {
@@ -123,13 +123,12 @@ func overlapAndMerge(box, otherBox instruction) []instruction {
 		}
 
 		newOverlaps = append(newOverlaps, merges...)
+		merges = []instruction{}
+		checked = map[string]instruction{}
 		overlaps = newOverlaps
 	}
 
-	fmt.Printf("at the end of merging and overlapping\n\n%#v\n\n", merges)
-	fmt.Printf("checked is\n\n%#v\n\n", checked)
-
-	return nil
+	return overlaps
 }
 
 func overlap(box, otherBox instruction) []instruction {
