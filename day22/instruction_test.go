@@ -91,7 +91,7 @@ func Test_findOverlapBox(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    []instruction
+		want    instruction
 		wantErr assert.ErrorAssertionFunc
 	}{
 		{
@@ -116,7 +116,73 @@ func Test_findOverlapBox(t *testing.T) {
 					flip:  off,
 				},
 			},
-			want:    nil,
+			want:    instruction{},
+			wantErr: assert.Error,
+		},
+		{
+			name: "finds overlapping box between the two boxes where otherbox is fully contained",
+			args: args{
+				box: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+				otherBox: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+			},
+			want: instruction{
+				xFrom: -10,
+				xTo:   10,
+				yFrom: -10,
+				yTo:   10,
+				zFrom: -10,
+				zTo:   10,
+				flip:  off,
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "finds overlapping box between the two boxes where only a corner matches",
+			args: args{
+				box: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+				otherBox: instruction{
+					xFrom: 5,
+					xTo:   15,
+					yFrom: 5,
+					yTo:   15,
+					zFrom: 5,
+					zTo:   15,
+					flip:  off,
+				},
+			},
+			want: instruction{
+				xFrom: 5,
+				xTo:   10,
+				yFrom: 5,
+				yTo:   10,
+				zFrom: 5,
+				zTo:   10,
+				flip:  off,
+			},
 			wantErr: assert.NoError,
 		},
 	}

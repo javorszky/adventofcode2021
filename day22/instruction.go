@@ -153,7 +153,7 @@ func findOverlapBox(box, otherBox instruction) (instruction, error) {
 	}
 
 	zmin := box.zFrom
-	if otherBox.zFrom < zmin {
+	if otherBox.zFrom > zmin {
 		zmin = otherBox.zFrom
 	}
 
