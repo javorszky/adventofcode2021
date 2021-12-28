@@ -1,6 +1,7 @@
 package day22
 
 import (
+	"errors"
 	"log"
 	"regexp"
 	"strconv"
@@ -17,6 +18,10 @@ const (
 type instruction struct {
 	xFrom, xTo, yFrom, yTo, zFrom, zTo int
 	flip                               flip
+}
+
+func (i instruction) Lights() int {
+	return (i.xTo - i.xFrom + 1) * (i.yTo - i.yFrom + 1) * (i.zTo - i.zFrom + 1)
 }
 
 var reInstruction = regexp.MustCompile(`^(on|off) x=(-?\d+)\.\.(-?\d+),y=(-?\d+)\.\.(-?\d+),z=(-?\d+)\.\.(-?\d+)$`)
@@ -56,4 +61,240 @@ func parseInstruction(s string) instruction {
 		zTo:   numbers[5],
 		flip:  ins,
 	}
+}
+
+func overlap(box, otherBox instruction) []instruction {
+	// they do not overlap, because box ends before otherBox begins.
+	if box.xFrom > otherBox.xTo || box.yFrom > otherBox.yTo || box.zFrom > box.zTo {
+		return []instruction{box, otherBox}
+	}
+
+	// they do not overlap, because box doesn't start until after otherBox ends.
+	if box.xTo < otherBox.xFrom || box.yTo < otherBox.yFrom || box.zTo < otherBox.zFrom {
+		return []instruction{box, otherBox}
+	}
+
+	instructions := make([]instruction, 0)
+
+	overlapBox, err := findOverlapBox(box, otherBox)
+	if err != nil {
+		log.Fatalf("despite checking for overlaps, we couldn't find the box. This should not have happened\n"+
+			"box:      %v\n"+
+			"otherbox: %v", box, otherBox)
+	}
+
+	instructions = append(instructions, overlapBox)
+
+	for _, f := range []func(instruction, instruction) []instruction{
+		findTopFace,
+		findBottomFace,
+		findLeftFace,
+		findRightFace,
+		findFrontFace,
+		findBackFace,
+		findTopLeftEdge,
+		findTopBackEdge,
+		findTopRightEdge,
+		findTopFrontEdge,
+		findBottomLeftEdge,
+		findBottomBackEdge,
+		findBottomRightEdge,
+		findBottomFrontEdge,
+		findFrontLeftEdge,
+		findFrontRightEdge,
+		findBackLeftEdge,
+		findBackRightEdge,
+		findTopBackLeftCorner,
+		findTopBackRightCorner,
+		findTopFrontLeftCorner,
+		findTopFrontRightCorner,
+		findBottomBackLeftCorner,
+		findBottomBackRightCorner,
+		findBottomFrontLeftCorner,
+		findBottomFrontRightCorner,
+	} {
+		instructions = append(instructions, f(box, overlapBox)...)
+	}
+
+	/*
+		xxx  xxx  xxx
+		xxx  xox  xxx
+		xxx  xxx  xxx
+
+		ends up being
+
+		aaa  bbb  ccc
+		aaa  doe  ccc
+		aaa  fff  ccc
+	*/
+	return instructions
+}
+
+func findOverlapBox(box, otherBox instruction) (instruction, error) {
+	// Generate overlap box.
+	xmin := box.xFrom
+	if otherBox.xFrom > xmin {
+		xmin = otherBox.xFrom
+	}
+
+	xmax := box.xTo
+	if otherBox.xTo < xmax {
+		xmax = otherBox.xTo
+	}
+
+	ymin := box.yFrom
+	if otherBox.yFrom > ymin {
+		ymin = otherBox.yFrom
+	}
+
+	ymax := box.yTo
+	if otherBox.yTo < ymax {
+		ymax = otherBox.yTo
+	}
+
+	zmin := box.zFrom
+	if otherBox.zFrom < zmin {
+		zmin = otherBox.zFrom
+	}
+
+	zmax := box.zTo
+	if otherBox.zTo < zmax {
+		zmax = otherBox.zTo
+	}
+
+	if xmin >= xmax || ymin >= ymax || zmin >= zmax {
+		return instruction{}, errors.New("out of bounds")
+	}
+
+	return instruction{
+		xFrom: xmin,
+		xTo:   xmax,
+		yFrom: ymin,
+		yTo:   ymax,
+		zFrom: zmin,
+		zTo:   zmax,
+		flip:  otherBox.flip,
+	}, nil
+}
+
+// find faces, 6 of them
+func findTopFace(box, overlapBox instruction) []instruction {
+	// there is no face here, the overlap box is at the edge
+	if box.zTo == overlapBox.zTo {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: overlapBox.xFrom,
+			xTo:   overlapBox.xTo,
+			yFrom: overlapBox.yFrom,
+			yTo:   overlapBox.yTo,
+			zFrom: overlapBox.zTo,
+			zTo:   box.zTo,
+			flip:  box.flip,
+		},
+	}
+}
+
+func findBottomFace(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findFrontFace(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findBackFace(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findLeftFace(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findRightFace(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+// find edges, 12 of them
+func findTopLeftEdge(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findTopBackEdge(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findTopRightEdge(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findTopFrontEdge(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findBottomLeftEdge(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findBottomBackEdge(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findBottomRightEdge(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findBottomFrontEdge(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findFrontLeftEdge(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findFrontRightEdge(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findBackLeftEdge(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findBackRightEdge(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+// find corners, 8 of them
+func findTopBackLeftCorner(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findTopBackRightCorner(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findTopFrontLeftCorner(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findTopFrontRightCorner(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findBottomBackLeftCorner(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findBottomBackRightCorner(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findBottomFrontLeftCorner(box, overlapBox instruction) []instruction {
+	return nil
+}
+
+func findBottomFrontRightCorner(box, overlapBox instruction) []instruction {
+	return nil
 }
