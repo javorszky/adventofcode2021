@@ -120,7 +120,7 @@ func Test_findOverlapBox(t *testing.T) {
 			wantErr: assert.Error,
 		},
 		{
-			name: "finds overlapping box between the two boxes where otherbox is fully contained",
+			name: "finds overlapping box between the two boxes where otherBox is fully contained",
 			args: args{
 				box: instruction{
 					xFrom: -10,
@@ -3728,7 +3728,7 @@ func Test_overlap(t *testing.T) {
 					flip:  on,
 				},
 
-				// otherbox front face
+				// otherBox front face
 				{
 					xFrom: 5,
 					xTo:   20,
@@ -3738,7 +3738,7 @@ func Test_overlap(t *testing.T) {
 					zTo:   5,
 					flip:  off,
 				},
-				// otherbox right face
+				// otherBox right face
 				{
 					xFrom: -5,
 					xTo:   5,
@@ -3748,7 +3748,7 @@ func Test_overlap(t *testing.T) {
 					zTo:   5,
 					flip:  off,
 				},
-				// otherbox top face
+				// otherBox top face
 				{
 					xFrom: -5,
 					xTo:   5,
@@ -3758,7 +3758,7 @@ func Test_overlap(t *testing.T) {
 					zTo:   20,
 					flip:  off,
 				},
-				// otherbox front right edge
+				// otherBox front right edge
 				{
 					xFrom: 5,
 					xTo:   20,
@@ -3768,7 +3768,7 @@ func Test_overlap(t *testing.T) {
 					zTo:   5,
 					flip:  off,
 				},
-				// otherbox front top edge
+				// otherBox front top edge
 				{
 					xFrom: 5,
 					xTo:   20,
@@ -3778,7 +3778,7 @@ func Test_overlap(t *testing.T) {
 					zTo:   20,
 					flip:  off,
 				},
-				// otherbox right top edge
+				// otherBox right top edge
 				{
 					xFrom: -5,
 					xTo:   5,
@@ -3788,7 +3788,7 @@ func Test_overlap(t *testing.T) {
 					zTo:   20,
 					flip:  off,
 				},
-				// otherbox top right front corner
+				// otherBox top right front corner
 				{
 					xFrom: 5,
 					xTo:   20,
@@ -4204,6 +4204,50 @@ func Test_mergeBoxes(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.ElementsMatchf(t, tt.want, mergeBoxes(tt.args.box, tt.args.otherBox),
 				"mergeBoxes(%v, %v)", tt.args.box, tt.args.otherBox)
+		})
+	}
+}
+
+func Test_overlapAndMerge(t *testing.T) {
+	type args struct {
+		box      instruction
+		otherBox instruction
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want []instruction
+	}{
+		{
+			name: "overlaps and merges two boxes",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   5,
+					yFrom: -20,
+					yTo:   5,
+					zFrom: -20,
+					zTo:   5,
+					flip:  on,
+				},
+				otherBox: instruction{
+					xFrom: -5,
+					xTo:   20,
+					yFrom: -5,
+					yTo:   20,
+					zFrom: -5,
+					zTo:   20,
+					flip:  off,
+				},
+			},
+			want: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, overlapAndMerge(tt.args.box, tt.args.otherBox),
+				"overlapAndMerge(%v, %v)", tt.args.box, tt.args.otherBox)
 		})
 	}
 }

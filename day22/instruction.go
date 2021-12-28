@@ -2,6 +2,7 @@ package day22
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"regexp"
 	"strconv"
@@ -15,6 +16,17 @@ const (
 	off
 )
 
+func (f flip) String() string {
+	switch f {
+	case on:
+		return "on"
+	case off:
+		return "off"
+	default:
+		return "unknown"
+	}
+}
+
 type instruction struct {
 	xFrom, xTo, yFrom, yTo, zFrom, zTo int
 	flip                               flip
@@ -22,6 +34,15 @@ type instruction struct {
 
 func (i instruction) Lights() int {
 	return (i.xTo - i.xFrom + 1) * (i.yTo - i.yFrom + 1) * (i.zTo - i.zFrom + 1)
+}
+
+func (i instruction) String() string {
+	return fmt.Sprintf("%d/%d/%d/%d/%d/%d/%s",
+		i.xFrom, i.xTo,
+		i.yFrom, i.yTo,
+		i.zFrom, i.zTo,
+		i.flip,
+	)
 }
 
 var reInstruction = regexp.MustCompile(`^(on|off) x=(-?\d+)\.\.(-?\d+),y=(-?\d+)\.\.(-?\d+),z=(-?\d+)\.\.(-?\d+)$`)
@@ -63,6 +84,54 @@ func parseInstruction(s string) instruction {
 	}
 }
 
+func overlapAndMerge(box, otherBox instruction) []instruction {
+	overlaps := overlap(box, otherBox)
+	checked := make(map[string]instruction)
+	//merged := make([]instruction, 0)
+	merges := make([]instruction, 0)
+
+	for {
+		for i, overlapBox := range overlaps {
+			for _, overlapOtherBox := range overlaps[i+1:] {
+				_, ok := checked[overlapBox.String()]
+				_, ok2 := checked[overlapOtherBox.String()]
+
+				if ok || ok2 {
+					continue
+				}
+
+				m := mergeBoxes(overlapBox, overlapOtherBox)
+
+				if len(m) == 1 {
+					merges = append(merges, m...)
+					checked[overlapBox.String()] = overlapBox
+					checked[overlapOtherBox.String()] = overlapOtherBox
+				}
+			}
+		}
+
+		if len(merges) == 0 {
+			break
+		}
+
+		newOverlaps := make([]instruction, 0)
+
+		for _, _o := range overlaps {
+			if _, ok := checked[_o.String()]; !ok {
+				newOverlaps = append(newOverlaps, _o)
+			}
+		}
+
+		newOverlaps = append(newOverlaps, merges...)
+		overlaps = newOverlaps
+	}
+
+	fmt.Printf("at the end of merging and overlapping\n\n%#v\n\n", merges)
+	fmt.Printf("checked is\n\n%#v\n\n", checked)
+
+	return nil
+}
+
 func overlap(box, otherBox instruction) []instruction {
 	// they do not overlap, because box ends before otherBox begins.
 	if box.xFrom > otherBox.xTo || box.yFrom > otherBox.yTo || box.zFrom > box.zTo {
@@ -80,7 +149,7 @@ func overlap(box, otherBox instruction) []instruction {
 	if err != nil {
 		log.Fatalf("despite checking for overlaps, we couldn't find the box. This should not have happened\n"+
 			"box:      %v\n"+
-			"otherbox: %v", box, otherBox)
+			"otherBox: %v", box, otherBox)
 	}
 
 	instructions = append(instructions, overlapBox)
@@ -682,8 +751,9 @@ func mergeBoxes(box, otherBox instruction) []instruction {
 			largerXTo = otherBox.xTo
 		}
 
-		// let's make sure there's no gap between the two
-		if (box.xFrom <= otherBox.xFrom && box.xTo >= otherBox.xFrom) || (otherBox.xFrom <= box.xFrom && otherBox.xTo >= box.xFrom) {
+		if (box.xFrom <= otherBox.xFrom && box.xTo >= otherBox.xFrom) ||
+			(otherBox.xFrom <= box.xFrom && otherBox.xTo >= box.xFrom) {
+			// If they don't touch.
 			return []instruction{
 				{
 					xFrom: smallerXFrom,
@@ -710,8 +780,9 @@ func mergeBoxes(box, otherBox instruction) []instruction {
 			largerYTo = otherBox.yTo
 		}
 
-		// let's make sure there's no gap between the two
-		if (box.yFrom <= otherBox.yFrom && box.yTo >= otherBox.yFrom) || (otherBox.yFrom <= box.yFrom && otherBox.yTo >= box.yFrom) {
+		if (box.yFrom <= otherBox.yFrom && box.yTo >= otherBox.yFrom) ||
+			(otherBox.yFrom <= box.yFrom && otherBox.yTo >= box.yFrom) {
+			// If they don't touch.
 			return []instruction{
 				{
 					xFrom: box.xFrom,
@@ -738,8 +809,9 @@ func mergeBoxes(box, otherBox instruction) []instruction {
 			largerZTo = otherBox.zTo
 		}
 
-		// let's make sure there's no gap between the two
-		if (box.zFrom <= otherBox.zFrom && box.zTo >= otherBox.zFrom) || (otherBox.zFrom <= box.zFrom && otherBox.zTo >= box.zFrom) {
+		if (box.zFrom <= otherBox.zFrom && box.zTo >= otherBox.zFrom) ||
+			(otherBox.zFrom <= box.zFrom && otherBox.zTo >= box.zFrom) {
+			// If there's no gap between the two boxes in z.
 			return []instruction{
 				{
 					xFrom: box.xFrom,

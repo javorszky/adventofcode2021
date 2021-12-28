@@ -37,6 +37,7 @@ func limitInstructionTo50(in instruction) (instruction, error) {
 		in.xTo < cubeLowerLimit ||
 		in.yTo < cubeLowerLimit ||
 		in.zTo < cubeLowerLimit {
+		// If any part of the cube is outside our bounds, then return an error.
 		return instruction{}, errors.New("out of bounds")
 	}
 
