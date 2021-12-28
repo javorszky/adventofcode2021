@@ -332,7 +332,22 @@ func findTopBackEdge(box, overlapBox instruction) []instruction {
 }
 
 func findTopRightEdge(box, overlapBox instruction) []instruction {
-	return nil
+	// there is no edge here, the overlap box is at either the top or the left edge.
+	if box.zTo == overlapBox.zTo || box.yTo == overlapBox.yTo {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: overlapBox.xFrom,
+			xTo:   overlapBox.xTo,
+			yFrom: overlapBox.yTo,
+			yTo:   box.yTo,
+			zFrom: overlapBox.zTo,
+			zTo:   box.zTo,
+			flip:  box.flip,
+		},
+	}
 }
 
 func findTopFrontEdge(box, overlapBox instruction) []instruction {
