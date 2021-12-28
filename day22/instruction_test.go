@@ -4172,6 +4172,33 @@ func Test_mergeBoxes(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "fails merging two boxes, on off switches differ",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 5,
+					zTo:   15,
+					flip:  off,
+				},
+			},
+			want: []instruction{
+				standardBox,
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 5,
+					zTo:   15,
+					flip:  off,
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
