@@ -663,3 +663,96 @@ func findBottomFrontRightCorner(box, overlapBox instruction) []instruction {
 		},
 	}
 }
+
+func mergeBoxes(box, otherBox instruction) []instruction {
+	// different flips will never be merged
+	if box.flip != otherBox.flip {
+		return []instruction{box, otherBox}
+	}
+
+	// try to merge along the x axis. yfrom, yto, zfrom, zto need to match, xfrom == xto
+	if box.zFrom == otherBox.zFrom && box.yFrom == otherBox.yFrom && box.zTo == otherBox.zTo && box.yTo == otherBox.yTo {
+		smallerXFrom := box.xFrom
+		if otherBox.xFrom < smallerXFrom {
+			smallerXFrom = otherBox.xFrom
+		}
+
+		largerXTo := box.xTo
+		if otherBox.xTo > largerXTo {
+			largerXTo = otherBox.xTo
+		}
+
+		// let's make sure there's no gap between the two
+		if (box.xFrom <= otherBox.xFrom && box.xTo >= otherBox.xFrom) || (otherBox.xFrom <= box.xFrom && otherBox.xTo >= box.xFrom) {
+			return []instruction{
+				{
+					xFrom: smallerXFrom,
+					xTo:   largerXTo,
+					yFrom: box.yFrom,
+					yTo:   box.yTo,
+					zFrom: box.zFrom,
+					zTo:   box.zTo,
+					flip:  box.flip,
+				},
+			}
+		}
+	}
+
+	// try to merge along the y axis. xfrom, xto, zfrom, zto need to match, yfrom == yto
+	if box.zFrom == otherBox.zFrom && box.zTo == otherBox.zTo && box.xFrom == otherBox.xFrom && box.xTo == otherBox.xTo {
+		smallerYFrom := box.yFrom
+		if otherBox.yFrom < smallerYFrom {
+			smallerYFrom = otherBox.yFrom
+		}
+
+		largerYTo := box.yTo
+		if otherBox.yTo > largerYTo {
+			largerYTo = otherBox.yTo
+		}
+
+		// let's make sure there's no gap between the two
+		if (box.yFrom <= otherBox.yFrom && box.yTo >= otherBox.yFrom) || (otherBox.yFrom <= box.yFrom && otherBox.yTo >= box.yFrom) {
+			return []instruction{
+				{
+					xFrom: box.xFrom,
+					xTo:   box.xTo,
+					yFrom: smallerYFrom,
+					yTo:   largerYTo,
+					zFrom: box.zFrom,
+					zTo:   box.zTo,
+					flip:  box.flip,
+				},
+			}
+		}
+	}
+
+	// try to merge along the z axis. xfrom, xto, yfrom, yto need to match.
+	if box.yFrom == otherBox.yFrom && box.yTo == otherBox.yTo && box.xFrom == otherBox.xFrom && box.xTo == otherBox.xTo {
+		smallerZFrom := box.zFrom
+		if otherBox.zFrom < smallerZFrom {
+			smallerZFrom = otherBox.zFrom
+		}
+
+		largerZTo := box.zTo
+		if otherBox.zTo > largerZTo {
+			largerZTo = otherBox.zTo
+		}
+
+		// let's make sure there's no gap between the two
+		if (box.zFrom <= otherBox.zFrom && box.zTo >= otherBox.zFrom) || (otherBox.zFrom <= box.zFrom && otherBox.zTo >= box.zFrom) {
+			return []instruction{
+				{
+					xFrom: box.xFrom,
+					xTo:   box.xTo,
+					yFrom: box.yFrom,
+					yTo:   box.yTo,
+					zFrom: smallerZFrom,
+					zTo:   largerZTo,
+					flip:  box.flip,
+				},
+			}
+		}
+	}
+
+	return []instruction{box, otherBox}
+}

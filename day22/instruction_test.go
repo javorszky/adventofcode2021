@@ -3808,3 +3808,375 @@ func Test_overlap(t *testing.T) {
 		})
 	}
 }
+
+func Test_mergeBoxes(t *testing.T) {
+	standardBox := instruction{
+		xFrom: 0,
+		xTo:   10,
+		yFrom: 0,
+		yTo:   10,
+		zFrom: 0,
+		zTo:   10,
+		flip:  on,
+	}
+
+	type args struct {
+		box      instruction
+		otherBox instruction
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want []instruction
+	}{
+		{
+			name: "merges two boxes on x, touching",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 10,
+					xTo:   20,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   20,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on x, overlapping",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 5,
+					xTo:   15,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   15,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on x, fully enclosed",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: -6,
+					xTo:   17,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: -6,
+					xTo:   17,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "fails merging two boxes on x, do not touch",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 12,
+					xTo:   17,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				standardBox,
+				{
+					xFrom: 12,
+					xTo:   17,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on y, touching",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 10,
+					yTo:   20,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   20,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on y, overlapping",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 5,
+					yTo:   15,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   15,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on y, fully enclosed",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: -6,
+					yTo:   17,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: -6,
+					yTo:   17,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "fails merging two boxes on y, do not touch",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 12,
+					yTo:   17,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				standardBox,
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 12,
+					yTo:   17,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on z, touching",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 10,
+					zTo:   20,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   20,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on z, overlapping",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 5,
+					zTo:   15,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   15,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on z, fully enclosed",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: -6,
+					zTo:   17,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: -6,
+					zTo:   17,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "fails merging two boxes on z, do not touch",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 12,
+					zTo:   17,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				standardBox,
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 12,
+					zTo:   17,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "fails merging two boxes, two axis values do not match",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 3,
+					yTo:   10,
+					zFrom: 5,
+					zTo:   15,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				standardBox,
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 3,
+					yTo:   10,
+					zFrom: 5,
+					zTo:   15,
+					flip:  on,
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.ElementsMatchf(t, tt.want, mergeBoxes(tt.args.box, tt.args.otherBox),
+				"mergeBoxes(%v, %v)", tt.args.box, tt.args.otherBox)
+		})
+	}
+}
