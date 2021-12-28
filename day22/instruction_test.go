@@ -209,3 +209,80 @@ func Test_findTopFace(t *testing.T) {
 		})
 	}
 }
+
+func Test_findBottomFace(t *testing.T) {
+	type args struct {
+		box        instruction
+		overlapBox instruction
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want []instruction
+	}{
+		{
+			name: "returns nil if overlapbox is at the bottom edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -20,
+					zTo:   -10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns bottom face box if overlapbox is not at the bottom edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -20,
+					zTo:   -10,
+					flip:  off,
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, findBottomFace(tt.args.box, tt.args.overlapBox), "findBottomFace(%v, %v)", tt.args.box, tt.args.overlapBox)
+		})
+	}
+}

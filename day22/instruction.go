@@ -198,7 +198,22 @@ func findTopFace(box, overlapBox instruction) []instruction {
 }
 
 func findBottomFace(box, overlapBox instruction) []instruction {
-	return nil
+	// there is no face here, the overlap box is at the edge
+	if box.zFrom == overlapBox.zFrom {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: overlapBox.xFrom,
+			xTo:   overlapBox.xTo,
+			yFrom: overlapBox.yFrom,
+			yTo:   overlapBox.yTo,
+			zFrom: box.zFrom,
+			zTo:   overlapBox.zFrom,
+			flip:  box.flip,
+		},
+	}
 }
 
 func findFrontFace(box, overlapBox instruction) []instruction {
