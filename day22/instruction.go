@@ -8,13 +8,15 @@ import (
 	"strconv"
 )
 
-type flip int
-
 const (
 	unknownInstruction flip = iota
 	on
 	off
 )
+
+var reInstruction = regexp.MustCompile(`^(on|off) x=(-?\d+)\.\.(-?\d+),y=(-?\d+)\.\.(-?\d+),z=(-?\d+)\.\.(-?\d+)$`)
+
+type flip int
 
 func (f flip) String() string {
 	switch f {
@@ -44,8 +46,6 @@ func (i instruction) String() string {
 		i.flip,
 	)
 }
-
-var reInstruction = regexp.MustCompile(`^(on|off) x=(-?\d+)\.\.(-?\d+),y=(-?\d+)\.\.(-?\d+),z=(-?\d+)\.\.(-?\d+)$`)
 
 func parseInstruction(s string) instruction {
 	parts := reInstruction.FindStringSubmatch(s)
