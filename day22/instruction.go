@@ -445,20 +445,80 @@ func findBottomFrontEdge(box, overlapBox instruction) []instruction {
 	}
 }
 
-func findFrontLeftEdge(box, overlapBox instruction) []instruction {
-	return nil
-}
-
 func findFrontRightEdge(box, overlapBox instruction) []instruction {
-	return nil
+	// there is no edge here, the overlap box is at either the front or the left edge.
+	if box.xTo == overlapBox.xTo || box.yTo == overlapBox.yTo {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: overlapBox.xTo,
+			xTo:   box.xTo,
+			yFrom: overlapBox.yTo,
+			yTo:   box.yTo,
+			zFrom: overlapBox.zFrom,
+			zTo:   overlapBox.zTo,
+			flip:  box.flip,
+		},
+	}
 }
 
-func findBackLeftEdge(box, overlapBox instruction) []instruction {
-	return nil
+func findFrontLeftEdge(box, overlapBox instruction) []instruction {
+	// there is no edge here, the overlap box is at either the front or the left edge.
+	if box.xTo == overlapBox.xTo || box.yFrom == overlapBox.yFrom {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: overlapBox.xTo,
+			xTo:   box.xTo,
+			yFrom: box.yFrom,
+			yTo:   overlapBox.yFrom,
+			zFrom: overlapBox.zFrom,
+			zTo:   overlapBox.zTo,
+			flip:  box.flip,
+		},
+	}
 }
 
 func findBackRightEdge(box, overlapBox instruction) []instruction {
-	return nil
+	// there is no edge here, the overlap box is at either the back or the left edge.
+	if box.xFrom == overlapBox.xFrom || box.yTo == overlapBox.yTo {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: box.xFrom,
+			xTo:   overlapBox.xFrom,
+			yFrom: overlapBox.yTo,
+			yTo:   box.yTo,
+			zFrom: overlapBox.zFrom,
+			zTo:   overlapBox.zTo,
+			flip:  box.flip,
+		},
+	}
+}
+
+func findBackLeftEdge(box, overlapBox instruction) []instruction {
+	// there is no edge here, the overlap box is at either the back or the left edge.
+	if box.xFrom == overlapBox.xFrom || box.yFrom == overlapBox.yFrom {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: box.xFrom,
+			xTo:   overlapBox.xFrom,
+			yFrom: box.yFrom,
+			yTo:   overlapBox.yFrom,
+			zFrom: overlapBox.zFrom,
+			zTo:   overlapBox.zTo,
+			flip:  box.flip,
+		},
+	}
 }
 
 // find corners, 8 of them.
