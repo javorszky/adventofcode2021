@@ -370,19 +370,79 @@ func findTopFrontEdge(box, overlapBox instruction) []instruction {
 }
 
 func findBottomLeftEdge(box, overlapBox instruction) []instruction {
-	return nil
+	// there is no edge here, the overlap box is at either the bottom or the left edge.
+	if box.zFrom == overlapBox.zFrom || box.yFrom == overlapBox.yFrom {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: overlapBox.xFrom,
+			xTo:   overlapBox.xTo,
+			yFrom: box.yFrom,
+			yTo:   overlapBox.yFrom,
+			zFrom: box.zFrom,
+			zTo:   overlapBox.zFrom,
+			flip:  box.flip,
+		},
+	}
 }
 
 func findBottomBackEdge(box, overlapBox instruction) []instruction {
-	return nil
+	// there is no edge here, the overlap box is at either the bottom or the back edge.
+	if box.zFrom == overlapBox.zFrom || box.xFrom == overlapBox.xFrom {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: box.xFrom,
+			xTo:   overlapBox.xFrom,
+			yFrom: overlapBox.yFrom,
+			yTo:   overlapBox.yTo,
+			zFrom: box.zFrom,
+			zTo:   overlapBox.zFrom,
+			flip:  box.flip,
+		},
+	}
 }
 
 func findBottomRightEdge(box, overlapBox instruction) []instruction {
-	return nil
+	// there is no edge here, the overlap box is at either the bottom or the left edge.
+	if box.zFrom == overlapBox.zFrom || box.yTo == overlapBox.yTo {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: overlapBox.xFrom,
+			xTo:   overlapBox.xTo,
+			yFrom: overlapBox.yTo,
+			yTo:   box.yTo,
+			zFrom: box.zFrom,
+			zTo:   overlapBox.zFrom,
+			flip:  box.flip,
+		},
+	}
 }
 
 func findBottomFrontEdge(box, overlapBox instruction) []instruction {
-	return nil
+	// there is no edge here, the overlap box is at either the bottom or the back edge.
+	if box.zFrom == overlapBox.zFrom || box.xTo == overlapBox.xTo {
+		return nil
+	}
+
+	return []instruction{
+		{
+			xFrom: overlapBox.xTo,
+			xTo:   box.xTo,
+			yFrom: overlapBox.yFrom,
+			yTo:   overlapBox.yTo,
+			zFrom: box.zFrom,
+			zTo:   overlapBox.zFrom,
+			flip:  box.flip,
+		},
+	}
 }
 
 func findFrontLeftEdge(box, overlapBox instruction) []instruction {

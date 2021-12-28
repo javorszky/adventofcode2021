@@ -1103,3 +1103,507 @@ func Test_findTopFrontEdge(t *testing.T) {
 		})
 	}
 }
+
+func Test_findBottomLeftEdge(t *testing.T) {
+	type args struct {
+		box        instruction
+		overlapBox instruction
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want []instruction
+	}{
+		{
+			name: "returns nil if overlapbox is at the bottom edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -20,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns nil if overlapbox is at the left edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -20,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns nil if overlapbox is at both the bottom and the left edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -20,
+					yTo:   10,
+					zFrom: -20,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns bottom left edge box if overlapbox is not at the bottom or left edges",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -20,
+					yTo:   -10,
+					zFrom: -20,
+					zTo:   -10,
+					flip:  off,
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, findBottomLeftEdge(tt.args.box, tt.args.overlapBox),
+				"findBottomLeftEdge(%v, %v)", tt.args.box, tt.args.overlapBox)
+		})
+	}
+}
+
+func Test_findBottomBackEdge(t *testing.T) {
+	type args struct {
+		box        instruction
+		overlapBox instruction
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want []instruction
+	}{
+		{
+			name: "returns nil if overlapbox is at the bottom edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -20,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns nil if overlapbox is at the back edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -20,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns nil if overlapbox is at both the bottom and the back edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -20,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -20,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns bottom right edge box if overlapbox is not at the bottom or back edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: -20,
+					xTo:   -10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -20,
+					zTo:   -10,
+					flip:  off,
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, findBottomBackEdge(tt.args.box, tt.args.overlapBox),
+				"findBottomBackEdge(%v, %v)", tt.args.box, tt.args.overlapBox)
+		})
+	}
+}
+
+func Test_findBottomRightEdge(t *testing.T) {
+	type args struct {
+		box        instruction
+		overlapBox instruction
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want []instruction
+	}{
+		{
+			name: "returns nil if overlapbox is at the bottom edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -20,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns nil if overlapbox is at the right edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   20,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns nil if overlapbox is at both the bottom and the right edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns bottom left edge box if overlapbox is not at the bottom or left edges",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: 10,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   -10,
+					flip:  off,
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, findBottomRightEdge(tt.args.box, tt.args.overlapBox),
+				"findBottomRightEdge(%v, %v)", tt.args.box, tt.args.overlapBox)
+		})
+	}
+}
+
+func Test_findBottomFrontEdge(t *testing.T) {
+	type args struct {
+		box        instruction
+		overlapBox instruction
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want []instruction
+	}{
+		{
+			name: "returns nil if overlapbox is at the bottom edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -20,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns nil if overlapbox is at the front edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   20,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns nil if overlapbox is at both the bottom and the front edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   20,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -20,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "returns bottom right edge box if overlapbox is not at the bottom or front edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 10,
+					xTo:   20,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -20,
+					zTo:   -10,
+					flip:  off,
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, findBottomFrontEdge(tt.args.box, tt.args.overlapBox),
+				"findBottomFrontEdge(%v, %v)", tt.args.box, tt.args.overlapBox)
+		})
+	}
+}
