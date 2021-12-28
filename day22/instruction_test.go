@@ -3569,3 +3569,242 @@ func Test_findBottomFrontRightCorner(t *testing.T) {
 		})
 	}
 }
+
+func Test_overlap(t *testing.T) {
+	type args struct {
+		box      instruction
+		otherBox instruction
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want []instruction
+	}{
+		{
+			name: "returns only the two boxes if they do not overlap",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   -10,
+					yFrom: -20,
+					yTo:   -10,
+					zFrom: -20,
+					zTo:   -10,
+					flip:  on,
+				},
+				otherBox: instruction{
+					xFrom: 10,
+					xTo:   20,
+					yFrom: 10,
+					yTo:   20,
+					zFrom: 10,
+					zTo:   20,
+					flip:  off,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: -20,
+					xTo:   -10,
+					yFrom: -20,
+					yTo:   -10,
+					zFrom: -20,
+					zTo:   -10,
+					flip:  on,
+				},
+				{
+					xFrom: 10,
+					xTo:   20,
+					yFrom: 10,
+					yTo:   20,
+					zFrom: 10,
+					zTo:   20,
+					flip:  off,
+				},
+			},
+		},
+		{
+			name: "returns overlapbox, and all other pieces from both of the boxes",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   5,
+					yFrom: -20,
+					yTo:   5,
+					zFrom: -20,
+					zTo:   5,
+					flip:  on,
+				},
+				otherBox: instruction{
+					xFrom: -5,
+					xTo:   20,
+					yFrom: -5,
+					yTo:   20,
+					zFrom: -5,
+					zTo:   20,
+					flip:  off,
+				},
+			},
+			want: []instruction{
+				// the overlapbox
+				{
+					xFrom: -5,
+					xTo:   5,
+					yFrom: -5,
+					yTo:   5,
+					zFrom: -5,
+					zTo:   5,
+					flip:  off,
+				},
+				// box back face
+				{
+					xFrom: -20,
+					xTo:   -5,
+					yFrom: -5,
+					yTo:   5,
+					zFrom: -5,
+					zTo:   5,
+					flip:  on,
+				},
+				// box bottom face
+				{
+					xFrom: -5,
+					xTo:   5,
+					yFrom: -5,
+					yTo:   5,
+					zFrom: -20,
+					zTo:   -5,
+					flip:  on,
+				},
+				// box left face
+				{
+					xFrom: -5,
+					xTo:   5,
+					yFrom: -20,
+					yTo:   -5,
+					zFrom: -5,
+					zTo:   5,
+					flip:  on,
+				},
+				// box back left edge
+				{
+					xFrom: -20,
+					xTo:   -5,
+					yFrom: -20,
+					yTo:   -5,
+					zFrom: -5,
+					zTo:   5,
+					flip:  on,
+				},
+				// box back bottom edge
+				{
+					xFrom: -20,
+					xTo:   -5,
+					yFrom: -5,
+					yTo:   5,
+					zFrom: -20,
+					zTo:   -5,
+					flip:  on,
+				},
+				// box left bottom edge
+				{
+					xFrom: -5,
+					xTo:   5,
+					yFrom: -20,
+					yTo:   -5,
+					zFrom: -20,
+					zTo:   -5,
+					flip:  on,
+				},
+				// box bottom back left corner
+				{
+					xFrom: -20,
+					xTo:   -5,
+					yFrom: -20,
+					yTo:   -5,
+					zFrom: -20,
+					zTo:   -5,
+					flip:  on,
+				},
+
+				// otherbox front face
+				{
+					xFrom: 5,
+					xTo:   20,
+					yFrom: -5,
+					yTo:   5,
+					zFrom: -5,
+					zTo:   5,
+					flip:  off,
+				},
+				// otherbox right face
+				{
+					xFrom: -5,
+					xTo:   5,
+					yFrom: 5,
+					yTo:   20,
+					zFrom: -5,
+					zTo:   5,
+					flip:  off,
+				},
+				// otherbox top face
+				{
+					xFrom: -5,
+					xTo:   5,
+					yFrom: -5,
+					yTo:   5,
+					zFrom: 5,
+					zTo:   20,
+					flip:  off,
+				},
+				// otherbox front right edge
+				{
+					xFrom: 5,
+					xTo:   20,
+					yFrom: 5,
+					yTo:   20,
+					zFrom: -5,
+					zTo:   5,
+					flip:  off,
+				},
+				// otherbox front top edge
+				{
+					xFrom: 5,
+					xTo:   20,
+					yFrom: -5,
+					yTo:   5,
+					zFrom: 5,
+					zTo:   20,
+					flip:  off,
+				},
+				// otherbox right top edge
+				{
+					xFrom: -5,
+					xTo:   5,
+					yFrom: 5,
+					yTo:   20,
+					zFrom: 5,
+					zTo:   20,
+					flip:  off,
+				},
+				// otherbox top right front corner
+				{
+					xFrom: 5,
+					xTo:   20,
+					yFrom: 5,
+					yTo:   20,
+					zFrom: 5,
+					zTo:   20,
+					flip:  off,
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.ElementsMatchf(t, tt.want, overlap(tt.args.box, tt.args.otherBox),
+				"overlap(%v, %v)", tt.args.box, tt.args.otherBox)
+		})
+	}
+}

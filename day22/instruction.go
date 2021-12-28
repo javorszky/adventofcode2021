@@ -114,19 +114,9 @@ func overlap(box, otherBox instruction) []instruction {
 		findBottomFrontRightCorner,
 	} {
 		instructions = append(instructions, f(box, overlapBox)...)
+		instructions = append(instructions, f(otherBox, overlapBox)...)
 	}
 
-	/*
-		xxx  xxx  xxx
-		xxx  xox  xxx
-		xxx  xxx  xxx
-
-		ends up being
-
-		aaa  bbb  ccc
-		aaa  doe  ccc
-		aaa  fff  ccc
-	*/
 	return instructions
 }
 
