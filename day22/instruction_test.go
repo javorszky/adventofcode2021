@@ -64,6 +64,32 @@ func Test_instruction_Lights(t *testing.T) {
 		{
 			name: "calculates volume for cuboid",
 			i: instruction{
+				xFrom: 1,
+				xTo:   1,
+				yFrom: 1,
+				yTo:   1,
+				zFrom: 1,
+				zTo:   1,
+				flip:  on,
+			},
+			want: 1,
+		},
+		{
+			name: "calculates volume for cuboid",
+			i: instruction{
+				xFrom: 1,
+				xTo:   3,
+				yFrom: 1,
+				yTo:   3,
+				zFrom: 1,
+				zTo:   3,
+				flip:  on,
+			},
+			want: 27,
+		},
+		{
+			name: "calculates volume for cuboid",
+			i: instruction{
 				xFrom: -2,
 				xTo:   2,
 				yFrom: -8,
