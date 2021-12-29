@@ -149,3 +149,44 @@ func Test_limitInstructionTo50(t *testing.T) {
 		})
 	}
 }
+
+func Test_task1(t *testing.T) {
+	type args struct {
+		input []instruction
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			name: "task 1 super smol example",
+			args: args{input: testInput(t, "example_input_smol.txt")},
+			want: 39,
+		},
+		{
+			name: "task 1 example",
+			args: args{input: testInput(t, "example_input.txt")},
+			want: 590784,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, task1(tt.args.input), "task1(%v)", tt.args.input)
+		})
+	}
+}
+
+func testInput(t testing.TB, fn string) []instruction {
+	t.Helper()
+
+	input := getInputs(fn)
+	insts := make([]instruction, len(input))
+
+	for i, line := range input {
+		insts[i] = parseInstruction(line)
+	}
+
+	return insts
+}
