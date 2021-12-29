@@ -433,7 +433,7 @@ func Test_findBottomFace(t *testing.T) {
 					yFrom: -10,
 					yTo:   10,
 					zFrom: -20,
-					zTo:   -9,
+					zTo:   -11,
 					flip:  off,
 				},
 			},
