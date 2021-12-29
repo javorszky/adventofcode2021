@@ -9,7 +9,7 @@ const (
 	cubeUpperLimit = 50
 )
 
-func task1(input []instruction) interface{} {
+func task1(input []instruction) int {
 	limited := make([]instruction, 0)
 
 	for _, ins := range input {
@@ -23,15 +23,11 @@ func task1(input []instruction) interface{} {
 
 	kuqe := make(cubespace)
 
-	for i, inst := range limited {
+	for _, inst := range limited {
 		kuqe.applyInstructions(inst)
-
-		if i > 1 {
-			break
-		}
 	}
 
-	return len(limited)
+	return kuqe.Lights()
 }
 
 func limitInstructionTo50(in instruction) (instruction, error) {

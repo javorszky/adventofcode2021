@@ -86,52 +86,8 @@ func parseInstruction(s string) instruction {
 
 func overlapAndMerge(box, otherBox instruction) map[string]instruction {
 	overlaps := overlap(box, otherBox)
-	checked := make(map[string]instruction)
 
-	for {
-		merges := map[string]instruction{}
-
-		for i, overlapBox := range overlaps {
-			for _, overlapOtherBox := range overlaps[i+1:] {
-				_, ok := checked[overlapBox.String()]
-				_, ok2 := checked[overlapOtherBox.String()]
-
-				if ok || ok2 {
-					continue
-				}
-
-				m := mergeBoxes(overlapBox, overlapOtherBox)
-
-				if len(m) == 1 {
-					merges[m[0].String()] = m[0]
-					checked[overlapBox.String()] = overlapBox
-					checked[overlapOtherBox.String()] = overlapOtherBox
-				}
-			}
-		}
-
-		if len(merges) == 0 {
-			break
-		}
-
-		newOverlaps := make(map[string]instruction)
-
-		for _, _o := range overlaps {
-			if _, ok := checked[_o.String()]; !ok {
-				newOverlaps[_o.String()] = _o
-			}
-		}
-
-		newOverlaps = mergeMap(merges, newOverlaps)
-		checked = map[string]instruction{}
-		overlaps = make([]instruction, len(newOverlaps))
-		i := 0
-
-		for _, v := range newOverlaps {
-			overlaps[i] = v
-			i++
-		}
-	}
+	overlaps = mergeInstructionSlice(overlaps)
 
 	newOverlapsMap := make(map[string]instruction)
 	for _, v := range overlaps {
@@ -143,12 +99,12 @@ func overlapAndMerge(box, otherBox instruction) map[string]instruction {
 
 func overlap(box, otherBox instruction) []instruction {
 	// they do not overlap, because box ends before otherBox begins.
-	if box.xFrom > otherBox.xTo || box.yFrom > otherBox.yTo || box.zFrom > box.zTo {
+	if box.xFrom >= otherBox.xTo || box.yFrom >= otherBox.yTo || box.zFrom >= otherBox.zTo {
 		return []instruction{box, otherBox}
 	}
 
 	// they do not overlap, because box doesn't start until after otherBox ends.
-	if box.xTo < otherBox.xFrom || box.yTo < otherBox.yFrom || box.zTo < otherBox.zFrom {
+	if otherBox.xFrom >= box.xTo || otherBox.yFrom >= box.yTo || otherBox.zFrom >= box.zTo {
 		return []instruction{box, otherBox}
 	}
 
