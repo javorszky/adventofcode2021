@@ -186,7 +186,7 @@ func findOverlapBox(box, otherBox instruction) (instruction, error) {
 		zmax = otherBox.zTo
 	}
 
-	if xmin >= xmax || ymin >= ymax || zmin >= zmax {
+	if xmin > xmax || ymin > ymax || zmin > zmax {
 		return instruction{}, errors.New("out of bounds")
 	}
 

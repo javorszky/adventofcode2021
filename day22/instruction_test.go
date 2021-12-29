@@ -146,7 +146,7 @@ func Test_findOverlapBox(t *testing.T) {
 			wantErr: assert.Error,
 		},
 		{
-			name: "finds overlapping box between the two boxes where otherBox is fully contained",
+			name: "finds overlapping box between the two boxes where box is fully contained",
 			args: args{
 				box: instruction{
 					xFrom: -10,
@@ -206,6 +206,39 @@ func Test_findOverlapBox(t *testing.T) {
 				yFrom: 5,
 				yTo:   10,
 				zFrom: 5,
+				zTo:   10,
+				flip:  off,
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "finds overlapping box between the two boxes where only a single cube",
+			args: args{
+				box: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+				otherBox: instruction{
+					xFrom: 10,
+					xTo:   12,
+					yFrom: 10,
+					yTo:   12,
+					zFrom: 10,
+					zTo:   12,
+					flip:  off,
+				},
+			},
+			want: instruction{
+				xFrom: 10,
+				xTo:   10,
+				yFrom: 10,
+				yTo:   10,
+				zFrom: 10,
 				zTo:   10,
 				flip:  off,
 			},
