@@ -4217,7 +4217,7 @@ func Test_overlapAndMerge(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []instruction
+		want map[string]instruction
 	}{
 		{
 			name: "overlaps and merges two boxes",
@@ -4241,12 +4241,12 @@ func Test_overlapAndMerge(t *testing.T) {
 					flip:  off,
 				},
 			},
-			want: []instruction{
-				{xFrom: -20, xTo: -5, yFrom: -20, yTo: -5, zFrom: -20, zTo: -5, flip: 1},
-				{xFrom: -5, xTo: 5, yFrom: -20, yTo: 5, zFrom: -20, zTo: -5, flip: 1},
-				{xFrom: -20, xTo: 5, yFrom: -20, yTo: -5, zFrom: -5, zTo: 5, flip: 1},
-				{xFrom: -20, xTo: -5, yFrom: -5, yTo: 5, zFrom: -20, zTo: 5, flip: 1},
-				{xFrom: -5, xTo: 20, yFrom: -5, yTo: 20, zFrom: -5, zTo: 20, flip: 2},
+			want: map[string]instruction{
+				"-20/-5/-20/-5/-20/-5/on": {xFrom: -20, xTo: -5, yFrom: -20, yTo: -5, zFrom: -20, zTo: -5, flip: 1},
+				"-5/5/-20/5/-20/-5/on":    {xFrom: -5, xTo: 5, yFrom: -20, yTo: 5, zFrom: -20, zTo: -5, flip: 1},
+				"-20/5/-20/-5/-5/5/on":    {xFrom: -20, xTo: 5, yFrom: -20, yTo: -5, zFrom: -5, zTo: 5, flip: 1},
+				"-20/-5/-5/5/-20/5/on":    {xFrom: -20, xTo: -5, yFrom: -5, yTo: 5, zFrom: -20, zTo: 5, flip: 1},
+				"-5/20/-5/20/-5/20/off":   {xFrom: -5, xTo: 20, yFrom: -5, yTo: 20, zFrom: -5, zTo: 20, flip: 2},
 			},
 		},
 	}

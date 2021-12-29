@@ -1,25 +1,22 @@
 package day22
 
-type cubespace map[int]flip
+import "fmt"
 
-func (c *cubespace) applyInstructions(i instruction) {
+type cubespace map[string]instruction
 
+func (c cubespace) applyInstructions(i instruction) {
+	if c.Length() == 0 {
+		c[i.String()] = i
+
+		return
+	}
+
+	for _, b := range c {
+		bla := filterOffs(overlapAndMerge(b, i))
+		fmt.Printf("bla after instructions\n\n%#v\n", bla)
+	}
 }
 
-func bla() {
-	_ = []instruction{
-		{xFrom: -20, xTo: -5, yFrom: -20, yTo: -5, zFrom: -20, zTo: -5, flip: 1},
-		{xFrom: -5, xTo: 5, yFrom: -20, yTo: 5, zFrom: -20, zTo: -5, flip: 1},
-		{xFrom: -20, xTo: 5, yFrom: -20, yTo: -5, zFrom: -5, zTo: 5, flip: 1},
-		{xFrom: -20, xTo: -5, yFrom: -5, yTo: 5, zFrom: -20, zTo: 5, flip: 1},
-		{xFrom: -5, xTo: 20, yFrom: -5, yTo: 20, zFrom: -5, zTo: 20, flip: 2},
-	}
-
-	_ = []instruction{
-		{xFrom: -20, xTo: -5, yFrom: -20, yTo: -5, zFrom: -20, zTo: -5, flip: 1},
-		{xFrom: -5, xTo: 5, yFrom: -20, yTo: 5, zFrom: -20, zTo: -5, flip: 1},
-		{xFrom: -20, xTo: 5, yFrom: -20, yTo: -5, zFrom: -5, zTo: 5, flip: 1},
-		{xFrom: -20, xTo: -5, yFrom: -5, yTo: 5, zFrom: -20, zTo: 5, flip: 1},
-		{xFrom: -5, xTo: 20, yFrom: -5, yTo: 20, zFrom: -5, zTo: 20, flip: 2},
-	}
+func (c cubespace) Length() int {
+	return len(c)
 }

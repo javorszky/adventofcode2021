@@ -2,7 +2,6 @@ package day22
 
 import (
 	"errors"
-	"fmt"
 )
 
 const (
@@ -22,7 +21,15 @@ func task1(input []instruction) interface{} {
 		limited = append(limited, limitedInstruction)
 	}
 
-	fmt.Printf("limited instruction set\n\n%#v\n", limited)
+	kuqe := make(cubespace)
+
+	for i, inst := range limited {
+		kuqe.applyInstructions(inst)
+
+		if i > 0 {
+			break
+		}
+	}
 
 	return len(limited)
 }

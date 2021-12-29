@@ -84,13 +84,13 @@ func parseInstruction(s string) instruction {
 	}
 }
 
-func overlapAndMerge(box, otherBox instruction) []instruction {
+func overlapAndMerge(box, otherBox instruction) map[string]instruction {
 	overlaps := overlap(box, otherBox)
 	checked := make(map[string]instruction)
 
-	var merges []instruction
-
 	for {
+		merges := map[string]instruction{}
+
 		for i, overlapBox := range overlaps {
 			for _, overlapOtherBox := range overlaps[i+1:] {
 				_, ok := checked[overlapBox.String()]
@@ -103,7 +103,7 @@ func overlapAndMerge(box, otherBox instruction) []instruction {
 				m := mergeBoxes(overlapBox, overlapOtherBox)
 
 				if len(m) == 1 {
-					merges = append(merges, m...)
+					merges[m[0].String()] = m[0]
 					checked[overlapBox.String()] = overlapBox
 					checked[overlapOtherBox.String()] = overlapOtherBox
 				}
@@ -114,21 +114,31 @@ func overlapAndMerge(box, otherBox instruction) []instruction {
 			break
 		}
 
-		newOverlaps := make([]instruction, 0)
+		newOverlaps := make(map[string]instruction)
 
 		for _, _o := range overlaps {
 			if _, ok := checked[_o.String()]; !ok {
-				newOverlaps = append(newOverlaps, _o)
+				newOverlaps[_o.String()] = _o
 			}
 		}
 
-		newOverlaps = append(newOverlaps, merges...)
-		merges = []instruction{}
+		newOverlaps = mergeMap(merges, newOverlaps)
 		checked = map[string]instruction{}
-		overlaps = newOverlaps
+		overlaps = make([]instruction, len(newOverlaps))
+		i := 0
+
+		for _, v := range newOverlaps {
+			overlaps[i] = v
+			i++
+		}
 	}
 
-	return overlaps
+	newOverlapsMap := make(map[string]instruction)
+	for _, v := range overlaps {
+		newOverlapsMap[v.String()] = v
+	}
+
+	return newOverlapsMap
 }
 
 func overlap(box, otherBox instruction) []instruction {
@@ -826,4 +836,16 @@ func mergeBoxes(box, otherBox instruction) []instruction {
 	}
 
 	return []instruction{box, otherBox}
+}
+
+func filterOffs(instructions map[string]instruction) map[string]instruction {
+	onlyOns := make(map[string]instruction)
+
+	for k, i := range instructions {
+		if i.flip == on {
+			onlyOns[k] = i
+		}
+	}
+
+	return onlyOns
 }

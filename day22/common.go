@@ -57,3 +57,11 @@ func findBoundaries(in []instruction) instruction {
 		flip:  off,
 	}
 }
+
+func mergeMap(mergeThis, intoThis map[string]instruction) map[string]instruction {
+	for k, v := range mergeThis {
+		intoThis[k] = v
+	}
+
+	return intoThis
+}
