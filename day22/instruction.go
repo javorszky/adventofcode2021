@@ -248,7 +248,7 @@ func findFrontFace(box, overlapBox instruction) []instruction {
 
 	return []instruction{
 		{
-			xFrom: overlapBox.xTo,
+			xFrom: overlapBox.xTo + 1 + 1,
 			xTo:   box.xTo,
 			yFrom: overlapBox.yFrom,
 			yTo:   overlapBox.yTo,
@@ -382,7 +382,7 @@ func findTopFrontEdge(box, overlapBox instruction) []instruction {
 
 	return []instruction{
 		{
-			xFrom: overlapBox.xTo,
+			xFrom: overlapBox.xTo + 1,
 			xTo:   box.xTo,
 			yFrom: overlapBox.yFrom,
 			yTo:   overlapBox.yTo,
@@ -458,7 +458,7 @@ func findBottomFrontEdge(box, overlapBox instruction) []instruction {
 
 	return []instruction{
 		{
-			xFrom: overlapBox.xTo,
+			xFrom: overlapBox.xTo + 1,
 			xTo:   box.xTo,
 			yFrom: overlapBox.yFrom,
 			yTo:   overlapBox.yTo,
@@ -477,7 +477,7 @@ func findFrontRightEdge(box, overlapBox instruction) []instruction {
 
 	return []instruction{
 		{
-			xFrom: overlapBox.xTo,
+			xFrom: overlapBox.xTo + 1,
 			xTo:   box.xTo,
 			yFrom: overlapBox.yTo,
 			yTo:   box.yTo,
@@ -496,7 +496,7 @@ func findFrontLeftEdge(box, overlapBox instruction) []instruction {
 
 	return []instruction{
 		{
-			xFrom: overlapBox.xTo,
+			xFrom: overlapBox.xTo + 1,
 			xTo:   box.xTo,
 			yFrom: box.yFrom,
 			yTo:   overlapBox.yFrom,
@@ -592,7 +592,7 @@ func findTopFrontLeftCorner(box, overlapBox instruction) []instruction {
 
 	return []instruction{
 		{
-			xFrom: overlapBox.xTo,
+			xFrom: overlapBox.xTo + 1,
 			xTo:   box.xTo,
 			yFrom: box.yFrom,
 			yTo:   overlapBox.yFrom,
@@ -611,7 +611,7 @@ func findTopFrontRightCorner(box, overlapBox instruction) []instruction {
 
 	return []instruction{
 		{
-			xFrom: overlapBox.xTo,
+			xFrom: overlapBox.xTo + 1,
 			xTo:   box.xTo,
 			yFrom: overlapBox.yTo,
 			yTo:   box.yTo,
@@ -668,7 +668,7 @@ func findBottomFrontLeftCorner(box, overlapBox instruction) []instruction {
 
 	return []instruction{
 		{
-			xFrom: overlapBox.xTo,
+			xFrom: overlapBox.xTo + 1,
 			xTo:   box.xTo,
 			yFrom: box.yFrom,
 			yTo:   overlapBox.yFrom,
@@ -687,7 +687,7 @@ func findBottomFrontRightCorner(box, overlapBox instruction) []instruction {
 
 	return []instruction{
 		{
-			xFrom: overlapBox.xTo,
+			xFrom: overlapBox.xTo + 1,
 			xTo:   box.xTo,
 			yFrom: overlapBox.yTo,
 			yTo:   box.yTo,
