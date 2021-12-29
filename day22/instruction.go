@@ -307,7 +307,7 @@ func findRightFace(box, overlapBox instruction) []instruction {
 		{
 			xFrom: overlapBox.xFrom,
 			xTo:   overlapBox.xTo,
-			yFrom: overlapBox.yTo,
+			yFrom: overlapBox.yTo + 1,
 			yTo:   box.yTo,
 			zFrom: overlapBox.zFrom,
 			zTo:   overlapBox.zTo,
@@ -365,7 +365,7 @@ func findTopRightEdge(box, overlapBox instruction) []instruction {
 		{
 			xFrom: overlapBox.xFrom,
 			xTo:   overlapBox.xTo,
-			yFrom: overlapBox.yTo,
+			yFrom: overlapBox.yTo + 1,
 			yTo:   box.yTo,
 			zFrom: overlapBox.zTo + 1,
 			zTo:   box.zTo,
@@ -441,7 +441,7 @@ func findBottomRightEdge(box, overlapBox instruction) []instruction {
 		{
 			xFrom: overlapBox.xFrom,
 			xTo:   overlapBox.xTo,
-			yFrom: overlapBox.yTo,
+			yFrom: overlapBox.yTo + 1,
 			yTo:   box.yTo,
 			zFrom: box.zFrom,
 			zTo:   overlapBox.zFrom - 1,
@@ -479,7 +479,7 @@ func findFrontRightEdge(box, overlapBox instruction) []instruction {
 		{
 			xFrom: overlapBox.xTo + 1,
 			xTo:   box.xTo,
-			yFrom: overlapBox.yTo,
+			yFrom: overlapBox.yTo + 1,
 			yTo:   box.yTo,
 			zFrom: overlapBox.zFrom,
 			zTo:   overlapBox.zTo,
@@ -517,7 +517,7 @@ func findBackRightEdge(box, overlapBox instruction) []instruction {
 		{
 			xFrom: box.xFrom,
 			xTo:   overlapBox.xFrom - 1,
-			yFrom: overlapBox.yTo,
+			yFrom: overlapBox.yTo + 1,
 			yTo:   box.yTo,
 			zFrom: overlapBox.zFrom,
 			zTo:   overlapBox.zTo,
@@ -575,7 +575,7 @@ func findTopBackRightCorner(box, overlapBox instruction) []instruction {
 		{
 			xFrom: box.xFrom,
 			xTo:   overlapBox.xFrom - 1,
-			yFrom: overlapBox.yTo,
+			yFrom: overlapBox.yTo + 1,
 			yTo:   box.yTo,
 			zFrom: overlapBox.zTo + 1,
 			zTo:   box.zTo,
@@ -613,7 +613,7 @@ func findTopFrontRightCorner(box, overlapBox instruction) []instruction {
 		{
 			xFrom: overlapBox.xTo + 1,
 			xTo:   box.xTo,
-			yFrom: overlapBox.yTo,
+			yFrom: overlapBox.yTo + 1,
 			yTo:   box.yTo,
 			zFrom: overlapBox.zTo + 1,
 			zTo:   box.zTo,
@@ -651,7 +651,7 @@ func findBottomBackRightCorner(box, overlapBox instruction) []instruction {
 		{
 			xFrom: box.xFrom,
 			xTo:   overlapBox.xFrom - 1,
-			yFrom: overlapBox.yTo,
+			yFrom: overlapBox.yTo + 1,
 			yTo:   box.yTo,
 			zFrom: box.zFrom,
 			zTo:   overlapBox.zFrom - 1,
@@ -689,7 +689,7 @@ func findBottomFrontRightCorner(box, overlapBox instruction) []instruction {
 		{
 			xFrom: overlapBox.xTo + 1,
 			xTo:   box.xTo,
-			yFrom: overlapBox.yTo,
+			yFrom: overlapBox.yTo + 1,
 			yTo:   box.yTo,
 			zFrom: box.zFrom,
 			zTo:   overlapBox.zFrom - 1,
