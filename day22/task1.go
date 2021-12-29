@@ -26,7 +26,7 @@ func task1(input []instruction) interface{} {
 	for i, inst := range limited {
 		kuqe.applyInstructions(inst)
 
-		if i > 0 {
+		if i > 1 {
 			break
 		}
 	}
