@@ -1,5 +1,7 @@
 package day22
 
+import "fmt"
+
 type cubespace map[string]instruction
 
 func (c *cubespace) applyInstructions(i instruction) {
@@ -9,15 +11,43 @@ func (c *cubespace) applyInstructions(i instruction) {
 		return
 	}
 
-	merge := make(map[string]instruction)
+	fmt.Printf("\n\ncurrently in the cubespace\nfunc curr() {\n\t_=%#v\n}\n", *c)
+	fmt.Printf("incoming\nfunc incoming() {\n\t%#v\n}\n", i)
 
-	for _, b := range *c {
-		merge = mergeMap(filterOffs(overlapAndMerge(b, i)), merge)
+	unaffected, affected := make(map[string]instruction), make(map[string]instruction)
+
+	for k, v := range *c {
+		_, err := findOverlapBox(v, i)
+		if err == nil {
+			affected[k] = v
+
+			continue
+		}
+
+		unaffected[k] = v
 	}
 
-	*c = merge
+	fmt.Printf("existing cubes that would overlap with the incoming one\nfunc affected() {\n\t_=%#v\n}\n", affected)
+
+	fmt.Printf("existing cubes that would be unaffected\nfunc unaffected() {\n\t_=%#v\n}\n", unaffected)
+
+	merge := make(map[string]instruction)
+
+	for _, b := range affected {
+		fmt.Printf("dealing with affected: %#v\n", b)
+		fmt.Printf("current merge is %#v\n", merge)
+		merge = mergeMap(filterOffs(overlapAndMerge(b, i)), merge)
+		fmt.Printf("after overlap and merge and filter off and mergemap: %#v\n\n", merge)
+	}
+
+	total := mergeMap(unaffected, merge)
+	*c = total
+
+	fmt.Printf("after merging the overlap and whatnot with the unaffected:\n%#v\n\nlights: %d\n", total, c.Lights())
 
 	c.Collapse()
+
+	fmt.Printf("collapsed it. Lights should be the same: %d\n%#v\n\n", c.Lights(), *c)
 }
 
 func (c *cubespace) Length() int {

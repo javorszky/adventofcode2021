@@ -2,6 +2,7 @@ package day22
 
 import (
 	"errors"
+	"fmt"
 )
 
 const (
@@ -26,6 +27,12 @@ func task1(input []instruction) int {
 	for _, inst := range limited {
 		kuqe.applyInstructions(inst)
 	}
+
+	fmt.Printf("kuqe is\n%#v\n\n", kuqe)
+
+	kuqe.Collapse()
+
+	fmt.Printf("kuqe is\n%#v\n\n", kuqe)
 
 	return kuqe.Lights()
 }
