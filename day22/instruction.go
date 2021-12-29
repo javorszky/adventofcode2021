@@ -248,7 +248,7 @@ func findFrontFace(box, overlapBox instruction) []instruction {
 
 	return []instruction{
 		{
-			xFrom: overlapBox.xTo + 1 + 1,
+			xFrom: overlapBox.xTo + 1,
 			xTo:   box.xTo,
 			yFrom: overlapBox.yFrom,
 			yTo:   overlapBox.yTo,
@@ -268,7 +268,7 @@ func findBackFace(box, overlapBox instruction) []instruction {
 	return []instruction{
 		{
 			xFrom: box.xFrom,
-			xTo:   overlapBox.xFrom - 1 - 1,
+			xTo:   overlapBox.xFrom - 1,
 			yFrom: overlapBox.yFrom,
 			yTo:   overlapBox.yTo,
 			zFrom: overlapBox.zFrom,
