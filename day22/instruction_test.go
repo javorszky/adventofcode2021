@@ -2797,8 +2797,42 @@ func Test_findBackRightEdge(t *testing.T) {
 			want: []instruction{
 				{
 					xFrom: -20,
-					xTo:   -10,
-					yFrom: 10,
+					xTo:   -11,
+					yFrom: 11,
+					yTo:   20,
+					zFrom: -10,
+					zTo:   10,
+					flip:  off,
+				},
+			},
+		},
+		{
+			name: "returns single line back right edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -19,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   19,
+					zFrom: -10,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: -20,
+					xTo:   -20,
+					yFrom: 20,
 					yTo:   20,
 					zFrom: -10,
 					zTo:   10,
