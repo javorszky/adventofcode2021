@@ -3117,6 +3117,30 @@ func Test_findTopBackRightCorner(t *testing.T) {
 			want: nil,
 		},
 		{
+			name: "returns nil if overlapbox is at the top edge",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -10,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   20,
+					flip:  on,
+				},
+			},
+			want: nil,
+		},
+		{
 			name: "returns nil if overlapbox is at the right edge",
 			args: args{
 				box: instruction{
@@ -3237,10 +3261,44 @@ func Test_findTopBackRightCorner(t *testing.T) {
 			want: []instruction{
 				{
 					xFrom: -20,
-					xTo:   -10,
-					yFrom: 10,
+					xTo:   -11,
+					yFrom: 11,
 					yTo:   20,
-					zFrom: 10,
+					zFrom: 11,
+					zTo:   20,
+					flip:  off,
+				},
+			},
+		},
+		{
+			name: "returns single top back right corner",
+			args: args{
+				box: instruction{
+					xFrom: -20,
+					xTo:   20,
+					yFrom: -20,
+					yTo:   20,
+					zFrom: -20,
+					zTo:   20,
+					flip:  off,
+				},
+				overlapBox: instruction{
+					xFrom: -19,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   19,
+					zFrom: -10,
+					zTo:   19,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: -20,
+					xTo:   -20,
+					yFrom: 20,
+					yTo:   20,
+					zFrom: 20,
 					zTo:   20,
 					flip:  off,
 				},
