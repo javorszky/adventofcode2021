@@ -4795,7 +4795,7 @@ func Test_overlap(t *testing.T) {
 				// box back face
 				{
 					xFrom: -20,
-					xTo:   -5,
+					xTo:   -6,
 					yFrom: -5,
 					yTo:   5,
 					zFrom: -5,
@@ -4809,7 +4809,7 @@ func Test_overlap(t *testing.T) {
 					yFrom: -5,
 					yTo:   5,
 					zFrom: -20,
-					zTo:   -5,
+					zTo:   -6,
 					flip:  on,
 				},
 				// box left face
@@ -4817,7 +4817,7 @@ func Test_overlap(t *testing.T) {
 					xFrom: -5,
 					xTo:   5,
 					yFrom: -20,
-					yTo:   -5,
+					yTo:   -6,
 					zFrom: -5,
 					zTo:   5,
 					flip:  on,
@@ -4825,9 +4825,9 @@ func Test_overlap(t *testing.T) {
 				// box back left edge
 				{
 					xFrom: -20,
-					xTo:   -5,
+					xTo:   -6,
 					yFrom: -20,
-					yTo:   -5,
+					yTo:   -6,
 					zFrom: -5,
 					zTo:   5,
 					flip:  on,
@@ -4835,11 +4835,11 @@ func Test_overlap(t *testing.T) {
 				// box back bottom edge
 				{
 					xFrom: -20,
-					xTo:   -5,
+					xTo:   -6,
 					yFrom: -5,
 					yTo:   5,
 					zFrom: -20,
-					zTo:   -5,
+					zTo:   -6,
 					flip:  on,
 				},
 				// box left bottom edge
@@ -4847,25 +4847,25 @@ func Test_overlap(t *testing.T) {
 					xFrom: -5,
 					xTo:   5,
 					yFrom: -20,
-					yTo:   -5,
+					yTo:   -6,
 					zFrom: -20,
-					zTo:   -5,
+					zTo:   -6,
 					flip:  on,
 				},
 				// box bottom back left corner
 				{
 					xFrom: -20,
-					xTo:   -5,
+					xTo:   -6,
 					yFrom: -20,
-					yTo:   -5,
+					yTo:   -6,
 					zFrom: -20,
-					zTo:   -5,
+					zTo:   -6,
 					flip:  on,
 				},
 
 				// otherBox front face
 				{
-					xFrom: 5,
+					xFrom: 6,
 					xTo:   20,
 					yFrom: -5,
 					yTo:   5,
@@ -4877,7 +4877,7 @@ func Test_overlap(t *testing.T) {
 				{
 					xFrom: -5,
 					xTo:   5,
-					yFrom: 5,
+					yFrom: 6,
 					yTo:   20,
 					zFrom: -5,
 					zTo:   5,
@@ -4889,15 +4889,15 @@ func Test_overlap(t *testing.T) {
 					xTo:   5,
 					yFrom: -5,
 					yTo:   5,
-					zFrom: 5,
+					zFrom: 6,
 					zTo:   20,
 					flip:  off,
 				},
 				// otherBox front right edge
 				{
-					xFrom: 5,
+					xFrom: 6,
 					xTo:   20,
-					yFrom: 5,
+					yFrom: 6,
 					yTo:   20,
 					zFrom: -5,
 					zTo:   5,
@@ -4905,11 +4905,11 @@ func Test_overlap(t *testing.T) {
 				},
 				// otherBox front top edge
 				{
-					xFrom: 5,
+					xFrom: 6,
 					xTo:   20,
 					yFrom: -5,
 					yTo:   5,
-					zFrom: 5,
+					zFrom: 6,
 					zTo:   20,
 					flip:  off,
 				},
@@ -4917,19 +4917,19 @@ func Test_overlap(t *testing.T) {
 				{
 					xFrom: -5,
 					xTo:   5,
-					yFrom: 5,
+					yFrom: 6,
 					yTo:   20,
-					zFrom: 5,
+					zFrom: 6,
 					zTo:   20,
 					flip:  off,
 				},
 				// otherBox top right front corner
 				{
-					xFrom: 5,
+					xFrom: 6,
 					xTo:   20,
-					yFrom: 5,
+					yFrom: 6,
 					yTo:   20,
-					zFrom: 5,
+					zFrom: 6,
 					zTo:   20,
 					flip:  off,
 				},
