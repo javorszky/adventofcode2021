@@ -705,7 +705,7 @@ func mergeBoxes(box, otherBox instruction) []instruction {
 	}
 
 	// try to merge along the x axis. yfrom, yto, zfrom, zto need to match, xfrom == xto
-	if box.zFrom == otherBox.zFrom && box.yFrom == otherBox.yFrom && box.zTo == otherBox.zTo && box.yTo == otherBox.yTo {
+	if box.zFrom == otherBox.zFrom && box.zTo == otherBox.zTo && box.yFrom == otherBox.yFrom && box.yTo == otherBox.yTo {
 		smallerXFrom := box.xFrom
 		if otherBox.xFrom < smallerXFrom {
 			smallerXFrom = otherBox.xFrom
@@ -717,7 +717,8 @@ func mergeBoxes(box, otherBox instruction) []instruction {
 		}
 
 		if (box.xFrom <= otherBox.xFrom && box.xTo >= otherBox.xFrom) ||
-			(otherBox.xFrom <= box.xFrom && otherBox.xTo >= box.xFrom) {
+			(otherBox.xFrom <= box.xFrom && otherBox.xTo >= box.xFrom) ||
+			(box.xTo+1 == otherBox.xFrom || otherBox.xTo+1 == box.xFrom) {
 			// If they don't touch.
 			return []instruction{
 				{
@@ -746,7 +747,8 @@ func mergeBoxes(box, otherBox instruction) []instruction {
 		}
 
 		if (box.yFrom <= otherBox.yFrom && box.yTo >= otherBox.yFrom) ||
-			(otherBox.yFrom <= box.yFrom && otherBox.yTo >= box.yFrom) {
+			(otherBox.yFrom <= box.yFrom && otherBox.yTo >= box.yFrom) ||
+			(box.yTo+1 == otherBox.yFrom || otherBox.yTo+1 == box.yFrom) {
 			// If they don't touch.
 			return []instruction{
 				{
@@ -775,7 +777,8 @@ func mergeBoxes(box, otherBox instruction) []instruction {
 		}
 
 		if (box.zFrom <= otherBox.zFrom && box.zTo >= otherBox.zFrom) ||
-			(otherBox.zFrom <= box.zFrom && otherBox.zTo >= box.zFrom) {
+			(otherBox.zFrom <= box.zFrom && otherBox.zTo >= box.zFrom) ||
+			(box.zTo+1 == otherBox.zFrom || otherBox.zTo+1 == box.zFrom) {
 			// If there's no gap between the two boxes in z.
 			return []instruction{
 				{

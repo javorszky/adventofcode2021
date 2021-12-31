@@ -4966,7 +4966,7 @@ func Test_mergeBoxes(t *testing.T) {
 		want []instruction
 	}{
 		{
-			name: "merges two boxes on x, touching",
+			name: "merges two boxes on x, touching above",
 			args: args{
 				box: standardBox,
 				otherBox: instruction{
@@ -4992,12 +4992,12 @@ func Test_mergeBoxes(t *testing.T) {
 			},
 		},
 		{
-			name: "merges two boxes on x, overlapping",
+			name: "merges two boxes on x, overlaps on one above",
 			args: args{
 				box: standardBox,
 				otherBox: instruction{
-					xFrom: 5,
-					xTo:   15,
+					xFrom: 10,
+					xTo:   20,
 					yFrom: 0,
 					yTo:   10,
 					zFrom: 0,
@@ -5008,7 +5008,59 @@ func Test_mergeBoxes(t *testing.T) {
 			want: []instruction{
 				{
 					xFrom: 0,
-					xTo:   15,
+					xTo:   20,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on x, overlaps wholly above",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   20,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   20,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on x, touching below",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: -10,
+					xTo:   -1,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: -10,
+					xTo:   10,
 					yFrom: 0,
 					yTo:   10,
 					zFrom: 0,
@@ -5071,7 +5123,7 @@ func Test_mergeBoxes(t *testing.T) {
 			},
 		},
 		{
-			name: "merges two boxes on y, touching",
+			name: "merges two boxes on y, touching above",
 			args: args{
 				box: standardBox,
 				otherBox: instruction{
@@ -5090,6 +5142,32 @@ func Test_mergeBoxes(t *testing.T) {
 					xTo:   10,
 					yFrom: 0,
 					yTo:   20,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on y, touching below",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   -1,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: -10,
+					yTo:   10,
 					zFrom: 0,
 					zTo:   10,
 					flip:  on,
@@ -5116,6 +5194,32 @@ func Test_mergeBoxes(t *testing.T) {
 					xTo:   10,
 					yFrom: 0,
 					yTo:   15,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on y, overlapping below",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: -5,
+					yTo:   5,
+					zFrom: 0,
+					zTo:   10,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: -5,
+					yTo:   10,
 					zFrom: 0,
 					zTo:   10,
 					flip:  on,
@@ -5176,7 +5280,7 @@ func Test_mergeBoxes(t *testing.T) {
 			},
 		},
 		{
-			name: "merges two boxes on z, touching",
+			name: "merges two boxes on z, touching above",
 			args: args{
 				box: standardBox,
 				otherBox: instruction{
@@ -5197,6 +5301,33 @@ func Test_mergeBoxes(t *testing.T) {
 					yTo:   10,
 					zFrom: 0,
 					zTo:   20,
+					flip:  on,
+				},
+			},
+		},
+
+		{
+			name: "merges two boxes on z, touching below",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   -1,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: -10,
+					zTo:   10,
 					flip:  on,
 				},
 			},
@@ -5223,6 +5354,32 @@ func Test_mergeBoxes(t *testing.T) {
 					yTo:   10,
 					zFrom: 0,
 					zTo:   15,
+					flip:  on,
+				},
+			},
+		},
+		{
+			name: "merges two boxes on z, overlapping below",
+			args: args{
+				box: standardBox,
+				otherBox: instruction{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: -5,
+					zTo:   5,
+					flip:  on,
+				},
+			},
+			want: []instruction{
+				{
+					xFrom: 0,
+					xTo:   10,
+					yFrom: 0,
+					yTo:   10,
+					zFrom: -5,
+					zTo:   10,
 					flip:  on,
 				},
 			},
@@ -5378,10 +5535,10 @@ func Test_overlapAndMerge(t *testing.T) {
 			},
 			want: map[string]instruction{
 				"-20/-6/-20/-6/-20/-6/on": {xFrom: -20, xTo: -6, yFrom: -20, yTo: -6, zFrom: -20, zTo: -6, flip: 1},
-				"-5/5/-20/6/-20/-6/on":    {xFrom: -5, xTo: 5, yFrom: -20, yTo: 6, zFrom: -20, zTo: -6, flip: 1},
-				"-20/6/-20/-6/-5/5/on":    {xFrom: -20, xTo: 6, yFrom: -20, yTo: -6, zFrom: -5, zTo: 5, flip: 1},
-				"-20/-6/-5/5/-20/6/on":    {xFrom: -20, xTo: -6, yFrom: -5, yTo: 5, zFrom: -20, zTo: 6, flip: 1},
-				"-6/20/-6/20/-6/20/off":   {xFrom: -6, xTo: 20, yFrom: -6, yTo: 20, zFrom: -6, zTo: 20, flip: 2},
+				"-20/-6/-5/5/-20/5/on":    {xFrom: -20, xTo: -6, yFrom: -5, yTo: 5, zFrom: -20, zTo: 5, flip: 1},
+				"-20/5/-20/-6/-5/5/on":    {xFrom: -20, xTo: 5, yFrom: -20, yTo: -6, zFrom: -5, zTo: 5, flip: 1},
+				"-5/20/-5/20/-5/20/off":   {xFrom: -5, xTo: 20, yFrom: -5, yTo: 20, zFrom: -5, zTo: 20, flip: 2},
+				"-5/5/-20/5/-20/-6/on":    {xFrom: -5, xTo: 5, yFrom: -20, yTo: 5, zFrom: -20, zTo: -6, flip: 1},
 			},
 		},
 	}
