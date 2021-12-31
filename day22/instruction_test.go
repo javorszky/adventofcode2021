@@ -5541,6 +5541,34 @@ func Test_overlapAndMerge(t *testing.T) {
 				"-5/5/-20/5/-20/-6/on":    {xFrom: -5, xTo: 5, yFrom: -20, yTo: 5, zFrom: -20, zTo: -6, flip: 1},
 			},
 		},
+		{
+			name: "slices out a piece from a plane",
+			args: args{
+				box: instruction{
+					xFrom: 10,
+					xTo:   12,
+					yFrom: 10,
+					yTo:   10,
+					zFrom: 11,
+					zTo:   12,
+					flip:  on,
+				},
+				otherBox: instruction{
+					xFrom: 9,
+					xTo:   11,
+					yFrom: 9,
+					yTo:   11,
+					zFrom: 9,
+					zTo:   11,
+					flip:  off,
+				},
+			},
+			want: map[string]instruction{
+				"10/12/10/10/12/12/on": {xFrom: 10, xTo: 12, yFrom: 10, yTo: 10, zFrom: 12, zTo: 12, flip: on},
+				"12/12/10/10/11/11/on": {xFrom: 12, xTo: 12, yFrom: 10, yTo: 10, zFrom: 11, zTo: 11, flip: on},
+				"9/11/9/11/9/11/off":   {xFrom: 9, xTo: 11, yFrom: 9, yTo: 11, zFrom: 9, zTo: 11, flip: off},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

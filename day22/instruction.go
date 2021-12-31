@@ -99,18 +99,18 @@ func overlapAndMerge(box, otherBox instruction) map[string]instruction {
 
 func overlap(box, otherBox instruction) []instruction {
 	// they do not overlap, because box ends before otherBox begins.
-	if box.xFrom >= otherBox.xTo || box.yFrom >= otherBox.yTo || box.zFrom >= otherBox.zTo {
+	if box.xFrom > otherBox.xTo || box.yFrom > otherBox.yTo || box.zFrom > otherBox.zTo {
 		return []instruction{box, otherBox}
 	}
 
 	// they do not overlap, because box doesn't start until after otherBox ends.
-	if otherBox.xFrom >= box.xTo || otherBox.yFrom >= box.yTo || otherBox.zFrom >= box.zTo {
+	if otherBox.xFrom > box.xTo || otherBox.yFrom > box.yTo || otherBox.zFrom > box.zTo {
 		return []instruction{box, otherBox}
 	}
 
 	instructions := make([]instruction, 0)
-
 	overlapBox, err := findOverlapBox(box, otherBox)
+
 	if err != nil {
 		log.Fatalf("despite checking for overlaps, we couldn't find the box. This should not have happened\n"+
 			"box:      %v\n"+

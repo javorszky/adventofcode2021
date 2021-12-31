@@ -1,7 +1,5 @@
 package day22
 
-import "fmt"
-
 type cubespace map[string]instruction
 
 func (c *cubespace) applyInstructions(i instruction) {
@@ -10,9 +8,6 @@ func (c *cubespace) applyInstructions(i instruction) {
 
 		return
 	}
-
-	fmt.Printf("\n\ncurrently in the cubespace\nfunc curr() {\n\t_=%#v\n}\n", *c)
-	fmt.Printf("incoming\nfunc incoming() {\n\t%#v\n}\n", i)
 
 	unaffected, affected := make(map[string]instruction), make(map[string]instruction)
 
@@ -27,27 +22,26 @@ func (c *cubespace) applyInstructions(i instruction) {
 		unaffected[k] = v
 	}
 
-	fmt.Printf("existing cubes that would overlap with the incoming one\nfunc affected() {\n\t_=%#v\n}\n", affected)
+	if len(affected) == 0 {
+		if i.flip == off {
+			// nothing needs doing, return
+			return
+		}
 
-	fmt.Printf("existing cubes that would be unaffected\nfunc unaffected() {\n\t_=%#v\n}\n", unaffected)
+		*c = mergeMap(map[string]instruction{i.String(): i}, unaffected)
+
+		return
+	}
 
 	merge := make(map[string]instruction)
 
 	for _, b := range affected {
-		fmt.Printf("dealing with affected: %#v\n", b)
-		fmt.Printf("current merge is %#v\n", merge)
 		merge = mergeMap(filterOffs(overlapAndMerge(b, i)), merge)
-		fmt.Printf("after overlap and merge and filter off and mergemap: %#v\n\n", merge)
 	}
 
-	total := mergeMap(unaffected, merge)
-	*c = total
-
-	fmt.Printf("after merging the overlap and whatnot with the unaffected:\n%#v\n\nlights: %d\n", total, c.Lights())
+	*c = mergeMap(unaffected, merge)
 
 	c.Collapse()
-
-	fmt.Printf("collapsed it. Lights should be the same: %d\n%#v\n\n", c.Lights(), *c)
 }
 
 func (c *cubespace) Length() int {
