@@ -4970,7 +4970,7 @@ func Test_mergeBoxes(t *testing.T) {
 			args: args{
 				box: standardBox,
 				otherBox: instruction{
-					xFrom: 10,
+					xFrom: 11,
 					xTo:   20,
 					yFrom: 0,
 					yTo:   10,
@@ -5077,7 +5077,7 @@ func Test_mergeBoxes(t *testing.T) {
 				otherBox: instruction{
 					xFrom: 0,
 					xTo:   10,
-					yFrom: 10,
+					yFrom: 11,
 					yTo:   20,
 					zFrom: 0,
 					zTo:   10,
@@ -5184,7 +5184,7 @@ func Test_mergeBoxes(t *testing.T) {
 					xTo:   10,
 					yFrom: 0,
 					yTo:   10,
-					zFrom: 10,
+					zFrom: 11,
 					zTo:   20,
 					flip:  on,
 				},
@@ -5377,11 +5377,11 @@ func Test_overlapAndMerge(t *testing.T) {
 				},
 			},
 			want: map[string]instruction{
-				"-20/-5/-20/-5/-20/-5/on": {xFrom: -20, xTo: -5, yFrom: -20, yTo: -5, zFrom: -20, zTo: -5, flip: 1},
-				"-5/5/-20/5/-20/-5/on":    {xFrom: -5, xTo: 5, yFrom: -20, yTo: 5, zFrom: -20, zTo: -5, flip: 1},
-				"-20/5/-20/-5/-5/5/on":    {xFrom: -20, xTo: 5, yFrom: -20, yTo: -5, zFrom: -5, zTo: 5, flip: 1},
-				"-20/-5/-5/5/-20/5/on":    {xFrom: -20, xTo: -5, yFrom: -5, yTo: 5, zFrom: -20, zTo: 5, flip: 1},
-				"-5/20/-5/20/-5/20/off":   {xFrom: -5, xTo: 20, yFrom: -5, yTo: 20, zFrom: -5, zTo: 20, flip: 2},
+				"-20/-6/-20/-6/-20/-6/on": {xFrom: -20, xTo: -6, yFrom: -20, yTo: -6, zFrom: -20, zTo: -6, flip: 1},
+				"-5/5/-20/6/-20/-6/on":    {xFrom: -5, xTo: 5, yFrom: -20, yTo: 6, zFrom: -20, zTo: -6, flip: 1},
+				"-20/6/-20/-6/-5/5/on":    {xFrom: -20, xTo: 6, yFrom: -20, yTo: -6, zFrom: -5, zTo: 5, flip: 1},
+				"-20/-6/-5/5/-20/6/on":    {xFrom: -20, xTo: -6, yFrom: -5, yTo: 5, zFrom: -20, zTo: 6, flip: 1},
+				"-6/20/-6/20/-6/20/off":   {xFrom: -6, xTo: 20, yFrom: -6, yTo: 20, zFrom: -6, zTo: 20, flip: 2},
 			},
 		},
 	}
