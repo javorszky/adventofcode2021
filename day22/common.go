@@ -22,39 +22,39 @@ func findBoundaries(in []instruction) instruction {
 	xmax, ymax, zmax := -1<<32, -1<<32, -1<<32
 
 	for _, i := range in {
-		if i.xFrom < xmin {
-			xmin = i.xFrom
+		if i.XFrom < xmin {
+			xmin = i.XFrom
 		}
 
-		if i.yFrom < ymin {
-			ymin = i.yFrom
+		if i.YFrom < ymin {
+			ymin = i.YFrom
 		}
 
-		if i.zFrom < zmin {
-			zmin = i.zFrom
+		if i.ZFrom < zmin {
+			zmin = i.ZFrom
 		}
 
-		if i.xTo > xmax {
-			xmax = i.xTo
+		if i.XTo > xmax {
+			xmax = i.XTo
 		}
 
-		if i.yTo > ymax {
-			ymax = i.yTo
+		if i.YTo > ymax {
+			ymax = i.YTo
 		}
 
-		if i.zTo > zmax {
-			zmax = i.zTo
+		if i.ZTo > zmax {
+			zmax = i.ZTo
 		}
 	}
 
 	return instruction{
-		xFrom: xmin,
-		xTo:   xmax,
-		yFrom: ymin,
-		yTo:   ymax,
-		zFrom: zmin,
-		zTo:   zmax,
-		flip:  off,
+		XFrom: xmin,
+		XTo:   xmax,
+		YFrom: ymin,
+		YTo:   ymax,
+		ZFrom: zmin,
+		ZTo:   zmax,
+		Flip:  off,
 	}
 }
 

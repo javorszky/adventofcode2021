@@ -23,7 +23,7 @@ func (c *cubespace) applyInstructions(i instruction) {
 	}
 
 	if len(affected) == 0 {
-		if i.flip == off {
+		if i.Flip == off {
 			// nothing needs doing, return
 			return
 		}

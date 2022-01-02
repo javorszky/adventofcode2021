@@ -36,47 +36,47 @@ func limitInstructionTo50(in instruction) (instruction, error) {
 	xmin, ymin, zmin := cubeLowerLimit, cubeLowerLimit, cubeLowerLimit
 	xmax, ymax, zmax := cubeUpperLimit, cubeUpperLimit, cubeUpperLimit
 
-	if in.xFrom > cubeUpperLimit ||
-		in.yFrom > cubeUpperLimit ||
-		in.zFrom > cubeUpperLimit ||
-		in.xTo < cubeLowerLimit ||
-		in.yTo < cubeLowerLimit ||
-		in.zTo < cubeLowerLimit {
+	if in.XFrom > cubeUpperLimit ||
+		in.YFrom > cubeUpperLimit ||
+		in.ZFrom > cubeUpperLimit ||
+		in.XTo < cubeLowerLimit ||
+		in.YTo < cubeLowerLimit ||
+		in.ZTo < cubeLowerLimit {
 		// If any part of the cube is outside our bounds, then return an error.
 		return instruction{}, errors.New("out of bounds")
 	}
 
-	if in.xFrom > xmin {
-		xmin = in.xFrom
+	if in.XFrom > xmin {
+		xmin = in.XFrom
 	}
 
-	if in.xTo < xmax {
-		xmax = in.xTo
+	if in.XTo < xmax {
+		xmax = in.XTo
 	}
 
-	if in.yFrom > ymin {
-		ymin = in.yFrom
+	if in.YFrom > ymin {
+		ymin = in.YFrom
 	}
 
-	if in.yTo < ymax {
-		ymax = in.yTo
+	if in.YTo < ymax {
+		ymax = in.YTo
 	}
 
-	if in.zFrom > zmin {
-		zmin = in.zFrom
+	if in.ZFrom > zmin {
+		zmin = in.ZFrom
 	}
 
-	if in.zTo < zmax {
-		zmax = in.zTo
+	if in.ZTo < zmax {
+		zmax = in.ZTo
 	}
 
 	return instruction{
-		xFrom: xmin,
-		xTo:   xmax,
-		yFrom: ymin,
-		yTo:   ymax,
-		zFrom: zmin,
-		zTo:   zmax,
-		flip:  in.flip,
+		XFrom: xmin,
+		XTo:   xmax,
+		YFrom: ymin,
+		YTo:   ymax,
+		ZFrom: zmin,
+		ZTo:   zmax,
+		Flip:  in.Flip,
 	}, nil
 }
