@@ -2,6 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import { ArcballControls } from "three/examples/jsm/controls/ArcballControls.js";
 import * as cubes from "./js/cubes.js";
+import * as steps from "../steps.json";
 
 // document.querySelector('#app').innerHTML = `
 //   <h1>Hello Vite!</h1>
@@ -11,11 +12,12 @@ let INTERSECTED;
 let width, height;
 let camera, scene, raycaster, renderer, controls;
 
+let stepCounter = 0;
+const maxStep = steps.default.length * 4 - 1;
+
 const pointer = new THREE.Vector2();
 
 init();
-
-parseCubes(cubes.default);
 
 animate();
 
@@ -23,6 +25,7 @@ function init() {
   width = window.innerWidth;
   height = window.innerHeight;
 
+  console.log(steps.default);
   // Create the scene
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xf0f0f0);
@@ -45,6 +48,7 @@ function init() {
   document.querySelector("#app").appendChild(renderer.domElement);
 
   document.addEventListener("mousemove", onPointerMove);
+  document.addEventListener("keydown", onKeyDown);
 
   // The Controls
   controls = new ArcballControls(camera, renderer.domElement, scene);
@@ -55,6 +59,68 @@ function init() {
 function onPointerMove(event) {
   pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
   pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
+
+function onKeyDown(event) {
+  // arrow right is keycode 39
+  // arrow left is 37
+  switch (event.keyCode) {
+    case 37:
+      // arrow left
+      if (stepCounter === 0) {
+        return;
+      }
+      stepCounter--;
+
+      break;
+    case 39:
+      // arrow right
+      if (stepCounter === maxStep) {
+        return;
+      }
+      stepCounter++;
+
+      break;
+    default:
+  }
+
+  for (const child of scene.children) {
+    if (child.name !== "") {
+      scene.remove(child);
+      console.log("removed ", child.name);
+    }
+  }
+  // 0 - existing
+  // 1 - incoming
+  // 2 - result
+  // 3 - collapsed
+  const bigStep = Math.floor(stepCounter / 4);
+  const littleStep = stepCounter % 4;
+
+  const obj = steps.default[bigStep];
+  console.log(scene);
+  switch (littleStep) {
+    case 0:
+      if (obj.Existing) {
+        parseCubes(obj.Existing);
+      }
+      break;
+    case 1:
+      if (obj.Incoming) {
+        parseCubes(obj.Incoming);
+      }
+      break;
+    case 2:
+      if (obj.Result) {
+        parseCubes(obj.Result);
+      }
+      break;
+    case 3:
+      if (obj.Collapsed) {
+        parseCubes(obj.Collapsed);
+      }
+      break;
+  }
 }
 
 function parseCubes(cubeString) {

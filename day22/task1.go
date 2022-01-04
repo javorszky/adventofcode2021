@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 )
 
 const (
@@ -25,9 +26,10 @@ func task1(input []instruction) int {
 	}
 
 	kuqe := make(cubespace)
+	steps := make([]step, 0)
 
 	for _, inst := range limited {
-		kuqe.applyInstructions(inst)
+		steps = append(steps, kuqe.applyInstructions(inst))
 
 		b, err := json.Marshal(kuqe)
 		if err != nil {
@@ -37,7 +39,7 @@ func task1(input []instruction) int {
 		fmt.Printf("kuqe json:\n\n%s\n\n", string(b))
 	}
 
-	kuqe.Collapse()
+	writeJSON(steps)
 
 	return kuqe.Lights()
 }
@@ -89,4 +91,16 @@ func limitInstructionTo50(in instruction) (instruction, error) {
 		ZTo:   zmax,
 		Flip:  in.Flip,
 	}, nil
+}
+
+func writeJSON(steps []step) {
+	b, err := json.Marshal(steps)
+	if err != nil {
+		log.Fatalf("turning steps to json failed: %s", err)
+	}
+
+	err = os.WriteFile("steps.json", b, 0644)
+	if err != nil {
+		log.Fatalf("writing byte into file: %s", err)
+	}
 }

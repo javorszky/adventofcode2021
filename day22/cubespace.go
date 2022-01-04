@@ -2,17 +2,42 @@ package day22
 
 type cubespace map[string]instruction
 
-func (c *cubespace) applyInstructions(i instruction) {
+type step struct {
+	Existing  map[string]instruction `json:"Existing,omitempty"`
+	Incoming  map[string]instruction `json:"Incoming"`
+	Result    map[string]instruction `json:"Result,omitempty"`
+	Collapsed map[string]instruction `json:"Collapsed,omitempty"`
+}
+
+func (c *cubespace) applyInstructions(i instruction) step {
 	if c.Length() == 0 {
 		(*c)[i.String()] = i
 
-		return
+		return step{
+			Existing: map[string]instruction{},
+			Incoming: map[string]instruction{
+				i.String(): i,
+			},
+			Result: map[string]instruction{
+				i.String(): i,
+			},
+			Collapsed: map[string]instruction{
+				i.String(): i,
+			},
+		}
 	}
 
-	unaffected, affected := make(map[string]instruction), make(map[string]instruction)
+	unaffected,
+		affected,
+		existing :=
+		make(map[string]instruction),
+		make(map[string]instruction),
+		make(map[string]instruction)
 
 	for k, v := range *c {
+		existing[k] = v
 		_, err := findOverlapBox(v, i)
+
 		if err == nil {
 			affected[k] = v
 
@@ -25,12 +50,38 @@ func (c *cubespace) applyInstructions(i instruction) {
 	if len(affected) == 0 {
 		if i.Flip == off {
 			// nothing needs doing, return
-			return
+			return step{
+				Existing: existing,
+				Incoming: map[string]instruction{
+					i.String(): i,
+				},
+				Result:    existing,
+				Collapsed: existing,
+			}
 		}
 
 		*c = mergeMap(map[string]instruction{i.String(): i}, unaffected)
 
-		return
+		result := make(map[string]instruction)
+		for k, v := range *c {
+			result[k] = v
+		}
+
+		c.Collapse()
+
+		collapsed := make(map[string]instruction)
+		for k, v := range *c {
+			collapsed[k] = v
+		}
+
+		return step{
+			Existing: existing,
+			Incoming: map[string]instruction{
+				i.String(): i,
+			},
+			Result:    result,
+			Collapsed: collapsed,
+		}
 	}
 
 	merge := make(map[string]instruction)
@@ -41,7 +92,26 @@ func (c *cubespace) applyInstructions(i instruction) {
 
 	*c = mergeMap(unaffected, merge)
 
+	result := make(map[string]instruction)
+	for k, v := range *c {
+		result[k] = v
+	}
+
 	c.Collapse()
+
+	collapsed := make(map[string]instruction)
+	for k, v := range *c {
+		collapsed[k] = v
+	}
+
+	return step{
+		Existing: existing,
+		Incoming: map[string]instruction{
+			i.String(): i,
+		},
+		Result:    result,
+		Collapsed: collapsed,
+	}
 }
 
 func (c *cubespace) Length() int {

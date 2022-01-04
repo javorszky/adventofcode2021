@@ -18,5 +18,5 @@ func Tasks() {
 	fmt.Printf("Task 1: After the first set there are %d cubes are on\n", output)
 
 	output2 := task2(input)
-	fmt.Printf("Task 2: The result is something: %v\n", output2)
+	fmt.Printf("Task 2: The Result is something: %v\n", output2)
 }
