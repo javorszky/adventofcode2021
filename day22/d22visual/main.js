@@ -1,6 +1,6 @@
 import "./style.css";
 import * as THREE from "three";
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
+import { ArcballControls } from "three/examples/jsm/controls/ArcballControls.js";
 import * as cubes from "./js/cubes.js";
 
 // document.querySelector('#app').innerHTML = `
@@ -14,7 +14,7 @@ let camera, scene, raycaster, renderer, controls;
 const pointer = new THREE.Vector2();
 
 init();
-console.log(cubes.default);
+
 parseCubes(cubes.default);
 
 animate();
@@ -42,12 +42,12 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  // The Controls
-  controls = new TrackballControls(camera, renderer.domElement);
-
   document.querySelector("#app").appendChild(renderer.domElement);
 
   document.addEventListener("mousemove", onPointerMove);
+
+  // The Controls
+  controls = new ArcballControls(camera, renderer.domElement, scene);
 
   scene.add(new THREE.AxesHelper(55));
 }
@@ -66,14 +66,15 @@ function parseCubes(cubeString) {
     const geo = new THREE.BoxGeometry(x, y, z);
 
     const material = new THREE.MeshStandardMaterial({
-      color: Math.random() * 0xffffff,
+      // color: Math.random() * 0xffffff,
+      emissive: Math.random() * 0xffffff,
       opacity: 0.3,
       transparent: true,
     });
+
     const cube = new THREE.Mesh(geo, material);
     cube.name = key;
 
-    console.log(cube.position);
     cube.position.x = value.x_from + x / 2;
     cube.position.y = value.y_from + y / 2;
     cube.position.z = value.z_from + z / 2;
@@ -96,21 +97,17 @@ function render() {
   if (intersects.length > 0) {
     if (INTERSECTED != intersects[0].object) {
       if (INTERSECTED && INTERSECTED.material.type == "MeshStandardMaterial") {
-        INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+        INTERSECTED.material.opacity = 0.3;
       }
 
       if (intersects[0].object.material.type == "MeshStandardMaterial") {
         INTERSECTED = intersects[0].object;
-        console.log("the material", INTERSECTED.material);
-
-        INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-        INTERSECTED.material.emissive.setHex(0xff0000);
+        INTERSECTED.material.opacity = 0.7;
       }
     }
   } else {
     if (INTERSECTED && INTERSECTED.material.type == "MeshStandardMaterial") {
-      console.log("what is wrong...", INTERSECTED);
-      INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+      INTERSECTED.material.opacity = 0.3;
     }
 
     INTERSECTED = null;
