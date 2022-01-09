@@ -4782,16 +4782,6 @@ func Test_overlap(t *testing.T) {
 				},
 			},
 			want: []instruction{
-				// the overlapbox
-				{
-					XFrom: -5,
-					XTo:   5,
-					YFrom: -5,
-					YTo:   5,
-					ZFrom: -5,
-					ZTo:   5,
-					Flip:  off,
-				},
 				// box back face
 				{
 					XFrom: -20,
@@ -4861,77 +4851,6 @@ func Test_overlap(t *testing.T) {
 					ZFrom: -20,
 					ZTo:   -6,
 					Flip:  on,
-				},
-
-				// otherBox front face
-				{
-					XFrom: 6,
-					XTo:   20,
-					YFrom: -5,
-					YTo:   5,
-					ZFrom: -5,
-					ZTo:   5,
-					Flip:  off,
-				},
-				// otherBox right face
-				{
-					XFrom: -5,
-					XTo:   5,
-					YFrom: 6,
-					YTo:   20,
-					ZFrom: -5,
-					ZTo:   5,
-					Flip:  off,
-				},
-				// otherBox top face
-				{
-					XFrom: -5,
-					XTo:   5,
-					YFrom: -5,
-					YTo:   5,
-					ZFrom: 6,
-					ZTo:   20,
-					Flip:  off,
-				},
-				// otherBox front right edge
-				{
-					XFrom: 6,
-					XTo:   20,
-					YFrom: 6,
-					YTo:   20,
-					ZFrom: -5,
-					ZTo:   5,
-					Flip:  off,
-				},
-				// otherBox front top edge
-				{
-					XFrom: 6,
-					XTo:   20,
-					YFrom: -5,
-					YTo:   5,
-					ZFrom: 6,
-					ZTo:   20,
-					Flip:  off,
-				},
-				// otherBox right top edge
-				{
-					XFrom: -5,
-					XTo:   5,
-					YFrom: 6,
-					YTo:   20,
-					ZFrom: 6,
-					ZTo:   20,
-					Flip:  off,
-				},
-				// otherBox top right front corner
-				{
-					XFrom: 6,
-					XTo:   20,
-					YFrom: 6,
-					YTo:   20,
-					ZFrom: 6,
-					ZTo:   20,
-					Flip:  off,
 				},
 			},
 		},
@@ -5537,7 +5456,6 @@ func Test_overlapAndMerge(t *testing.T) {
 				"-20/-6/-20/-6/-20/-6/on": {XFrom: -20, XTo: -6, YFrom: -20, YTo: -6, ZFrom: -20, ZTo: -6, Flip: 1},
 				"-20/-6/-5/5/-20/5/on":    {XFrom: -20, XTo: -6, YFrom: -5, YTo: 5, ZFrom: -20, ZTo: 5, Flip: 1},
 				"-20/5/-20/-6/-5/5/on":    {XFrom: -20, XTo: 5, YFrom: -20, YTo: -6, ZFrom: -5, ZTo: 5, Flip: 1},
-				"-5/20/-5/20/-5/20/off":   {XFrom: -5, XTo: 20, YFrom: -5, YTo: 20, ZFrom: -5, ZTo: 20, Flip: 2},
 				"-5/5/-20/5/-20/-6/on":    {XFrom: -5, XTo: 5, YFrom: -20, YTo: 5, ZFrom: -20, ZTo: -6, Flip: 1},
 			},
 		},
@@ -5566,7 +5484,6 @@ func Test_overlapAndMerge(t *testing.T) {
 			want: map[string]instruction{
 				"10/12/10/10/12/12/on": {XFrom: 10, XTo: 12, YFrom: 10, YTo: 10, ZFrom: 12, ZTo: 12, Flip: on},
 				"12/12/10/10/11/11/on": {XFrom: 12, XTo: 12, YFrom: 10, YTo: 10, ZFrom: 11, ZTo: 11, Flip: on},
-				"9/11/9/11/9/11/off":   {XFrom: 9, XTo: 11, YFrom: 9, YTo: 11, ZFrom: 9, ZTo: 11, Flip: off},
 			},
 		},
 	}

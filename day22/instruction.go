@@ -156,7 +156,16 @@ func overlap(box, otherBox instruction) []instruction {
 		instructions = append(instructions, f(otherBox, overlapBox)...)
 	}
 
-	return instructions
+	// filter for off boxes
+	filteredInstructions := make([]instruction, 0, len(instructions))
+
+	for _, i := range instructions {
+		if i.Flip == on {
+			filteredInstructions = append(filteredInstructions, i)
+		}
+	}
+
+	return filteredInstructions
 }
 
 func findOverlapBox(box, otherBox instruction) (instruction, error) {
