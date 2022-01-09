@@ -3,7 +3,6 @@ package day22
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"os"
 )
@@ -30,13 +29,6 @@ func task1(input []instruction) int {
 
 	for _, inst := range limited {
 		steps = append(steps, kuqe.applyInstructions(inst))
-
-		b, err := json.Marshal(kuqe)
-		if err != nil {
-			log.Fatalf("can't marshal cubespace into json: %s", err)
-		}
-
-		fmt.Printf("kuqe json:\n\n%s\n\n", string(b))
 	}
 
 	writeJSON(steps)
