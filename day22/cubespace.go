@@ -119,22 +119,7 @@ func (c *cubespace) Length() int {
 }
 
 func (c *cubespace) Collapse() {
-	overlaps := make([]instruction, c.Length())
-	counter := 0
-
-	for _, v := range *c {
-		overlaps[counter] = v
-		counter++
-	}
-
-	merged := mergeInstructionSlice(overlaps)
-	mergedMap := make(map[string]instruction)
-
-	for _, i := range merged {
-		mergedMap[i.String()] = i
-	}
-
-	*c = mergedMap
+	*c = mergeInstructionMap(*c)
 }
 
 func (c *cubespace) Lights() int {
@@ -193,6 +178,61 @@ func mergeInstructionSlice(overlaps []instruction) []instruction {
 			overlaps[i] = v
 			i++
 		}
+	}
+
+	return overlaps
+}
+
+func mergeInstructionMap(overlaps map[string]instruction) map[string]instruction {
+	for {
+		mergedTogether := make(map[string]instruction)
+		merges := map[string]instruction{}
+
+		iterated := make(map[string]instruction)
+
+		for i, overlapBox := range overlaps {
+			iterated[i] = overlapBox
+			for oi, overlapOtherBox := range overlaps {
+				_, oki := iterated[oi]
+				if oki {
+					continue
+				}
+
+				_, ok := mergedTogether[overlapBox.String()]
+				_, ok2 := mergedTogether[overlapOtherBox.String()]
+
+				if ok || ok2 {
+					continue
+				}
+
+				m := mergeBoxes(overlapBox, overlapOtherBox)
+
+				if len(m) == 1 {
+					merges[m[0].String()] = m[0]
+					mergedTogether[overlapBox.String()] = overlapBox
+					mergedTogether[overlapOtherBox.String()] = overlapOtherBox
+				}
+			}
+		}
+
+		if len(merges) == 0 {
+			break
+		}
+
+		newOverlaps := make(map[string]instruction)
+
+		// Move all the cuboids from the original that we haven't touched here.
+		for s, _o := range overlaps {
+			if _, ok := mergedTogether[_o.String()]; !ok {
+				newOverlaps[s] = _o
+			}
+		}
+
+		// merge the haven't touched with the merges
+		newOverlaps = mergeMap(merges, newOverlaps)
+
+		// reset the overlaps
+		overlaps = newOverlaps
 	}
 
 	return overlaps

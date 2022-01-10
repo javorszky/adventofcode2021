@@ -156,16 +156,99 @@ func overlap(box, otherBox instruction) []instruction {
 		instructions = append(instructions, f(otherBox, overlapBox)...)
 	}
 
-	// filter for off boxes
-	filteredInstructions := make([]instruction, 0, len(instructions))
-
+	// deduplicate
+	dedup := make(map[string]instruction)
 	for _, i := range instructions {
-		if i.Flip == on {
-			filteredInstructions = append(filteredInstructions, i)
+		dedup[i.String()] = i
+	}
+
+	dedup = filterOffs(dedup)
+
+	deduped := make([]instruction, len(dedup))
+	i := 0
+
+	for _, v := range dedup {
+		deduped[i] = v
+		i++
+	}
+
+	return deduped
+}
+
+func overlapMap(box, otherBox instruction) map[string]instruction {
+	// they do not overlap, because box ends before otherBox begins.
+	if box.XFrom > otherBox.XTo || box.YFrom > otherBox.YTo || box.ZFrom > otherBox.ZTo {
+		return map[string]instruction{
+			box.String():      box,
+			otherBox.String(): otherBox,
 		}
 	}
 
-	return filteredInstructions
+	// they do not overlap, because box doesn't start until after otherBox ends.
+	if otherBox.XFrom > box.XTo || otherBox.YFrom > box.YTo || otherBox.ZFrom > box.ZTo {
+		return map[string]instruction{
+			box.String():      box,
+			otherBox.String(): otherBox,
+		}
+	}
+
+	instructions := make(map[string]instruction)
+	overlapBox, err := findOverlapBox(box, otherBox)
+
+	if err != nil {
+		log.Fatalf("despite checking for overlaps, we couldn't find the box. This should not have happened\n"+
+			"box:      %v\n"+
+			"otherBox: %v", box, otherBox)
+	}
+
+	if overlapBox.Flip == on {
+		instructions[overlapBox.String()] = overlapBox
+	}
+
+	for _, f := range []func(instruction, instruction) []instruction{
+		findTopFace,
+		findBottomFace,
+		findLeftFace,
+		findRightFace,
+		findFrontFace,
+		findBackFace,
+		findTopLeftEdge,
+		findTopBackEdge,
+		findTopRightEdge,
+		findTopFrontEdge,
+		findBottomLeftEdge,
+		findBottomBackEdge,
+		findBottomRightEdge,
+		findBottomFrontEdge,
+		findFrontLeftEdge,
+		findFrontRightEdge,
+		findBackLeftEdge,
+		findBackRightEdge,
+		findTopBackLeftCorner,
+		findTopBackRightCorner,
+		findTopFrontLeftCorner,
+		findTopFrontRightCorner,
+		findBottomBackLeftCorner,
+		findBottomBackRightCorner,
+		findBottomFrontLeftCorner,
+		findBottomFrontRightCorner,
+	} {
+		if box.Flip == on {
+			one := f(box, overlapBox)
+			if one != nil {
+				instructions[one[0].String()] = one[0]
+			}
+		}
+
+		if otherBox.Flip == on {
+			two := f(otherBox, overlapBox)
+			if two != nil {
+				instructions[two[0].String()] = two[0]
+			}
+		}
+	}
+
+	return instructions
 }
 
 func findOverlapBox(box, otherBox instruction) (instruction, error) {

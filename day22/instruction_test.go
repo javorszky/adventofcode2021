@@ -5494,3 +5494,161 @@ func Test_overlapAndMerge(t *testing.T) {
 		})
 	}
 }
+
+func Test_overlapMap(t *testing.T) {
+	type args struct {
+		box      instruction
+		otherBox instruction
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want map[string]instruction
+	}{
+		{
+			name: "returns only the two boxes if they do not overlap",
+			args: args{
+				box: instruction{
+					XFrom: -20,
+					XTo:   -10,
+					YFrom: -20,
+					YTo:   -10,
+					ZFrom: -20,
+					ZTo:   -10,
+					Flip:  on,
+				},
+				otherBox: instruction{
+					XFrom: 10,
+					XTo:   20,
+					YFrom: 10,
+					YTo:   20,
+					ZFrom: 10,
+					ZTo:   20,
+					Flip:  off,
+				},
+			},
+			want: map[string]instruction{
+				"-20/-10/-20/-10/-20/-10/on": {
+					XFrom: -20,
+					XTo:   -10,
+					YFrom: -20,
+					YTo:   -10,
+					ZFrom: -20,
+					ZTo:   -10,
+					Flip:  on,
+				},
+				"10/20/10/20/10/20/off": {
+					XFrom: 10,
+					XTo:   20,
+					YFrom: 10,
+					YTo:   20,
+					ZFrom: 10,
+					ZTo:   20,
+					Flip:  off,
+				},
+			},
+		},
+		{
+			name: "returns overlapbox, and all other pieces from both of the boxes",
+			args: args{
+				box: instruction{
+					XFrom: -20,
+					XTo:   5,
+					YFrom: -20,
+					YTo:   5,
+					ZFrom: -20,
+					ZTo:   5,
+					Flip:  on,
+				},
+				otherBox: instruction{
+					XFrom: -5,
+					XTo:   20,
+					YFrom: -5,
+					YTo:   20,
+					ZFrom: -5,
+					ZTo:   20,
+					Flip:  off,
+				},
+			},
+			want: map[string]instruction{
+				// box back face
+				"-20/-6/-5/5/-5/5/on": {
+					XFrom: -20,
+					XTo:   -6,
+					YFrom: -5,
+					YTo:   5,
+					ZFrom: -5,
+					ZTo:   5,
+					Flip:  on,
+				},
+				// box bottom face
+				"-5/5/-5/5/-20/-6/on": {
+					XFrom: -5,
+					XTo:   5,
+					YFrom: -5,
+					YTo:   5,
+					ZFrom: -20,
+					ZTo:   -6,
+					Flip:  on,
+				},
+				// box left face
+				"-5/5/-20/-6/-5/5/on": {
+					XFrom: -5,
+					XTo:   5,
+					YFrom: -20,
+					YTo:   -6,
+					ZFrom: -5,
+					ZTo:   5,
+					Flip:  on,
+				},
+				// box back left edge
+				"-20/-6/-20/-6/-5/5/on": {
+					XFrom: -20,
+					XTo:   -6,
+					YFrom: -20,
+					YTo:   -6,
+					ZFrom: -5,
+					ZTo:   5,
+					Flip:  on,
+				},
+				// box back bottom edge
+				"-20/-6/-5/5/-20/-6/on": {
+					XFrom: -20,
+					XTo:   -6,
+					YFrom: -5,
+					YTo:   5,
+					ZFrom: -20,
+					ZTo:   -6,
+					Flip:  on,
+				},
+				// box left bottom edge
+				"-5/5/-20/-6/-20/-6/on": {
+					XFrom: -5,
+					XTo:   5,
+					YFrom: -20,
+					YTo:   -6,
+					ZFrom: -20,
+					ZTo:   -6,
+					Flip:  on,
+				},
+				// box bottom back left corner
+				"-20/-6/-20/-6/-20/-6/on": {
+					XFrom: -20,
+					XTo:   -6,
+					YFrom: -20,
+					YTo:   -6,
+					ZFrom: -20,
+					ZTo:   -6,
+					Flip:  on,
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, overlapMap(tt.args.box, tt.args.otherBox),
+				"overlapMap(%v, %v)", tt.args.box, tt.args.otherBox)
+		})
+	}
+}
